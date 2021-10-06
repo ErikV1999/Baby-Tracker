@@ -13,7 +13,7 @@ class _FeedingState extends State<Feeding> {
     return Scaffold(
         backgroundColor: Colors.white38,
         appBar: AppBar(
-          title: Text('Homepage'),
+          title: Text('Feeding'),
           centerTitle: true,
           backgroundColor: Colors.amber,
         ),
