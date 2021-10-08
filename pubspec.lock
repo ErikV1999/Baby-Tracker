@@ -205,9 +205,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+<<<<<<< Updated upstream
 
   nested:
 =======
+=======
+>>>>>>> Stashed changes
   path:
 
     dependency: transitive
@@ -215,6 +218,7 @@ packages:
       name: nested
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< Updated upstream
     version: "1.0.0"
   path:
     dependency: transitive
@@ -222,6 +226,8 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
+=======
+>>>>>>> Stashed changes
     version: "1.8.0"
   plugin_platform_interface:
     dependency: transitive
@@ -300,4 +306,8 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
+<<<<<<< Updated upstream
   flutter: ">=1.16.0"
+=======
+  flutter: ">=1.12.13+hotfix.5"
+>>>>>>> Stashed changes
