@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Firebase',
         home: Wrapper(),
       ),
-=======
-    return MaterialApp(
+//=======
+    //return MaterialApp(
 
-      home: TittleScreen(),
+      //home: TittleScreen(),
 
     );
   }
