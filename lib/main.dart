@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return StreamProvider<MyUser?>.value(
       initialData: null,
       catchError: (User, CustomUser) => null,
@@ -26,8 +27,12 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Firebase',
         home: Wrapper(),
       ),
+=======
+    return MaterialApp(
+
+      home: TittleScreen(),
+
     );
   }
 }
-
 

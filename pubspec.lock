@@ -205,7 +205,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+
   nested:
+=======
+  path:
+
     dependency: transitive
     description:
       name: nested
