@@ -28,8 +28,13 @@ class TittleScreen extends StatelessWidget {
             }
             ),
             ElevatedButton(
-                child: const Text('screens'),
-                onPressed: () {}
+            child: const Text('Feeding'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Feeding()),
+              );
+                }
             )
           ],
         )
