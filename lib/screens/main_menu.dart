@@ -16,7 +16,15 @@ class Baby{
 
 }
 
-class MainMenu extends StatelessWidget{
+class MainMenu extends StatefulWidget{
+
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
+
+
 
   void babyClick(Baby baby){
     print(baby.name);
@@ -67,6 +75,11 @@ class MainMenu extends StatelessWidget{
         title: Text(userName),
         centerTitle: true,
         backgroundColor: Colors.cyanAccent,
+      ),
+      floatingActionButton: FloatingActionButton(   //might replace add baby with this
+        onPressed: (){},
+        child: Icon(Icons.add),
+        backgroundColor: Colors.grey[800],
       ),
       body: Column(
         children: [
