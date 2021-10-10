@@ -8,6 +8,7 @@ class MainMenu extends StatelessWidget{
     dynamic userName = "Sarah";               //will eventually be fetched
     List babies = ["john", "jerry", "james"];   //will eventually be fetched
     List feedings = [4, 2, 4,];                 //eventually be fetched
+    //replace this with something scrollable
     List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
     for(int i = 0; i < babies.length;i++){    //loop though for each baby
       buttons.add(                            //add a button that contains the baby's info
@@ -35,7 +36,7 @@ class MainMenu extends StatelessWidget{
       body: Column(
         children: [
           Column(
-            children: buttons
+            children: buttons //make this scrollable
           ),
           Row(
             children:[
