@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+class Baby{
+  String name = "";
+  int feeding = -1;
+  int sleeping = -1;
+  int diaper = -1;
+
+  Baby(String n, int f, int s, int d){
+    name = n;
+    feeding = f;
+    sleeping = s;
+    diaper = d;
+  }
+
+}
+
 class MainMenu extends StatelessWidget{
+
+  void babyClick(Baby baby){
+    print(baby.name);
+  }
+
+  void addBabyClick(){
+
+  }
+
+  void acceptInviteClick(){
+
+  }
 
   @override
   Widget build(BuildContext context){
     dynamic userName = "Sarah";               //will eventually be fetched
-    List babies = ["john", "jerry", "james"];   //will eventually be fetched
-    List feedings = [4, 2, 4,];                 //eventually be fetched
+    //List babies = ["john", "jerry", "james"];   //will eventually be fetched
+    //List feedings = [4, 2, 4,];                 //eventually be fetched
+    List<Baby> babies = [
+      Baby("john",4,2,3),
+      Baby("jerry",4,2,3),
+      Baby("jessie",4,2,3),
+      Baby("james",4,2,3),
+    ];
     //replace this with something scrollable
     List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
     for(int i = 0; i < babies.length;i++){    //loop though for each baby
@@ -15,15 +48,17 @@ class MainMenu extends StatelessWidget{
           ElevatedButton(
             child: Column(
                 children: [
-                  Text(babies[i]),          //baby's name as the title
+                  Text(babies[i].name),          //baby's name as the title
                   Row(                      //use a row because itll eventually contain feeding and diaper and
                       children: [
-                        Text("Last Feeding " + feedings[i].toString()),
+                        Text("Last Feeding " + babies[i].feeding.toString()),
                       ]
                   ),
                 ]
             ),
-            onPressed: (){},
+            onPressed: (){
+              babyClick(babies[i]);
+            },
           )
       );
     }
@@ -42,11 +77,15 @@ class MainMenu extends StatelessWidget{
             children:[
               ElevatedButton(
                 child: Text("Add Baby"),
-                onPressed: (){}
+                onPressed: (){
+                  addBabyClick();
+                }
               ),
               ElevatedButton(
                 child: Text("Accept Invite"),
-                onPressed: (){}
+                onPressed: (){
+                  acceptInviteClick();
+                }
               )
             ]
           )
