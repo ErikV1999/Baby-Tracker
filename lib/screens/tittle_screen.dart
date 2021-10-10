@@ -33,7 +33,12 @@ class TittleScreen extends StatelessWidget {
             ),
             ElevatedButton(
                 child: const Text('Main Menu'),
-                onPressed: () {}
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  MainMenu()),
+                  );
+                }
             )
           ],
         )
