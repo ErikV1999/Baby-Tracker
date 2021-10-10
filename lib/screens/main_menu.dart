@@ -15,7 +15,7 @@ class MainMenu extends StatelessWidget{
             child: Column(
                 children: [
                   Text(babies[i]),          //baby's name as the title
-                  Row(                      //use a row because itll eventually contain feeding and diaper and 
+                  Row(                      //use a row because itll eventually contain feeding and diaper and
                       children: [
                         Text("Last Feeding " + feedings[i].toString()),
                       ]
@@ -33,8 +33,23 @@ class MainMenu extends StatelessWidget{
         backgroundColor: Colors.cyanAccent,
       ),
       body: Column(
-        children: buttons
-
+        children: [
+          Column(
+            children: buttons
+          ),
+          Row(
+            children:[
+              ElevatedButton(
+                child: Text("Add Baby"),
+                onPressed: (){}
+              ),
+              ElevatedButton(
+                child: Text("Accept Invite"),
+                onPressed: (){}
+              )
+            ]
+          )
+        ]
       )
     );
   }
