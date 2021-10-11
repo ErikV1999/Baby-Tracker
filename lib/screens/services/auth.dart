@@ -1,4 +1,5 @@
 import 'package:baby_tracker/models/myuser.dart';
+import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -43,11 +44,15 @@ class AuthService {
   }
   //register with email and password
 
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String email, String password, String name) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
-      return _userFromFirebaseUser(user!);
+      final User? user = result.user;
+      final uid = user!.uid;
+
+      await FirestoreDatabase().addUser(uid, name);
+
+      return _userFromFirebaseUser(user);
     }catch(e)
     {
       print(e.toString());
