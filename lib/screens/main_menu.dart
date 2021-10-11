@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 class Baby{
@@ -37,7 +38,25 @@ class _MainMenuState extends State<MainMenu> {
   void acceptInviteClick(){
 
   }
+  Widget _buildListItem(BuildContext context, Baby baby){
+    if(baby.name==""){
+      return Card(
+        child: Text("empty")
+      );
+    }
+    return
+      Card(
+        child: ListTile(
+          title: Text(baby.name),
+          subtitle: Text("Last Feeding: " + baby.feeding.toString() +
+            " Last Sleep: " + baby.sleeping.toString() +
+            " Last Diaper: " + baby.diaper.toString()),
+          onTap: (){
 
+          },
+        )
+      );
+  }
   @override
   Widget build(BuildContext context){
     dynamic userName = "Sarah";               //will eventually be fetched
@@ -50,7 +69,7 @@ class _MainMenuState extends State<MainMenu> {
       Baby("james",4,2,3),
     ];
     //replace this with something scrollable
-    List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
+    /*List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
     for(int i = 0; i < babies.length;i++){    //loop though for each baby
       buttons.add(                            //add a button that contains the baby's info
           ElevatedButton(
@@ -69,7 +88,7 @@ class _MainMenuState extends State<MainMenu> {
             },
           )
       );
-    }
+    }*/
     return Scaffold(
       appBar: AppBar(
         title: Text(userName),
@@ -81,10 +100,24 @@ class _MainMenuState extends State<MainMenu> {
         child: Icon(Icons.add),
         backgroundColor: Colors.grey[800],
       ),
-      body: Column(
+      body: ListView.builder(
+        itemCount: babies.length,
+        itemBuilder: (context, index){
+          return _buildListItem(context, babies[index]);
+        },
+      ),
+      /*body: Column(
         children: [
-          Column(
-            children: buttons //make this scrollable
+          //Column(
+            //children: buttons //make this scrollable
+            //children:[
+            //]
+          //),
+          ListView.builder(
+            itemCount: babies.length,
+            itemBuilder: (context, index){
+              return _buildListItem(context, babies[index]);
+            },
           ),
           Row(
             children:[
@@ -103,7 +136,7 @@ class _MainMenuState extends State<MainMenu> {
             ]
           )
         ]
-      )
+      )*/
     );
   }
 }
