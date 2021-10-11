@@ -38,19 +38,23 @@ class _MainMenuState extends State<MainMenu> {
   void acceptInviteClick(){
 
   }
-  Widget _buildListItem(BuildContext context, Baby baby){
-    if(baby.name==""){
-      return Card(
-        child: Text("empty")
-      );
-    }
+
+  /*Builds a card to be displayed for a baby
+    BuildContext context: is some boilerplate thing for the environment
+      its from
+    DocumentSnapshot document: is the data element extracted from the
+      database
+
+  */
+  Widget _buildBabyItem(BuildContext context, DocumentSnapshot document){
+
     return
-      Card(
-        child: ListTile(
-          title: Text(baby.name),
-          subtitle: Text("Last Feeding: " + baby.feeding.toString() +
-            " Last Sleep: " + baby.sleeping.toString() +
-            " Last Diaper: " + baby.diaper.toString()),
+      Card(                                 //card encapsulates 1 Listtile
+        child: ListTile(                    //each list tile is a baby
+          title: Text(document['Name']),    //pulls the babys name
+          subtitle: Text("Last Feeding: " + document['Feeding'].toString() +
+            " Last Sleep: " + document['Sleeping'].toString() +
+            " Last Diaper: " + document['Diaper'].toString()),
           onTap: (){
 
           },
@@ -60,7 +64,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context){
     dynamic userName = "Sarah";               //will eventually be fetched
-    //List babies = ["john", "jerry", "james"];   //will eventually be fetched
+    /*List babies = ["john", "jerry", "james"];   //will eventually be fetched
     //List feedings = [4, 2, 4,];                 //eventually be fetched
     List<Baby> babies = [
       Baby("john",4,2,3),
@@ -69,7 +73,7 @@ class _MainMenuState extends State<MainMenu> {
       Baby("james",4,2,3),
     ];
     //replace this with something scrollable
-    /*List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
+    List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
     for(int i = 0; i < babies.length;i++){    //loop though for each baby
       buttons.add(                            //add a button that contains the baby's info
           ElevatedButton(
@@ -90,7 +94,7 @@ class _MainMenuState extends State<MainMenu> {
       );
     }*/
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
         title: Text(userName),
         centerTitle: true,
         backgroundColor: Colors.cyanAccent,
@@ -100,12 +104,23 @@ class _MainMenuState extends State<MainMenu> {
         child: Icon(Icons.add),
         backgroundColor: Colors.grey[800],
       ),
-      body: ListView.builder(
-        itemCount: babies.length,
-        itemBuilder: (context, index){
-          return _buildListItem(context, babies[index]);
-        },
-      ),
+      body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
+          stream: FirebaseFirestore.instance.collection('Babies').snapshots(),
+              //.where('Document ID', isEqualTo: 'EGQ9WR5wqbedNAlSdhuu ').snapshots(),
+
+          builder: (context, snapshot){      //builds the list of widgets to display
+            if(!snapshot.hasData)                     //if the snapshot has any data in it
+              return const Text('Loading...');
+            if(snapshot.data.docs == null)            //if the doc is null
+              return const Text('Loading...');
+            return ListView.builder(                  //is the list of tiles contained in the builder
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index){           //builds individual widgets
+                return _buildBabyItem(context, snapshot.data.docs[index]);
+              }
+            );
+          }
+        )
       /*body: Column(
         children: [
           //Column(
