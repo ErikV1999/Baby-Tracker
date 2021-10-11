@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
 
@@ -23,15 +24,21 @@ class _SignInState extends State<SignIn> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.yellow[400],
+        backgroundColor: Color(0xFF006992),
         elevation:0.0,
         title: Text('Sign in to baby tracker'),
         actions: <Widget>[
           TextButton.icon(
-            icon: Icon(Icons.person),
-            label: Text('Register'),
+            icon: Icon(
+                Icons.person,
+              color: Colors.white,
+            ),
+            label: Text(
+                'Register',
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () {
               widget.toggleView();
             }
@@ -39,46 +46,30 @@ class _SignInState extends State<SignIn> {
         ]
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage('assets/tempBabyLogo.png'),
+              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            )
+        ),
+        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: <Widget>[
               SizedBox(height: 20.0),
-              TextFormField(
-              validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                }
-              ),
+              _buildEmailField(),
+
               SizedBox(height: 20.0),
-              TextFormField(
-                  obscureText: true,
-                  validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
-                  onChanged: (val) {
-                    setState(() => password = val);
-              }
-              ),
+              _buildPasswordField(),
+
               SizedBox(height: 20.0),
-              ElevatedButton(
-                child: Text('Sign in'),
-                style: ButtonStyle(
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.pink[400]),
-                  textStyle: MaterialStateProperty.all(
-                    TextStyle(color: Colors.white))),
-                    onPressed:() async {
-                      if (_formKey.currentState!.validate())
-                      {
-                        dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                        if(result == null)
-                        {
-                          setState(() => error = 'could not sign in with those credentials');
-                        }
-                      }
-                    },
-              ),
+
+
               SizedBox(height:12.0),
+              _buildSignInButton(),
+
               Text(
                 error,
                 style: TextStyle(color: Colors.red, fontSize: 14.0),
@@ -90,4 +81,55 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Email:',
+        ),
+        validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+        onChanged: (val) {
+          setState(() => email = val);
+        }
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Password:',
+        ),
+        obscureText: true,
+        validator: (val) => val!.length < 6 ? 'Enter a password' : null,
+        onChanged: (val) {
+          setState(() => password = val);
+        }
+    );
+  }
+
+
+  Widget _buildSignInButton() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(80, 50, 80, 0),
+      child: ElevatedButton(
+        child: Text('Sign in'),
+        style: ButtonStyle(
+            backgroundColor:
+            MaterialStateProperty.all(Colors.pink[400]),
+            textStyle: MaterialStateProperty.all(
+                TextStyle(color: Colors.white))),
+        onPressed:() async {
+          if (_formKey.currentState!.validate())
+          {
+            dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+            if(result == null)
+            {
+              setState(() => error = 'could not sign in with those credentials');
+            }
+          }
+        },
+      ),
+    );
+  }
+
 }
