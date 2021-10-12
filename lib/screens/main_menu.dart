@@ -25,10 +25,14 @@ class MainMenu extends StatefulWidget{
 
 class _MainMenuState extends State<MainMenu> {
 
+  dynamic userName = "Sarah";               //will eventually be fetched
+  dynamic userEntry = "EGQ9WR5wqbedNAlSdhuu";   //will need to be sent in a form from prev page
 
 
-  void babyClick(Baby baby){
-    print(baby.name);
+  void babyClick(){
+    //print(FirebaseFirestore.instance.collection('Babies').snapshots() );
+    //print(FirebaseFirestore.instance.collection('Babies'));
+    //print(FirebaseFirestore.instance.collection('Users').doc("EGQ9WR5wqbedNAlSdhuu ").collection("Babies"));
   }
 
   void addBabyClick(){
@@ -56,14 +60,14 @@ class _MainMenuState extends State<MainMenu> {
             " Last Sleep: " + document['Sleeping'].toString() +
             " Last Diaper: " + document['Diaper'].toString()),
           onTap: (){
-
+            babyClick();
           },
         )
       );
   }
   @override
   Widget build(BuildContext context){
-    dynamic userName = "Sarah";               //will eventually be fetched
+
     /*List babies = ["john", "jerry", "james"];   //will eventually be fetched
     //List feedings = [4, 2, 4,];                 //eventually be fetched
     List<Baby> babies = [
@@ -105,7 +109,9 @@ class _MainMenuState extends State<MainMenu> {
         backgroundColor: Colors.grey[800],
       ),
       body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
-          stream: FirebaseFirestore.instance.collection('Babies').snapshots(),
+
+          //stream: FirebaseFirestore.instance.collection('Babies').snapshots(),
+          stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).collection("Babies").snapshots(),
               //.where('Document ID', isEqualTo: 'EGQ9WR5wqbedNAlSdhuu ').snapshots(),
 
           builder: (context, snapshot){      //builds the list of widgets to display
