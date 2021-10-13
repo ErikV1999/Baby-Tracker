@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
+import 'package:baby_tracker/screens/baby_menu.dart';
+
 class Baby{
   String name = "";
   int feeding = -1;
@@ -33,6 +35,10 @@ class _MainMenuState extends State<MainMenu> {
     //print(FirebaseFirestore.instance.collection('Babies').snapshots() );
     //print(FirebaseFirestore.instance.collection('Babies'));
     //print(FirebaseFirestore.instance.collection('Users').doc("EGQ9WR5wqbedNAlSdhuu ").collection("Babies"));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  BabyMenu()),
+    );
   }
 
   void addBabyClick(){
