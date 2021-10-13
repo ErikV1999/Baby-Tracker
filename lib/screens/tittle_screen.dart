@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/Sleeping.dart';
-
+import 'package:baby_tracker/screens/main_menu.dart';
 class TittleScreen extends StatelessWidget {
   const TittleScreen({Key? key}) : super(key: key);
 
@@ -26,6 +26,10 @@ class TittleScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const Sleeping()),
               );
             }
+            ),
+            ElevatedButton(
+                child: const Text('screens'),
+                onPressed: () {}
             ),
             ElevatedButton(
             child: const Text('Feeding'),
