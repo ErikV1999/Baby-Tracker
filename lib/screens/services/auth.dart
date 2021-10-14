@@ -70,4 +70,15 @@ class AuthService {
     }
   }
 
+  Future getUID() async {
+    var currentUser = _auth.currentUser;
+    if(currentUser != null) {
+      var uid = currentUser.uid;
+      return uid;
+    } else{
+      print("Error auth.dart: Could Not Get User");
+      return null;
+    }
+  }
+
 }
