@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:baby_tracker/screens/services/auth.dart';
 import 'dart:async';
 
 import 'package:baby_tracker/screens/baby_menu.dart';
@@ -29,7 +30,7 @@ class _MainMenuState extends State<MainMenu> {
 
   dynamic userName = "Sarah";               //will eventually be fetched
   dynamic userEntry = "EGQ9WR5wqbedNAlSdhuu";   //will need to be sent in a form from prev page
-
+  final AuthService _auth = AuthService();
 
   void babyClick(){
     //print(FirebaseFirestore.instance.collection('Babies').snapshots() );
@@ -108,6 +109,16 @@ class _MainMenuState extends State<MainMenu> {
         title: Text(userName),
         centerTitle: true,
         backgroundColor: Colors.cyanAccent,
+        actions: <Widget>[
+          TextButton.icon(
+            icon: Icon(Icons.person),
+            onPressed: () async {
+              await _auth.signOut();
+
+            },
+            label: Text('logout'),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(   //might replace add baby with this
         onPressed: (){},
@@ -133,37 +144,7 @@ class _MainMenuState extends State<MainMenu> {
             );
           }
         )
-      /*body: Column(
-        children: [
-          //Column(
-            //children: buttons //make this scrollable
-            //children:[
-            //]
-          //),
-          ListView.builder(
-            itemCount: babies.length,
-            itemBuilder: (context, index){
-              return _buildListItem(context, babies[index]);
-            },
-          ),
-          Row(
-            children:[
-              ElevatedButton(
-                child: Text("Add Baby"),
-                onPressed: (){
-                  addBabyClick();
-                }
-              ),
-              ElevatedButton(
-                child: Text("Accept Invite"),
-                onPressed: (){
-                  acceptInviteClick();
-                }
-              )
-            ]
-          )
-        ]
-      )*/
+
     );
   }
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:baby_tracker/screens/Sleeping.dart';
-
+import 'package:baby_tracker/screens/feeding.dart';
+//import 'package:baby_tracker/screens/diaper.dart';
 class BabyMenu extends StatefulWidget{
   @override
   State<BabyMenu> createState() => _BabyMenuState();
@@ -29,7 +30,13 @@ class _BabyMenuState extends State<BabyMenu> {
                   Text("Fed"),
                   Text("Type")
                 ]
-              )
+              ),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Feeding()),
+                );
+              }
             )
           ),
           Card(
@@ -51,14 +58,20 @@ class _BabyMenuState extends State<BabyMenu> {
           ),
           Card(
               child: ListTile(
-                  title: Text("Feeding"),
+                  title: Text("Diaper Change"),
                   subtitle: Row(
                       children: [
                         Text("Last Changed"),
                         Text("Pooped"),
                         Text("Peed")
                       ]
-                  )
+                  ),
+                  /*onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Diaper()),
+                    );
+                  }*/
 
               )
           ),
