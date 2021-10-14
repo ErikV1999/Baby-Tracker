@@ -1,3 +1,4 @@
+import 'package:baby_tracker/screens/addbaby.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -42,7 +43,10 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   void addBabyClick(){
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddBaby()),
+    );
   }
 
   void acceptInviteClick(){
@@ -110,7 +114,7 @@ class _MainMenuState extends State<MainMenu> {
         backgroundColor: Colors.cyanAccent,
       ),
       floatingActionButton: FloatingActionButton(   //might replace add baby with this
-        onPressed: (){},
+        onPressed: () => addBabyClick(),
         child: Icon(Icons.add),
         backgroundColor: Colors.grey[800],
       ),

@@ -1,5 +1,6 @@
 import 'package:baby_tracker/screens/authenticate/authenticate.dart';
 import 'package:baby_tracker/screens/home/home.dart';
+import 'package:baby_tracker/screens/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:baby_tracker/models/myuser.dart';
@@ -20,7 +21,7 @@ class Wrapper extends StatelessWidget {
       }
       else
         {
-          return Home();
+          return MainMenu();
         }
   }
 }

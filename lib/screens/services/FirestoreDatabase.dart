@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:baby_tracker/screens/services/auth.dart';
 
 class FirestoreDatabase {
 
@@ -14,6 +15,24 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
+  Future<void> addBaby(String name, String gender, int feet, int inches, DateTime date) async {
+    final uid = await AuthService().getUID();
+    CollectionReference babies = users.doc(uid).collection('Babies');
 
+    int dob = date.millisecondsSinceEpoch;
+
+    await babies.add({
+      'Name': name,
+      'gender': gender,
+      'feet': feet,
+      'inches': inches,
+      'dob': dob,
+      'Diaper': 'N/A',
+      'Feeding': 'N/A',
+      'Sleeping': 'N/A',
+    })
+        .then((value) => print('Baby Added'))
+        .catchError((error) => print("Failed to add baby"));
+  }
 
 }
