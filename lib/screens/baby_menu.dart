@@ -5,6 +5,11 @@ import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 class BabyMenu extends StatefulWidget{
+
+  final String baby;
+
+  BabyMenu({Key? key, required this.baby}) : super(key: key);
+
   @override
   State<BabyMenu> createState() => _BabyMenuState();
 }
@@ -13,10 +18,13 @@ class BabyMenu extends StatefulWidget{
 
 class _BabyMenuState extends State<BabyMenu> {
   dynamic babyName = "Placeholder";
+
   Widget build(BuildContext context){
+    dynamic babyPath = widget.baby;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(babyName),
+        title: Text(babyPath),
         backgroundColor: Colors.cyanAccent,
       ),
       body: Column(

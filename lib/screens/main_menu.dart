@@ -33,13 +33,13 @@ class _MainMenuState extends State<MainMenu> {
   dynamic userEntry = "EGQ9WR5wqbedNAlSdhuu";   //will need to be sent in a form from prev page
   final AuthService _auth = AuthService();
 
-  void babyClick(){
+  void babyClick(String path){
     //print(FirebaseFirestore.instance.collection('Babies').snapshots() );
     //print(FirebaseFirestore.instance.collection('Babies'));
     //print(FirebaseFirestore.instance.collection('Users').doc("EGQ9WR5wqbedNAlSdhuu ").collection("Babies"));
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>  BabyMenu()),
+      MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path)),
     );
   }
 
@@ -71,7 +71,7 @@ class _MainMenuState extends State<MainMenu> {
             " Last Sleep: " + document['Sleeping'].toString() +
             " Last Diaper: " + document['Diaper'].toString()),
           onTap: (){
-            babyClick();
+            babyClick(document.reference.path);
           },
         )
       );
