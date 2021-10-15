@@ -20,7 +20,7 @@ class _BabyMenuState extends State<BabyMenu> {
   dynamic babyName = "Placeholder";
 
   Widget build(BuildContext context){
-    dynamic babyPath = widget.baby;
+    String babyPath = widget.baby;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +42,7 @@ class _BabyMenuState extends State<BabyMenu> {
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Feeding()),
+                  MaterialPageRoute(builder: (context) => Feeding(baby: babyPath)),
                 );
               }
             )
@@ -59,7 +59,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Sleeping()),
+                      MaterialPageRoute(builder: (context) =>  Sleeping(baby: babyPath)),
                     );
                   }
               )

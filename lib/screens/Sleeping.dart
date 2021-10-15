@@ -3,7 +3,10 @@ import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'dart:async';
 
 class Sleeping extends StatefulWidget {
-  const Sleeping({Key? key}) : super(key: key);
+
+  final String baby;
+
+  const Sleeping({Key? key, required this.baby}) : super(key: key);
   @override
   _SleepingState createState() => _SleepingState();
 }
@@ -12,6 +15,9 @@ class _SleepingState extends State<Sleeping> {
 
   @override
   Widget build(BuildContext context) {
+
+    String babyPath = widget.baby;
+
     // appBar header
     return Scaffold(
         backgroundColor: Colors.white38,
@@ -88,6 +94,7 @@ class SleepingFormState extends State<SleepingForm> {
 
   @override
   Widget build(BuildContext context) {
+
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
