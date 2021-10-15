@@ -35,4 +35,18 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add baby"));
   }
 
+  Future<void> addSleepTime(int start, int stop, String notes) async {
+    final uid = await AuthService().getUID();
+
+    CollectionReference sleeping = users.doc(uid).collection('Babies').doc('KTthHOHEVbwaMtxutRzW').collection('sleeping');
+
+    await sleeping.add({
+      'Start': start,
+      'Stop': stop,
+      'Notes': notes,
+    })
+        .then((value) => print('Sleep Added'))
+        .catchError((error) => print("Failed to add sleeping data"));
+  }
+
 }
