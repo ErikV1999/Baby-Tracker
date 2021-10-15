@@ -8,48 +8,6 @@ class Sleeping extends StatefulWidget {
 }
 
 class _SleepingState extends State<Sleeping> {
-  Duration duration = Duration();
-  Timer? timer;
-
-  bool isCountdown = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    reset();
-  }
-
-  //reset timer
-  void reset() {
-    setState(() => duration = Duration());
-  }
-
-  // add to timer, in 1 second
-  void addTime() {
-    final addSeconds = 1;
-
-    setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-      duration = Duration(seconds: seconds);
-    });
-  }
-
-  // start the timer
-  void startTimer({bool resets = true}) {
-    if (resets) {
-      reset();
-    }
-    timer = Timer.periodic(Duration(seconds:1), (_) => addTime());
-  }
-
-  // stop/pause the timer
-  void stopTimer({bool resets = true}) {
-    if (resets) {
-      reset();
-    }
-    setState(() => timer?.cancel());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,139 +17,165 @@ class _SleepingState extends State<Sleeping> {
         appBar: AppBar(
           title: Text('Sleeping'),
           centerTitle: true,
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.yellow,
           actions: [
             Icon(Icons.more_vert),
           ],
         ),
-        body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                buildTime(),
-                const SizedBox(height: 80),
-                buildButtons(),
-              ]
-            ),
-        )
+        body: const SleepingForm(),
     );
   }
+}
 
-  // Start, Stop, and cancel buttons
-  Widget buildButtons() {
-    final isRunning = timer == null ? false : timer!.isActive;
-    final isCompleted = duration.inSeconds == 0;
+class SleepingForm extends StatefulWidget {
+  const SleepingForm({Key? key}) : super(key: key);
 
-    // when counter stop and cancel are displayed
-    if (isRunning) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                if (isRunning) {
-                  stopTimer(resets: false);
-                } else {
-                  startTimer(resets: false);
-                }
-              },
-              child: (
-                  const Text('STOP')
-              ) ,
-          ),
-          const SizedBox(width: 12),
-          ElevatedButton(
-              onPressed: () {stopTimer();},
-              child: (
-                  const Text('CANCEL')
-              ),
-          ),
-        ]
-    );
-    } // when stopped/paused resume and cancel
-     else if (!isCompleted) {
-      return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                if (isRunning) {
-                  stopTimer(resets: false);
-                } else {
-                  startTimer(resets: false);
-                }
-              },
-              child: (
-                  const Text('RESUME')
-              ) ,
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: () {stopTimer();},
-              child: (
-                  const Text('CANCEL')
-              ),
-            ),
-          ]
-      );
-    } // beginning timer/ has been reset
-      else {
-      return ElevatedButton(
-      child: (
-          const Text('Baby Sleeping!')
-      ),
-      onPressed: () {
-        startTimer();
-      },
+  @override
+  SleepingFormState createState() {
+    return SleepingFormState();
+  }
+}
 
-    );
+// Create a corresponding State class.
+// This class holds data related to the form.
+class SleepingFormState extends State<SleepingForm> {
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a GlobalKey<FormState>,
+  // not a GlobalKey<MyCustomFormState>.
+  String? _selectedTime1;
+  String? _selectedTime2;
+
+  Future<void> _show1() async {
+    final TimeOfDay? result =
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (result != null) {
+      setState(() {
+        _selectedTime1 = result.format(context);
+      });
+    }
+  }
+  Future<void> _show2() async {
+    final TimeOfDay? result =
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (result != null) {
+      setState(() {
+        _selectedTime2 = result.format(context);
+      });
     }
   }
 
-  //here the hours/minutes/seconds are built
-  //we can extract these values to save on the database
-  Widget buildTime() {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
+  final _formKey = GlobalKey<FormState>();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  @override
+  Widget build(BuildContext context) {
+    // Build a Form widget using the _formKey created above.
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          buildTimeCard(time: hours, header: 'HOURS'),
-          const SizedBox(width: 8),
-          buildTimeCard(time: minutes, header: 'MINUTES'),
-          const SizedBox(width: 8),
-          buildTimeCard(time: seconds, header: 'SECONDS'),
-        ],
-    );
-  }
-
-  //visualize the hours/minutes/seconds
-  Widget buildTimeCard({required String time, required String header}) =>
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              time,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 72,
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Center(
+              child: Text(
+                'Started Sleeping At:',
+                style: TextStyle(height:1, fontSize: 30, backgroundColor: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2.0),
               ),
             ),
           ),
-          const SizedBox(height:24),
-          Text(header),
+          SizedBox(height: 1.0),
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Center(
+              child: Text(
+                _selectedTime1 != null ? _selectedTime1! : 'No time selected!',
+                style: TextStyle(fontSize: 30, backgroundColor: Colors.white,),
+                ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: ElevatedButton(
+                child: const Text('Show Time Picker'),
+                onPressed: () {
+                  _show1();},
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Center(
+              child: Text(
+                'Woke Up At:',
+                style: TextStyle(height:1, fontSize: 30, backgroundColor: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2.0),
+              ),
+            ),
+          ),
+          SizedBox(height: 1.0),
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Center(
+              child: Text(
+                _selectedTime2 != null ? _selectedTime2! : 'No time selected!',
+                style: TextStyle(fontSize: 30, backgroundColor: Colors.white,),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: ElevatedButton(
+                child: const Text('Show Time Picker'),
+                onPressed: () {
+                  _show2();},
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              // The validator receives the text that the user has entered.
+              decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Notes',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 4.0)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.yellow, width: 4.0)
+                  ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some notes';
+                }
+                return null;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // Validate returns true if the form is valid, or false otherwise.
+                if (_formKey.currentState!.validate()) {
+                  // If the form is valid, display a snackbar. In the real world,
+                  // you'd often call a server or save the information in a database.
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ),
         ],
-      );
-
-
+      ),
+    );
+  }
 }
