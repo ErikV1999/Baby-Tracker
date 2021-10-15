@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'dart:async';
 
 class Sleeping extends StatefulWidget {
@@ -46,7 +47,23 @@ class SleepingFormState extends State<SleepingForm> {
   // not a GlobalKey<MyCustomFormState>.
   String? _selectedTime1;
   String? _selectedTime2;
+  int start = 0;
+  int stop = 0;
+  String notes = 'note';
 
+  Future<void> _test1() async {
+    final TimeOfDay? result = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if(result != null){
+      setState(() {
+        _selectedTime1 = result.format(context);
+      }
+      );
+      print(result.period); // DayPeriod.pm or DayPeriod.am
+      print(result.hour);
+      start = result.hour;
+      print(result.minute);
+    }
+  }
   Future<void> _show1() async {
     final TimeOfDay? result =
     await showTimePicker(context: context, initialTime: TimeOfDay.now());
@@ -63,6 +80,7 @@ class SleepingFormState extends State<SleepingForm> {
       setState(() {
         _selectedTime2 = result.format(context);
       });
+      stop = result.hour;
     }
   }
 
@@ -101,7 +119,7 @@ class SleepingFormState extends State<SleepingForm> {
               child: ElevatedButton(
                 child: const Text('Show Time Picker'),
                 onPressed: () {
-                  _show1();},
+                  _test1();},
               ),
             ),
           ),
@@ -154,6 +172,7 @@ class SleepingFormState extends State<SleepingForm> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some notes';
                 }
+                notes = value;
                 return null;
               },
             ),
@@ -164,6 +183,7 @@ class SleepingFormState extends State<SleepingForm> {
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
+                  FirestoreDatabase().addSleepTime(start, stop, notes);
                   // If the form is valid, display a snackbar. In the real world,
                   // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
