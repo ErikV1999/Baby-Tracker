@@ -25,7 +25,16 @@ class _BabyMenuState extends State<BabyMenu> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(babyPath),
+        //title: Text(babyPath),
+        title: StreamBuilder(
+          stream: FirebaseFirestore.instance.doc(babyPath).snapshots(),
+          builder: (context, snapshot){
+            if(!snapshot.hasData)
+              return Text("Jane Doe");
+            dynamic babyName = snapshot.data;
+            return Text(babyName["Name"]);
+          }
+        ),
         backgroundColor: Colors.cyanAccent,
       ),
       body: Column(
