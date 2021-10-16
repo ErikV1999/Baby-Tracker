@@ -6,21 +6,7 @@ import 'dart:async';
 
 import 'package:baby_tracker/screens/baby_menu.dart';
 
-/*class Baby{
-  String name = "";
-  int feeding = -1;
-  int sleeping = -1;
-  int diaper = -1;
 
-  Baby(String n, int f, int s, int d){
-    name = n;
-    feeding = f;
-    sleeping = s;
-    diaper = d;
-  }
-
-}
-*/
 class MainMenu extends StatefulWidget{
 
   @override
@@ -75,17 +61,26 @@ class _MainMenuState extends State<MainMenu> {
         )
       );
   }
+
+  /*
+
+  encapsulates the "screen" widget where all the visuals are actually built
+   */
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _auth.getUID(),
-      initialData: "Loading Text...",
-      builder: (BuildContext context, AsyncSnapshot text){
+    return FutureBuilder(     //builds the screen based on data it might not have yet
+      future: _auth.getUID(),             //gets the users UID to get their document
+      initialData: "Loading Text...",     //while it waits for the data to come in
+      builder: (BuildContext context, AsyncSnapshot text){    //when the data arrives
         return screen(context, text);
       }
     );
   }
-
+  /*
+  where all the visuals are actually made. This function takes in the
+  text: text is the data pulled in the "build" function that contains the users UID
+  context: boilerplate context
+   */
   Widget screen(BuildContext context, AsyncSnapshot text){
     //_auth.getUID();
     //userEntry = _auth.getUID();
@@ -93,8 +88,7 @@ class _MainMenuState extends State<MainMenu> {
     //userName = FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots().data['Name'];
     return Scaffold(
       appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
-        //title: Text(userName),
-        title: StreamBuilder(
+        title: StreamBuilder(   //streambuilder here creates the title based on the users name in the database
           stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots(),
           builder: (context, snapshot){
             if(!snapshot.hasData){
@@ -107,7 +101,7 @@ class _MainMenuState extends State<MainMenu> {
         ),
         centerTitle: true,
         backgroundColor: Colors.cyanAccent,
-        actions: <Widget>[
+        actions: <Widget>[      //sign out button at the appbar
           TextButton.icon(
             icon: Icon(Icons.person),
             onPressed: () async {
@@ -118,23 +112,26 @@ class _MainMenuState extends State<MainMenu> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(   //might replace add baby with this
+      floatingActionButton: FloatingActionButton(   //button for the "add baby" at the bottom
         onPressed: () => addBabyClick(),
         child: Icon(Icons.add),
         backgroundColor: Colors.grey[800],
       ),
       body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
 
-          //stream: FirebaseFirestore.instance.collection('Babies').snapshots(),
-          stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).collection("Babies").snapshots(),
-              //.where('Document ID', isEqualTo: 'EGQ9WR5wqbedNAlSdhuu ').snapshots(),
 
-          builder: (context, snapshot){      //builds the list of widgets to display
+          stream: FirebaseFirestore.instance
+              .collection('Users')  //takes from the user table
+              .doc(userEntry)       //finds the users document
+              .collection("Babies")   //goes into users subcollectino for their babies
+              .snapshots(),           //takes a snapshot
+
+          builder: (context, snapshot){      //builds the list of widgets to display based on users babies
             if(!snapshot.hasData)                     //if the snapshot has any data in it
               return const Text('Loading...');
-            if(snapshot.data.docs == null)            //if the doc is null
+            if(snapshot.data.docs == null)            //if the collectino is empty
               return const Text('Loading...');
-            return ListView.builder(                  //is the list of tiles contained in the builder
+            return ListView.builder(                  //builds each tile for each baby
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index){           //builds individual widgets
                 return _buildBabyItem(context, snapshot.data.docs[index]);
