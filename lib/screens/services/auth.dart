@@ -80,5 +80,4 @@ class AuthService {
       return null;
     }
   }
-
 }
