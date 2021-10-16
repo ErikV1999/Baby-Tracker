@@ -29,24 +29,40 @@ class FirestoreDatabase {
       'dob': dob,
       'Diaper': 'N/A',
       'Feeding': 'N/A',
-      'Sleeping': 'N/A',
+      'Sleeping': 0,
     })
         .then((value) => print('Baby Added'))
         .catchError((error) => print("Failed to add baby"));
   }
 
-  Future<void> addSleepTime(int start, int stop, String notes) async {
+  Future<void> addSleepTime(int startHour, int startMin, int stopHour, int stopMin, int month, int day, int year, String notes, String path) async {
     final uid = await AuthService().getUID();
 
-    CollectionReference sleeping = users.doc(uid).collection('Babies').doc('KTthHOHEVbwaMtxutRzW').collection('sleeping');
+    CollectionReference sleeping = users.doc(uid).collection('Babies').doc(path).collection('sleeping');
+    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
 
     await sleeping.add({
-      'Start': start,
-      'Stop': stop,
+      'StartHour': startHour,
+      'StartMin': startMin,
+      'StopHour': stopHour,
+      'StopMin': stopMin,
+      'Month': month,
+      'Day': day,
+      'Year': year,
       'Notes': notes,
     })
         .then((value) => print('Sleep Added'))
         .catchError((error) => print("Failed to add sleeping data"));
+  }
+  Future<void> updateLastSleep(int totalSleep, String path) async {
+    final uid = await AuthService().getUID();
+    users
+      .doc(uid)
+      .collection('Babies')
+      .doc(path)
+      .update({'Sleeping': totalSleep})
+      .then((value) => print('Last Sleep Updated'))
+      .catchError((error) => print("Failed to add sleeping data"));
   }
 
 }
