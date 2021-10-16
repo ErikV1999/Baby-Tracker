@@ -3,6 +3,10 @@ import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/*
+    Takes in baby's name, gender, height, and date of birth.
+    Then pushes it to the users Baby collection.
+ */
 class AddBaby extends StatefulWidget {
   const AddBaby({Key? key}) : super(key: key);
 
@@ -18,6 +22,22 @@ class _AddBabyState extends State<AddBaby> {
   int inches = 0;
   DateTime selectedDate = DateTime.now();
 
+  //creates date picker and assigns chosen date to selectedDate variable
+  _showDatePicker(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2050),
+    );
+    if(selected != null && selected != selectedDate) {
+      setState(() {
+        selectedDate = selected;
+      });
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,85 +50,40 @@ class _AddBabyState extends State<AddBaby> {
       ),
 
       body: Container(
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage('assets/tempBabyLogo.png'),
+              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            )
+        ),
         padding: EdgeInsets.fromLTRB(45, 30, 45, 20),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: <Widget>[
-                    _buildName(),
-                    SizedBox(height: 60.0),
+          child: ListView(
+            children: <Widget>[
+              _buildName(),
+              SizedBox(height: 60.0),
 
-                    Text(
-                      'Gender:',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    _buildGender(),
-                    SizedBox(height: 30.0),
-
-                    _buildHeightField(),
-                    SizedBox(height: 110),
-
-                    Row(
-                      children: [
-                        Text(
-                            'Date of Birth:',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-
-                        Container(
-                          padding: EdgeInsets.fromLTRB(20, 10, 40, 0),
-                          child: Column(
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () => _showDatePicker(context),
-                                label: Text(''),
-                                icon: Icon(
-                                    Icons.calendar_today_sharp,
-                                  size:28,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                  fixedSize: Size(50, 50),
-                                  primary: Color(0xFF006992)
-                                ),
-                              ),
-
-                              Text('${selectedDate.month}/${selectedDate.day}/${selectedDate.year}'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-
-
-                  ],
+              Text(
+                'Gender:',
+                style: TextStyle(
+                  fontSize: 24,
+                  //fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 45),
-                child: ElevatedButton(
-                  onPressed: () {
-                    FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate);
-                    Navigator.pop(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainMenu()),
-                    );
-                  },
-                  child: Text('Submit'),
-                ),
-              ),
+              _buildGender(),
+              SizedBox(height: 50.0),
+
+              _buildHeightField(),
+              SizedBox(height: 60),
+
+              _buildDate(),
+
+              SizedBox(height: 100),
+              _buildSignInButton(),
+
             ],
           ),
         ),
@@ -122,8 +97,8 @@ class _AddBabyState extends State<AddBaby> {
       decoration: InputDecoration(
         labelText: 'Name:',
         labelStyle: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
+          fontSize: 24,
+          //fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
         enabledBorder: UnderlineInputBorder(
@@ -182,14 +157,15 @@ class _AddBabyState extends State<AddBaby> {
     );
   }
 
+
   Widget _buildHeightField() {
     return Row(
       children: [
         Text(
           'Height:',
           style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
+            fontSize: 24,
+           // fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
@@ -198,8 +174,17 @@ class _AddBabyState extends State<AddBaby> {
           child: TextFormField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left:5, bottom: 0),
+              errorMaxLines: 3,
             ),
-            validator: (val) => val!.isEmpty ? 'Enter value: ft' : null,
+            validator: (val) {
+              if(val!.isEmpty) {
+                return 'Enter value: ft';
+              }
+              var number = int.tryParse(val);
+              if(number == null) {
+                return 'Enter a number';
+              }
+            },
             onChanged: (val) {
               setState(() {
                 feet = int.parse(val);
@@ -218,7 +203,22 @@ class _AddBabyState extends State<AddBaby> {
         child: Container(
           padding: EdgeInsets.only(left: 15),
           child: TextFormField(
-            validator: (val) => val!.isEmpty ? 'Enter value: in' : null,
+            decoration: InputDecoration(
+              errorMaxLines: 3,
+            ),
+            validator: (val) {
+              if(val!.isEmpty) {
+                return 'Enter value: ft';
+              }
+              var number = int.tryParse(val);
+              if(number == null) {
+                return 'Enter a number';
+              }
+
+              if(number <0 || number > 11) {
+                return 'Enter number 0-11';
+              }
+            },
             onChanged: (val) {
               setState(() {
                 inches = int.parse(val);
@@ -230,7 +230,7 @@ class _AddBabyState extends State<AddBaby> {
         ),
 
     Container(
-      padding: EdgeInsets.only(right: 60),
+      padding: EdgeInsets.only(right: 70),
         child: Text(
             'in',
           style: TextStyle(fontSize: 18),
@@ -242,18 +242,69 @@ class _AddBabyState extends State<AddBaby> {
 
   }
 
-  _showDatePicker(BuildContext context) async {
-    final DateTime? selected = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2010),
-        lastDate: DateTime(2050),
+  Widget _buildDate() {
+    return              Row(
+      children: [
+        Text(
+          'Date of Birth:',
+          style: TextStyle(
+            fontSize: 24,
+            //fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+
+        Container(
+          padding: EdgeInsets.fromLTRB(20, 10, 40, 0),
+          child: Column(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () => _showDatePicker(context),
+                label: Text(''),
+                icon: Icon(
+                  Icons.calendar_today_sharp,
+                  size:28,
+                ),
+                style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                    fixedSize: Size(50, 50),
+                    primary: Color(0xFF006992)
+                ),
+              ),
+
+              Text('${selectedDate.month}/${selectedDate.day}/${selectedDate.year}'),
+            ],
+          ),
+        ),
+      ],
     );
-    if(selected != null && selected != selectedDate) {
-      setState(() {
-        selectedDate = selected;
-      });
-    }
+  }
+
+
+  Widget _buildSignInButton() {
+    return Container(
+      child: ElevatedButton(
+        onPressed: () {
+          if(_formKey.currentState!.validate()) {
+            FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate);
+            Navigator.pop(
+              context,
+              MaterialPageRoute(builder: (context) => MainMenu()),
+            );
+          }
+
+        },
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(0),
+          fixedSize: Size(40,60),
+          primary: Color(0xFF006992),
+        ),
+        child: Text(
+            'Submit',
+          style: TextStyle(fontSize: 20)
+        ),
+      ),
+    );
 
   }
 
