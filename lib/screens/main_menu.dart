@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:baby_tracker/screens/baby_menu.dart';
 
-class Baby{
+/*class Baby{
   String name = "";
   int feeding = -1;
   int sleeping = -1;
@@ -20,7 +20,7 @@ class Baby{
   }
 
 }
-
+*/
 class MainMenu extends StatefulWidget{
 
   @override
@@ -31,12 +31,11 @@ class _MainMenuState extends State<MainMenu> {
 
   dynamic userName = "Sarah";               //will eventually be fetched
   dynamic userEntry = "EGQ9WR5wqbedNAlSdhuu";   //will need to be sent in a form from prev page
+  //String userEntry = FirebaseAuth.instance.currentUser;
   final AuthService _auth = AuthService();
 
   void babyClick(String path){
-    //print(FirebaseFirestore.instance.collection('Babies').snapshots() );
-    //print(FirebaseFirestore.instance.collection('Babies'));
-    //print(FirebaseFirestore.instance.collection('Users').doc("EGQ9WR5wqbedNAlSdhuu ").collection("Babies"));
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path)),
@@ -77,40 +76,35 @@ class _MainMenuState extends State<MainMenu> {
       );
   }
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _auth.getUID(),
+      initialData: "Loading Text...",
+      builder: (BuildContext context, AsyncSnapshot text){
+        return screen(context, text);
+      }
+    );
+  }
 
-    /*List babies = ["john", "jerry", "james"];   //will eventually be fetched
-    //List feedings = [4, 2, 4,];                 //eventually be fetched
-    List<Baby> babies = [
-      Baby("john",4,2,3),
-      Baby("jerry",4,2,3),
-      Baby("jessie",4,2,3),
-      Baby("james",4,2,3),
-    ];
-    //replace this with something scrollable
-    List<ElevatedButton> buttons = [];        //stores the button widgets for each baby
-    for(int i = 0; i < babies.length;i++){    //loop though for each baby
-      buttons.add(                            //add a button that contains the baby's info
-          ElevatedButton(
-            child: Column(
-                children: [
-                  Text(babies[i].name),          //baby's name as the title
-                  Row(                      //use a row because itll eventually contain feeding and diaper and
-                      children: [
-                        Text("Last Feeding " + babies[i].feeding.toString()),
-                      ]
-                  ),
-                ]
-            ),
-            onPressed: (){
-              babyClick(babies[i]);
-            },
-          )
-      );
-    }*/
+  Widget screen(BuildContext context, AsyncSnapshot text){
+    //_auth.getUID();
+    //userEntry = _auth.getUID();
+    userEntry = text.data;
+    //userName = FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots().data['Name'];
     return Scaffold(
       appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
-        title: Text(userName),
+        //title: Text(userName),
+        title: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots(),
+          builder: (context, snapshot){
+            if(!snapshot.hasData){
+              return Text("Jane Doe");
+            }
+            userName = snapshot.data;
+            return Text(userName["name"]);
+
+          }
+        ),
         centerTitle: true,
         backgroundColor: Colors.cyanAccent,
         actions: <Widget>[

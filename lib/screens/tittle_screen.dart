@@ -23,7 +23,7 @@ class TittleScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Sleeping()),
+                MaterialPageRoute(builder: (context) => const Sleeping(baby:"hi")),
               );
             }
             ),
@@ -36,7 +36,7 @@ class TittleScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Feeding()),
+                MaterialPageRoute(builder: (context) =>  Feeding(baby:"hi")),
               );
                 }
             )

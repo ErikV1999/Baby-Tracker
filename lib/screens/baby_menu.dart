@@ -1,3 +1,4 @@
+import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -20,11 +21,20 @@ class _BabyMenuState extends State<BabyMenu> {
   dynamic babyName = "Placeholder";
 
   Widget build(BuildContext context){
-    dynamic babyPath = widget.baby;
+    String babyPath = widget.baby;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(babyPath),
+        //title: Text(babyPath),
+        title: StreamBuilder(
+          stream: FirebaseFirestore.instance.doc(babyPath).snapshots(),
+          builder: (context, snapshot){
+            if(!snapshot.hasData)
+              return Text("Jane Doe");
+            dynamic babyName = snapshot.data;
+            return Text(babyName["Name"]);
+          }
+        ),
         backgroundColor: Colors.cyanAccent,
       ),
       body: Column(
@@ -42,7 +52,7 @@ class _BabyMenuState extends State<BabyMenu> {
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Feeding()),
+                  MaterialPageRoute(builder: (context) => Feeding(baby: babyPath)),
                 );
               }
             )
@@ -59,7 +69,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Sleeping()),
+                      MaterialPageRoute(builder: (context) =>  Sleeping(baby: babyPath)),
                     );
                   }
               )
@@ -74,12 +84,12 @@ class _BabyMenuState extends State<BabyMenu> {
                         Text("Peed")
                       ]
                   ),
-                  /*onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Diaper()),
+                      MaterialPageRoute(builder: (context) => const diaperchange()),
                     );
-                  }*/
+                  }
 
               )
           ),

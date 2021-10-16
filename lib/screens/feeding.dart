@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class Feeding extends StatefulWidget {
-  const Feeding({Key? key}) : super(key: key);
+
+  final String baby;
+  const Feeding({Key? key, required this.baby}) : super(key: key);
 
   @override
   _FeedingState createState() => _FeedingState();
@@ -82,6 +84,9 @@ class _FeedingState extends State<Feeding> {
 
   @override
   Widget build(BuildContext context) {
+
+    String babyPath = widget.baby;
+
     // appBar header
     return Scaffold(
         backgroundColor: Colors.white60,
