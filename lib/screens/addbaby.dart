@@ -1,5 +1,6 @@
 import 'package:baby_tracker/screens/main_menu.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddBaby extends StatefulWidget {
@@ -23,55 +24,91 @@ class _AddBabyState extends State<AddBaby> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Color(0xFF006992),
+          backgroundColor: Color( 0xFFFED766),
           elevation:0.0,
           title: Text('Sign in to baby tracker'),
       ),
 
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 50.0),
+        padding: EdgeInsets.fromLTRB(45, 30, 45, 20),
         child: Form(
           key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              _buildName(),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    _buildName(),
+                    SizedBox(height: 60.0),
 
-              SizedBox(height: 30.0),
-              Text(
-                'Gender:',
-                style: TextStyle(fontSize: 25),
-              ),
-              _buildGender(),
+                    Text(
+                      'Gender:',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    _buildGender(),
+                    SizedBox(height: 30.0),
 
-              SizedBox(height: 20.0),
-              _buildHeightField(),
+                    _buildHeightField(),
+                    SizedBox(height: 110),
+
+                    Row(
+                      children: [
+                        Text(
+                            'Date of Birth:',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 10, 40, 0),
+                          child: Column(
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () => _showDatePicker(context),
+                                label: Text(''),
+                                icon: Icon(
+                                    Icons.calendar_today_sharp,
+                                  size:28,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                  fixedSize: Size(50, 50),
+                                  primary: Color(0xFF006992)
+                                ),
+                              ),
+
+                              Text('${selectedDate.month}/${selectedDate.day}/${selectedDate.year}'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
 
 
-              Container(
-                padding: EdgeInsets.only(top: 40),
-                child: ElevatedButton(
-                    onPressed: () => _showDatePicker(context),
-                    child: Text('DOB'),
+
+                  ],
                 ),
               ),
-
-              Text('${selectedDate.month}/${selectedDate.day}/${selectedDate.year}'),
-
               Container(
-                padding: EdgeInsets.only(top: 25),
+                padding: EdgeInsets.only(top: 45),
                 child: ElevatedButton(
-                    onPressed: () {
-                      FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate);
-                      Navigator.pop(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainMenu()),
-                      );
-                    },
-                    child: Text('Submit'),
+                  onPressed: () {
+                    FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate);
+                    Navigator.pop(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainMenu()),
+                    );
+                  },
+                  child: Text('Submit'),
                 ),
               ),
-
             ],
           ),
         ),
@@ -84,7 +121,16 @@ class _AddBabyState extends State<AddBaby> {
     return TextFormField(
       decoration: InputDecoration(
         labelText: 'Name:',
+        labelStyle: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(width: 1.5)
+        ),
       ),
+
       validator: (val) => val!.isEmpty ? 'Enter a name' : null,
       onChanged: (val) {
         setState(() => name = val);
@@ -97,21 +143,31 @@ class _AddBabyState extends State<AddBaby> {
       children: [
         Expanded(
           child: RadioListTile<String>(
-            title: const Text('male'),
-              value: 'male',
-              groupValue: gender,
-              onChanged: (value) {
-                setState(() {
-                  gender = value!;
-                  print(gender);
-                });
-              },
+            title: const Text(
+                'male',
+              style:  TextStyle(
+                fontSize: 21
+              ),
             ),
+            activeColor: Color(0xFF006992),
+            value: 'male',
+            groupValue: gender,
+            onChanged: (value) {
+              setState(() {
+                gender = value!;
+                print(gender);
+              });
+            }
+          ),
         ),
 
         Expanded(
           child: RadioListTile<String>(
-            title: const Text('female'),
+            title: const Text(
+                'female',
+              style: TextStyle(fontSize: 21),
+            ),
+            activeColor: Color(0xFFDD99BB),
             value: 'female',
             groupValue: gender,
             onChanged: (value) {
@@ -131,6 +187,11 @@ class _AddBabyState extends State<AddBaby> {
       children: [
         Text(
           'Height:',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
 
         Expanded(
@@ -148,7 +209,10 @@ class _AddBabyState extends State<AddBaby> {
           ),
         ),
 
-        Text('ft'),
+        Text(
+            'ft',
+          style: TextStyle(fontSize: 18),
+        ),
 
         Expanded(
         child: Container(
@@ -167,7 +231,10 @@ class _AddBabyState extends State<AddBaby> {
 
     Container(
       padding: EdgeInsets.only(right: 60),
-        child: Text('in')
+        child: Text(
+            'in',
+          style: TextStyle(fontSize: 18),
+        ),
     ),
 
       ],
