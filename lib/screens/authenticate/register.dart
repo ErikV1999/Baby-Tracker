@@ -6,6 +6,7 @@ import 'package:baby_tracker/screens/services/auth.dart';
 class Register extends StatefulWidget {
   //const Register({Key? key}) : super(key: key);
 
+  // toggleView is used to enable going between sign_in and register screen
   final Function toggleView;
   Register({required this.toggleView});
 
