@@ -28,7 +28,7 @@ class FirestoreDatabase {
       'inches': inches,
       'dob': dob,
       'Diaper': 'N/A',
-      'Feeding': 'N/A',
+      'Feeding': 0,
       'Sleeping': 0,
     })
         .then((value) => print('Baby Added'))
@@ -63,6 +63,33 @@ class FirestoreDatabase {
       .update({'Sleeping': totalSleep})
       .then((value) => print('Last Sleep Updated'))
       .catchError((error) => print("Failed to add sleeping data"));
+  }
+
+
+
+  Future<void> addFeeding(String date, String time, String notes, String path) async {
+    final uid = await AuthService().getUID();
+
+    CollectionReference feeding = users.doc(uid).collection('Babies').doc(path).collection('feeding');
+    CollectionReference lastFeeding = users.doc(uid).collection('Babies');//update 10/16
+
+    await feeding.add({
+      'date': date,
+      'time': time,
+      'notes': notes,
+    })
+        .then((value) => print('Feeding Added'))
+        .catchError((error) => print("Failed to add Feeding data"));
+  }
+  Future<void> updateLastFeed(String totalFeed, String path) async {
+    final uid = await AuthService().getUID();
+    users
+        .doc(uid)
+        .collection('Babies')
+        .doc(path)
+        .update({'Feeding': totalFeed})
+        .then((value) => print('Last Feeding Updated'))
+        .catchError((error) => print("Failed to add sleeping data"));
   }
 
 }
