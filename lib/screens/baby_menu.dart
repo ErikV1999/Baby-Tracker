@@ -119,7 +119,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const diaperchange()),
+                      MaterialPageRoute(builder: (context) => diaperchange(baby: babyPath)),
                     );
                   }
 

@@ -92,4 +92,29 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add sleeping data"));
   }
 
+  Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
+    final uid = await AuthService().getUID();
+
+    CollectionReference adddiaper = users.doc(uid).collection('Babies').doc(path).collection('diaperchange');
+    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
+
+    await adddiaper.add({
+      'date' : date,
+      'status' : status,
+      'Notes': notes,
+    })
+        .then((value) => print('diaper change Added'))
+        .catchError((error) => print("Failed to add diaper change data"));
+  }
+  Future<void> updatediaperchange(DateTime date, String notes, String status, String path) async {
+    final uid = await AuthService().getUID();
+    users
+        .doc(uid)
+        .collection('Babies')
+        .doc(path)
+        .update({'date': date, 'status' : status, 'Notes' : notes,})
+        .then((value) => print('Last Sleep Updated'))
+        .catchError((error) => print("Failed to add sleeping data"));
+  }
+
 }

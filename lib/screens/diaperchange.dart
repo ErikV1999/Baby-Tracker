@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 
 class diaperchange extends StatefulWidget {
-  const diaperchange({Key? key}) : super(key: key);
+
+
+  final String baby;
+  const diaperchange({Key? key, required this.baby}) : super(key: key);
 
   @override
   _diaperchangeState createState() => _diaperchangeState();
@@ -12,14 +17,28 @@ class _diaperchangeState extends State<diaperchange> {
 
   final _formKey = GlobalKey<FormState>();
 
+
   String dateD = '';
   String timeD = '';
   String status = '';
+  String notes = '';
+  String path = 'path';
 
+  DateTime selectedDate = DateTime.now();
 
   @override
+
+
   Widget build(BuildContext context) {
+
+    String babyPath = widget.baby;
+    String path = babyPath.substring(42);
+
     return Scaffold(
+      // resizeToAvoidBottonInset use to fix overflow by X pixels
+      resizeToAvoidBottomInset: false,
+
+
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black,),
@@ -33,31 +52,31 @@ class _diaperchangeState extends State<diaperchange> {
           key: _formKey,
             child: Column(
               children: <Widget>[
-                SizedBox(height: 20.0),
-                  TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter Date (mm/dd/yy)'
+                Text('Enter date and time of diaper change',
+                    style: TextStyle(fontSize:20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                    ),
+                Container(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    initialDateTime: selectedDate,
+                    onDateTimeChanged: (val) {
+                      selectedDate = val;
+                    },
+                    use24hFormat: false,
+                    minuteInterval: 1,
                   ),
-                  validator: (val) => val!.isEmpty ? 'Enter a date(mm/dd/yy)' : null,
-                  onChanged: (val) {
-                    setState(() => dateD = val);
-                  },
                 ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Enter Time (hour:minutes am/pm)'
-                  ),
-                  validator: (val) => val!.isEmpty ? 'Enter a date(mm/dd/yy)' : null,
-                  onChanged: (val) {
-                    setState(() => timeD = val);
-                  },
-                ),
-
                 SizedBox(height: 20.0),
                 Wrap(
                   children: <Widget>[
-                    Text('status'),
+                  Text('Please choose best description',
+                  style: TextStyle(fontSize:20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                      ),
                     SizedBox(width: 10),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -97,26 +116,36 @@ class _diaperchangeState extends State<diaperchange> {
                         ),
                         onPressed: () async {
                           status = 'Mix';
-                          print(status);
                         }
                     ),
                   ]
                 ),
                 //add a notes input
-                //STOPPED HERE 10/15
-                Text('Notes__________________________________________'),
+                TextFormField(
+                  maxLines: 1,
+                  decoration: InputDecoration(
+                      labelText: 'Notes'
+                  ),
+                  validator: (val) => val!.isEmpty ? 'Notes' : null,
+                  onChanged: (val) {
+                    setState(() => notes = val);
+                  },
+                ),
                 SizedBox(height: 100.0,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: Colors.yellow[500],
                   ),
                   child: Text(
-                    'Enter Data',
+                    'Add Diaper Change',
                     style: TextStyle(color: Colors.black),
                   ),
                   onPressed: () async{
-                    print(dateD);
-                    print(timeD);
+                    /*print(notes);
+                    print(status);
+                    print(selectedDate);*/
+                    FirestoreDatabase().addDiaper(selectedDate, notes, status, path);
+                    FirestoreDatabase().updatediaperchange(selectedDate, notes, status, path);
                   },
                 ),
                 ],
