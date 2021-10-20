@@ -113,8 +113,8 @@ class FirestoreDatabase {
         .collection('Babies')
         .doc(path)
         .update({'date': date, 'status' : status, 'Notes' : notes,})
-        .then((value) => print('Last Sleep Updated'))
-        .catchError((error) => print("Failed to add sleeping data"));
+        .then((value) => print('Last Diaper Updated'))
+        .catchError((error) => print("Failed to add Diaper data"));
   }
 
 }
