@@ -97,18 +97,23 @@ class _SleepingState extends State<Sleeping> {
         ),
         body: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
+            scrollDirection: Axis.vertical,
             children: [
               SizedBox(height: 8.0),
-              Text(
-                "${selectedDate.toLocal()}".split(' ')[0],
-                style: TextStyle(height:1, fontSize: 30, backgroundColor: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2.0),
-              ),
-              ElevatedButton(
-                onPressed: () => _selectDate(context),
+              Center(
                 child: Text(
-                    'Select date'
+                  "${selectedDate.toLocal()}".split(' ')[0],
+                  style: TextStyle(height:1, fontSize: 30, backgroundColor: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2.0),
+
+                ),
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => _selectDate(context),
+                  child: Text(
+                      'Select date'
+                  ),
                 ),
               ),
               Padding(
@@ -196,26 +201,28 @@ class _SleepingState extends State<Sleeping> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      if (stopHour < startHour){
-                        totalSleep = (stopHour+24) - startHour;
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      if (_formKey.currentState!.validate()) {
+                        if (stopHour < startHour){
+                          totalSleep = (stopHour+24) - startHour;
+                        }
+                        else{
+                          totalSleep = stopHour - startHour;
+                        }
+                        FirestoreDatabase().addSleepTime(startHour, startMin, stopHour, stopMin, month, day, year, notes, path);
+                        FirestoreDatabase().updateLastSleep(totalSleep, path);
+                        // If the form is valid, display a snackbar. In the real world,
+                        // you'd often call a server or save the information in a database.
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Processing Data')),
+                        );
                       }
-                      else{
-                        totalSleep = stopHour - startHour;
-                      }
-                      FirestoreDatabase().addSleepTime(startHour, startMin, stopHour, stopMin, month, day, year, notes, path);
-                      FirestoreDatabase().updateLastSleep(totalSleep, path);
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                    }
-                  },
-                  child: const Text('Submit'),
+                    },
+                    child: const Text('Submit'),
+                  ),
                 ),
               ),
             ],
