@@ -1,4 +1,5 @@
 import 'package:baby_tracker/screens/diaperchange.dart';
+import 'package:baby_tracker/screens/graphDisplay.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -120,6 +121,20 @@ class _BabyMenuState extends State<BabyMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => diaperchange(baby: babyPath)),
+                    );
+                  }
+
+              )
+          ),
+          Card(     //diaper change card
+              child: ListTile(
+                  title: Text("Graph"),
+                  subtitle: Row(
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => graphDisplay(baby: babyPath)),
                     );
                   }
 
