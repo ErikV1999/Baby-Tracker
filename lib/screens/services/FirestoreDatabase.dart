@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreDatabase {
 
@@ -35,28 +36,28 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add baby"));
   }
 
-  Future<void> addSleepTime(int startHour, int startMin, int stopHour, int stopMin, int month, int day, int year, String notes, String path) async {
+  Future<void> addSleepTime(DateTime date, String startTime, String stopTime, String notes, String path) async {
+    final uid = await AuthService().getUID();
 
     CollectionReference sleepingPath = FirebaseFirestore.instance.doc(path).collection('sleeping');
 
     await sleepingPath.add({
-      'StartHour': startHour,
-      'StartMin': startMin,
-      'StopHour': stopHour,
-      'StopMin': stopMin,
-      'Month': month,
-      'Day': day,
-      'Year': year,
+      'SleepingDate' : date,
+      'StartSleeping': startTime,
+      'StopSleeping': stopTime,
       'Notes': notes,
     })
         .then((value) => print('Sleep Added'))
         .catchError((error) => print("Failed to add sleeping data"));
   }
-  Future<void> updateLastSleep(int totalSleep, String path) async {
 
-    FirebaseFirestore.instance
+  Future<void> updateLastSleep(TimeOfDay sleepTime, String path) async {
+    final uid = await AuthService().getUID();
+    users
+      .doc(uid)
+      .collection('Babies')
       .doc(path)
-      .update({'Sleeping': totalSleep})
+      .update({'Sleeping': sleepTime})
       .then((value) => print('Last Sleep Updated'))
       .catchError((error) => print("Failed to add sleeping data"));
   }
