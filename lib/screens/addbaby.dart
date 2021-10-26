@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
     Then pushes it to the users Baby collection.
  */
 class AddBaby extends StatefulWidget {
-  const AddBaby({Key? key}) : super(key: key);
+
+  final String userEntry;
+
+  const AddBaby({Key? key, required this.userEntry}) : super(key: key);
 
   @override
   _AddBabyState createState() => _AddBabyState();
@@ -286,7 +289,7 @@ class _AddBabyState extends State<AddBaby> {
       child: ElevatedButton(
         onPressed: () {
           if(_formKey.currentState!.validate()) {
-            FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate);
+            FirestoreDatabase().addBaby(name, gender, feet, inches, selectedDate, widget.userEntry);
             Navigator.pop(
               context,
               MaterialPageRoute(builder: (context) => MainMenu()),

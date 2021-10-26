@@ -15,7 +15,7 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  Future<void> addBaby(String name, String gender, int feet, int inches, DateTime date) async {
+  Future<void> addBaby(String name, String gender, int feet, int inches, DateTime date, String userEntry) async {
     final uid = await AuthService().getUID();
     CollectionReference babies = users.doc(uid).collection('Babies');
 
@@ -30,6 +30,8 @@ class FirestoreDatabase {
       'Diaper': 'N/A',
       'Feeding': 0,
       'Sleeping': 0,
+      'caretaker' : [userEntry],
+      'parent' : userEntry,
     })
         .then((value) => print('Baby Added'))
         .catchError((error) => print("Failed to add baby"));

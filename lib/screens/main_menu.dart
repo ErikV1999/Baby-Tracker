@@ -25,14 +25,14 @@ class _MainMenuState extends State<MainMenu> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path)),
+      MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path, userEntry: userEntry)),
     );
   }
 
   void addBabyClick(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddBaby()),
+      MaterialPageRoute(builder: (context) => AddBaby(userEntry:userEntry)),
     );
   }
 
@@ -62,17 +62,7 @@ class _MainMenuState extends State<MainMenu> {
         )
       );
   }
-  Stream<List<QuerySnapshot>> getData(dynamic userEntry){
-    Stream<QuerySnapshot<Object?>> s1 = FirebaseFirestore.instance
-        .collectionGroup('Babies')
-        .where('parent', isEqualTo: userEntry )
-        .snapshots();
-    Stream<QuerySnapshot<Object?>> s2 = FirebaseFirestore.instance
-        .collectionGroup('Babies')
-        .where('caretaker', isEqualTo: userEntry )
-        .snapshots();
-    return StreamZip([s1, s2]);
-  }
+
   /*
 
   encapsulates the "screen" widget where all the visuals are actually built
@@ -101,7 +91,6 @@ class _MainMenuState extends State<MainMenu> {
       appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
         title: StreamBuilder(   //streambuilder here creates the title based on the users name in the database
           stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots(),
-          //stream: getData(userEntry),
           builder: (context, snapshot){
             if(!snapshot.hasData){
               return Text("Jane Doe");
@@ -132,44 +121,13 @@ class _MainMenuState extends State<MainMenu> {
       body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
 
 
-          /*stream: FirebaseFirestore.instance
-              .collection('Users')  //takes from the user table
-              .doc(userEntry)       //finds the users document
-              .collection("Babies")   //goes into users subcollectino for their babies
-              .snapshots(),           //takes a snapshot
-          */
+
           stream: FirebaseFirestore.instance
               .collectionGroup('Babies')
               .where('caretaker', arrayContains: userEntry )
               .snapshots(),
-          //stream: getData(userEntry),
-          /*stream: CombineLatestStream([
-            FirebaseFirestore.instance
-              .collectionGroup('Babies')
-              .where('parent', isEqualTo: userEntry )
-              .snapshots(),
-            FirebaseFirestore.instance
-                .collectionGroup('Babies')
-                .where('caretaker', isEqualTo: userEntry )
-                .snapshots(),
 
-            ],
-              (values) => values.join()
-          ),*/
-          /*stream: MergeStream([
-            FirebaseFirestore.instance
-                .collectionGroup('Babies')
-                .where('parent', isEqualTo: userEntry )
-                .snapshots(),
-            FirebaseFirestore.instance
-                .collectionGroup('Babies')
-                .where('caretaker', isEqualTo: userEntry )
-                .snapshots(),
-          ]),*/
           builder: (context, snapshot){      //builds the list of widgets to display based on users babies
-            //snapshot.data[0].docs.addAll(snapshot.data[1].docs);
-            //for(int i = 0; i < snapshot.data[1].docs.length; i++)
-            //  print(snapshot.data[1].docs[i]['Name']);
             if(!snapshot.hasData)                     //if the snapshot has any data in it
               return const Text('Loading...no data');
             if(snapshot.data.docs == null)            //if the collectino is empty
