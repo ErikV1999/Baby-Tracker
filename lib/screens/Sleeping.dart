@@ -243,43 +243,10 @@ class _SleepingState extends State<Sleeping> {
                             borderSide: BorderSide(color: Color(0xFFFED766), width: 4.0),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some notes';
-                        }
-                        notes = value;
-                        return null;
+                      onChanged: (text) {
+                        notes = text;
                       },
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(0.0),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Validate returns true if the form is valid, or false otherwise.
-                              if (_formKey.currentState!.validate()) {
-                                // If the form is valid, display a snackbar. In the real world,
-                                // you'd often call a server or save the information in a database.
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Notes Draft Saved')),
-                                );
-                              }
-                            },
-                            label: Text('Save Notes'),
-                            style: ElevatedButton.styleFrom(
-                              primary: blueSapphire,
-                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                            ),
-                            icon: Icon(
-                              Icons.check,
-                              color: Colors.black,
-                            ),
-                          ),
-                      ),
-                    ],
                   ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -304,7 +271,7 @@ class _SleepingState extends State<Sleeping> {
                                   TextButton(
                                     onPressed: () {
                                     Navigator.pop(context, 'OK');
-                                    FirestoreDatabase().addSleepTime(_selectedDate, _selectedTime1.toString(), _selectedTime2.toString(), notes, path);
+                                    FirestoreDatabase().addSleepTime(_selectedDate, _selectedTime1.toString(), _selectedTime2.toString(), notes, babyPath);
                                     FirestoreDatabase().updateLastSleep(updateTime, path);
                                     },
                                     child: const Text('OK'),

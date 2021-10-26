@@ -41,7 +41,7 @@ class FirestoreDatabase {
 
     CollectionReference sleepingPath = FirebaseFirestore.instance.doc(path).collection('sleeping');
 
-    await sleeping.add({
+    await sleepingPath.add({
       'SleepingDate' : date,
       'StartSleeping': startTime,
       'StopSleeping': stopTime,
