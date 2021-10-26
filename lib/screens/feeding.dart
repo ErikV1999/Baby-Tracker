@@ -524,10 +524,10 @@ class _FeedingState extends State<Feeding> {
                       "${_startDate.year}/${_startDate.month}/${_startDate.day}",
                       timetodisplay,
                       notes,
-                      path);
+                      babyPath);
                   FirestoreDatabase().updateLastFeed(
                       "${_startDate.year}/${_startDate.month}/${_startDate.day}",
-                      path);
+                      babyPath);
                 },
                 child: Text('Submit'),
               ),

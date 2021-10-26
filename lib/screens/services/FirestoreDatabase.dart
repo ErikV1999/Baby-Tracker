@@ -39,8 +39,7 @@ class FirestoreDatabase {
   Future<void> addSleepTime(DateTime date, String startTime, String stopTime, String notes, String path) async {
     final uid = await AuthService().getUID();
 
-    CollectionReference sleeping = users.doc(uid).collection('Babies').doc(path).collection('sleeping');
-    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
+    CollectionReference sleepingPath = FirebaseFirestore.instance.doc(path).collection('sleeping');
 
     await sleeping.add({
       'SleepingDate' : date,
@@ -66,10 +65,7 @@ class FirestoreDatabase {
 
 
   Future<void> addFeeding(String date, String time, String notes, String path) async {
-    final uid = await AuthService().getUID();
-
-    CollectionReference feeding = users.doc(uid).collection('Babies').doc(path).collection('feeding');
-    CollectionReference lastFeeding = users.doc(uid).collection('Babies');//update 10/16
+    CollectionReference feeding = FirebaseFirestore.instance.doc(path).collection('feeding');
 
     await feeding.add({
       'date': date,
@@ -80,10 +76,7 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add Feeding data"));
   }
   Future<void> updateLastFeed(String totalFeed, String path) async {
-    final uid = await AuthService().getUID();
-    users
-        .doc(uid)
-        .collection('Babies')
+    FirebaseFirestore.instance
         .doc(path)
         .update({'Feeding': totalFeed})
         .then((value) => print('Last Feeding Updated'))
@@ -91,10 +84,7 @@ class FirestoreDatabase {
   }
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
-    final uid = await AuthService().getUID();
-
-    CollectionReference adddiaper = users.doc(uid).collection('Babies').doc(path).collection('diaperchange');
-    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
+    CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
 
     await adddiaper.add({
       'date' : date,
@@ -105,10 +95,7 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add diaper change data"));
   }
   Future<void> updatediaperchange(DateTime date, String notes, String status, String path) async {
-    final uid = await AuthService().getUID();
-    users
-        .doc(uid)
-        .collection('Babies')
+    FirebaseFirestore.instance
         .doc(path)
         .update({'date': date, 'status' : status, 'Notes' : notes,})
         .then((value) => print('Last Diaper Updated'))

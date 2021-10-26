@@ -21,7 +21,7 @@ class _MainMenuState extends State<MainMenu> {
   final AuthService _auth = AuthService();
 
   void babyClick(String path){
-
+    print(path);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path)),
