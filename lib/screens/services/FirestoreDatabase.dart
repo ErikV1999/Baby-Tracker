@@ -37,11 +37,9 @@ class FirestoreDatabase {
 
   Future<void> addSleepTime(int startHour, int startMin, int stopHour, int stopMin, int month, int day, int year, String notes, String path) async {
     final uid = await AuthService().getUID();
+    CollectionReference sleepingPath = FirebaseFirestore.instance.doc(path).collection('sleeping');
 
-    CollectionReference sleeping = users.doc(uid).collection('Babies').doc(path).collection('sleeping');
-    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
-
-    await sleeping.add({
+    await sleepingPath.add({
       'StartHour': startHour,
       'StartMin': startMin,
       'StopHour': stopHour,
@@ -69,9 +67,7 @@ class FirestoreDatabase {
 
   Future<void> addFeeding(String date, String time, String notes, String path) async {
     final uid = await AuthService().getUID();
-
-    CollectionReference feeding = users.doc(uid).collection('Babies').doc(path).collection('feeding');
-    CollectionReference lastFeeding = users.doc(uid).collection('Babies');//update 10/16
+    CollectionReference feeding = FirebaseFirestore.instance.doc(path).collection('feeding');
 
     await feeding.add({
       'date': date,
@@ -94,9 +90,7 @@ class FirestoreDatabase {
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
     final uid = await AuthService().getUID();
-
-    CollectionReference adddiaper = users.doc(uid).collection('Babies').doc(path).collection('diaperchange');
-    CollectionReference lastSleeping = users.doc(uid).collection('Babies');
+    CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
 
     await adddiaper.add({
       'date' : date,

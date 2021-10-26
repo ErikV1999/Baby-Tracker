@@ -212,7 +212,7 @@ class _SleepingState extends State<Sleeping> {
                         else{
                           totalSleep = stopHour - startHour;
                         }
-                        FirestoreDatabase().addSleepTime(startHour, startMin, stopHour, stopMin, month, day, year, notes, path);
+                        FirestoreDatabase().addSleepTime(startHour, startMin, stopHour, stopMin, month, day, year, notes, babyPath);
                         FirestoreDatabase().updateLastSleep(totalSleep, path);
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
