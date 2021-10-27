@@ -1,4 +1,5 @@
 import 'package:baby_tracker/screens/addnote.dart';
+import 'package:baby_tracker/screens/editNote.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,8 +33,7 @@ class _NotesState extends State<Notes> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddNote(baby: widget.baby)),
-          )
-            .then((value) {
+          ).then((value) {
               print('Calling Set State');
               setState(() {});
           });
@@ -49,34 +49,45 @@ class _NotesState extends State<Notes> {
                 itemBuilder: (context, index) {
                   Map data = snapshot.data!.docs[index].data() as Map;
                   DateTime date = data['timestamp'].toDate();
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "${data['title']}",
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-
-                          Container(
-                            alignment: Alignment.bottomRight,
-                            child: Text(
-                                DateFormat.yMMMd().add_jm().format(date),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditNote(document: snapshot.data!.docs[index]))
+                      ).then((value) {
+                        print('Calling Set State');
+                        setState(() {});
+                      });
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "${data['title']}",
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                          ),
 
-                        ],
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                  DateFormat.yMMMd().add_jm().format(date),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
                       ),
                     ),
                   );
