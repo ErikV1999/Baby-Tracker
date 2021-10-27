@@ -3,16 +3,16 @@ import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 
-class graphDisplay extends StatefulWidget {
+class allStats extends StatefulWidget {
 
   final String baby;
 
-  const graphDisplay({Key? key, required this.baby}) : super(key: key);
+  const allStats({Key? key, required this.baby}) : super(key: key);
   @override
   _graphDisplayState createState() => _graphDisplayState();
 }
 
-class _graphDisplayState extends State<graphDisplay> {
+class _graphDisplayState extends State<allStats> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,11 +29,11 @@ class _graphDisplayState extends State<graphDisplay> {
             color: Colors.blue,
             child: LineChart(
               LineChartData(
-                backgroundColor: Colors.white,
-                minX: 0,
-                maxX: 11,
-                minY: 0,
-                maxY: 6,
+                  backgroundColor: Colors.white,
+                  minX: 0,
+                  maxX: 11,
+                  minY: 0,
+                  maxY: 6,
                   gridData: FlGridData(
                     show: true,
 
@@ -44,18 +44,18 @@ class _graphDisplayState extends State<graphDisplay> {
                   ),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: [
-                        FlSpot(0,3),
-                        FlSpot(2,2),
-                        FlSpot(5,5),
-                        FlSpot(7,3),
-                        FlSpot(8,4),
-                      ],
-                      isCurved: true,
-                      barWidth: 7,
-                      belowBarData: BarAreaData(
-                        show: true,
-                      )
+                        spots: [
+                          FlSpot(0,3),
+                          FlSpot(2,2),
+                          FlSpot(5,5),
+                          FlSpot(7,3),
+                          FlSpot(8,4),
+                        ],
+                        isCurved: true,
+                        barWidth: 7,
+                        belowBarData: BarAreaData(
+                          show: true,
+                        )
                     )
                   ]
 

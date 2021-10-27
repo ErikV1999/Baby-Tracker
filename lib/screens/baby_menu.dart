@@ -1,5 +1,5 @@
+import 'package:baby_tracker/screens/all_stats.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
-import 'package:baby_tracker/screens/graphDisplay.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -126,28 +126,23 @@ class _BabyMenuState extends State<BabyMenu> {
 
               )
           ),
-          Card(     //diaper change card
-              child: ListTile(
-                  title: Text("Graph"),
-                  subtitle: Row(
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => graphDisplay(baby: babyPath)),
-                    );
-                  }
-
-              )
-          ),
           Card(     //notes card
               child: ListTile(
                   title: Text("Notes"),
               )
           ),
-          Card(     //all stats card
+          Card(     //diaper change card
               child: ListTile(
                   title: Text("All Stats"),
+                  subtitle: Row(
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => allStats(baby: babyPath)),
+                    );
+                  }
+
               )
           ),
 
