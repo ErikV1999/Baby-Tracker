@@ -26,26 +26,33 @@ class FirestoreDatabase {
     }).then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
 
-    //pushes map of diplayID to uid onto DisplayNames collection
+    //pushes map of displayID to uid onto DisplayNames collection
     await displayToUid.doc(displayID).set({
       'uid': uid,
     }).then((val) => print("DisplayID Added to map"))
         .catchError((error) => print("Failed to add displayID to map: $error"));
   }
-  
-  Future<void> getUserFromDisplayID(String displayID) async {
-    print('FIRST: $displayID');
 
-    await displayToUid.doc(displayID).get()
+  //takes user's displayID and returns uid
+  Future<String> getUserFromDisplayID(String displayID) async {
+    print('DisplayID getting converted to uid: $displayID');
+
+    //get userID from DisplayName collection
+    //if displayID exists then return uid
+    //if not, return "User Not Found"
+    String userID = await displayToUid.doc(displayID).get()
       .then((DocumentSnapshot snapshot) {
         if(snapshot.exists) {
           print('Doc snapshot data: ${snapshot.data()}');
           print('User ID: ${snapshot['uid']}');
+          return snapshot['uid'];   //return uid
         }else{
-          print('Error: Document does not exist');
+          print('Document does not exist');
+          return 'User Not Found';    //return "User Not Found"
         }
-      }).catchError((error) => print("Failed to get User from DisplayID"));
+      }).catchError((error) => print("Error: Failed to get User from DisplayID"));
 
+      return userID;
   }
 
   Future<void> addBaby(String name, String gender, int feet, int inches, DateTime date) async {
