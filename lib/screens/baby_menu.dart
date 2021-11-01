@@ -1,4 +1,5 @@
 import 'package:baby_tracker/screens/diaperchange.dart';
+import 'package:baby_tracker/screens/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -115,7 +116,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  Sleeping(baby: babyPath)),
+                      MaterialPageRoute(builder: (context)  =>  Sleeping(baby: babyPath)),
                     );
                   }
               )
@@ -141,12 +142,19 @@ class _BabyMenuState extends State<BabyMenu> {
           ),
           Card(     //notes card
               child: ListTile(
-                  title: Text("Notes"),
-              )
+                title: Text("Notes"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Notes(baby: babyPath)),
+                  );
+                },
+              ),
+
           ),
           Card(     //all stats card
               child: ListTile(
-                  title: Text("All Stats"),
+                title: Text("All Stats"),
               )
           ),
           Card(
