@@ -155,7 +155,7 @@ class _BabyMenuState extends State<BabyMenu> {
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, parent: babyName["parent"])),
+                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: babyName)),
                 );
               }
             )

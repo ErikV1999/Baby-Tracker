@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 
 import 'package:baby_tracker/screens/baby_menu.dart';
-
+import 'package:baby_tracker/screens/plus_menu.dart';
 
 class MainMenu extends StatefulWidget{
 
@@ -32,7 +32,8 @@ class _MainMenuState extends State<MainMenu> {
   void addBabyClick(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddBaby(userEntry:userEntry)),
+      //MaterialPageRoute(builder: (context) => AddBaby(userEntry:userEntry)),
+      MaterialPageRoute(builder: (context) => PlusMenu(user:userEntry)),
     );
   }
 
