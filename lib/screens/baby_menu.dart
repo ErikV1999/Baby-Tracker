@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
+import 'package:baby_tracker/screens/add_caretaker.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
+
 
 /*
 
@@ -15,8 +17,8 @@ constructor takes in a baby path from the main menu component
 class BabyMenu extends StatefulWidget{
 
   final String baby;    //will contain the babypath as  a string
-
-  BabyMenu({Key? key, required this.baby}) : super(key: key);   //constructor requires baby path
+  final String userEntry;
+  BabyMenu({Key? key, required this.baby, required this.userEntry}) : super(key: key);   //constructor requires baby path
 
   @override
   State<BabyMenu> createState() => _BabyMenuState();
@@ -29,6 +31,10 @@ class is the "real" widget for BabyMenu due to the statefulness of the widget
 class _BabyMenuState extends State<BabyMenu> {
   dynamic babyName = "Placeholder";
 
+
+  void addCaretakerClick(){
+
+  }
 
   /*
 
@@ -69,7 +75,15 @@ class _BabyMenuState extends State<BabyMenu> {
         ),*/
         backgroundColor: Colors.cyanAccent,
       ),
-
+      /*floatingActionButton: FloatingActionButton(
+        onPressed: () => addCaretakerClick(),
+        child: Row(
+          children:[
+            Text("Add Caretaker"),
+            Icon(Icons.add)
+          ]
+        )
+      ),*/
       body: Column( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
@@ -143,7 +157,17 @@ class _BabyMenuState extends State<BabyMenu> {
                 title: Text("All Stats"),
               )
           ),
-
+          Card(
+            child: ListTile(
+              title: Text("Add Caretakers"),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: babyName)),
+                );
+              }
+            )
+          ),
         ]
       ),
     );
