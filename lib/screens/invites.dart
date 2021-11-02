@@ -43,7 +43,7 @@ class _InvitesState extends State<Invites> {
                       DocumentReference baby = FirebaseFirestore.instance
                           .doc(document['babyPath']);
                       await baby.update({
-                        "caretaker": FieldValue.arrayUnion([document['receiver']])
+                        "caretaker": FieldValue.arrayUnion([widget.user])
                       });
                     }
 
@@ -70,15 +70,24 @@ class _InvitesState extends State<Invites> {
   }
 
   Widget build(BuildContext context){
+    return StreamBuilder<dynamic>(
+      stream: FirebaseFirestore.instance.collection('Users').doc(widget.user).snapshots(),
+      builder: (context, snapshot){
+        return buildWithDisplayID(context,snapshot.data);
+      }
+    );
+  }
+
+  Widget buildWithDisplayID(BuildContext context, snapshotDoc){
     return Scaffold(
       appBar: AppBar(
-
+        title: Text('Your ID: ' + snapshotDoc['displayID']),
       ),
       body: Container(
         child: StreamBuilder<dynamic>(
           stream: FirebaseFirestore.instance
               .collection('Invites')
-              .where('receiver', isEqualTo: widget.user)
+              .where('receiver', isEqualTo: snapshotDoc['displayID'])
               .snapshots(),
           builder: (context, snapshot) {
             print(widget.user + " WHYY");

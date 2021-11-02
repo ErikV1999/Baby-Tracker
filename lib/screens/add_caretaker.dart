@@ -21,7 +21,7 @@ class _AddCaretakerState extends State<AddCaretaker> {
   static Future<bool> validateUser(String userID) async {
     bool exists = false;
     try {
-      await FirebaseFirestore.instance.collection("Users").doc(userID).get()
+      await FirebaseFirestore.instance.collection("DisplayNames").doc(userID).get()
       .then((doc) {
         if (doc.exists)
           exists = true;
