@@ -16,6 +16,7 @@ class AddCaretaker extends StatefulWidget {
 class _AddCaretakerState extends State<AddCaretaker> {
 
   String userID = "";
+  dynamic msgController = TextEditingController();
 
   static Future<bool> validateUser(String userID) async {
     bool exists = false;
@@ -33,13 +34,19 @@ class _AddCaretakerState extends State<AddCaretaker> {
     }
   }
   void addPressed() async{
-    //String parent = widget.babyDoc["parent"];
-    //dynamic babyDoc = await FirebaseFirestore.instance.doc(widget.baby).snapshots();
-    //String babyParent = babyDoc.data['parent'];
+
     if(widget.babyDoc["parent"]!=widget.userEntry){
-      print(widget.userEntry);
-      print(userID);
+
       print("User is not parent");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                "You are not the parent of this child",
+                style: TextStyle(fontSize: 20)
+            ),
+
+          )
+      );
       return;
     }
     bool valid = await validateUser(userID);
@@ -52,14 +59,29 @@ class _AddCaretakerState extends State<AddCaretaker> {
         "receiver" : userID,
         "babyName" : widget.babyDoc["Name"]
       });
-      /*
-      DocumentReference baby = FirebaseFirestore.instance.doc(widget.baby);
-      await baby.update({
-        "caretaker": FieldValue.arrayUnion([userID])
-      });
-      */
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                "Caretaker Invited",
+                style: TextStyle(fontSize: 20)
+            ),
+
+          )
+      );
+      setState(()=>userID = "");
+      msgController.clear();
+
     }
     else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Not a valid User",
+              style: TextStyle(fontSize: 20)
+          ),
+
+        )
+      );
       print("invalid");
     }
   }
@@ -74,6 +96,7 @@ class _AddCaretakerState extends State<AddCaretaker> {
           child: ListView(
             children: [
               TextFormField(
+                controller: msgController,
                 decoration: InputDecoration(
                   labelText: "users ID: ",
 

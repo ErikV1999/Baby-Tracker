@@ -84,7 +84,7 @@ class _BabyMenuState extends State<BabyMenu> {
           ]
         )
       ),*/
-      body: Column( //contains all the cards seen (5 cards)
+      body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
             child: ListTile(
