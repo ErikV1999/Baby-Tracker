@@ -106,7 +106,7 @@ class _SleepingState extends State<Sleeping> {
                         child: Text(
                             _dateString != null ? _dateString! : 'No Date selected!',
                             //"${selectedDate.toLocal()}".split(' ')[0],
-                            style: TextStyle(fontSize: 30),
+                            style: TextStyle(fontSize: 25),
                           ),
                       ),
                   ),
@@ -152,7 +152,7 @@ class _SleepingState extends State<Sleeping> {
                     child: Center(
                       child: Text(
                         _selectedTime1 != null ? _selectedTime1! : 'No time selected!',
-                        style: TextStyle(fontSize: 30),
+                        style: TextStyle(fontSize: 25),
                       ),
                     ),
                   ),
@@ -200,7 +200,7 @@ class _SleepingState extends State<Sleeping> {
                     child: Center(
                       child: Text(
                         _selectedTime2 != null ? _selectedTime2! : 'No time selected!',
-                        style: TextStyle(fontSize: 30),
+                        style: TextStyle(fontSize: 25),
                       ),
                     ),
                   ),

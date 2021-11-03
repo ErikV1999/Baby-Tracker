@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
+import 'package:baby_tracker/screens/AllStats.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -150,12 +151,17 @@ class _BabyMenuState extends State<BabyMenu> {
                   );
                 },
               ),
-
           ),
           Card(     //all stats card
               child: ListTile(
                 title: Text("All Stats"),
-              )
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllStats(baby: babyPath)),
+                  );
+                },
+              ),
           ),
           Card(
             child: ListTile(
