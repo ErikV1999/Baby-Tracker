@@ -2,9 +2,14 @@ import 'package:baby_tracker/screens/addbaby.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
+
 import 'dart:async';
+import 'package:async/async.dart';
+
+
 
 import 'package:baby_tracker/screens/baby_menu.dart';
+import 'package:baby_tracker/screens/plus_menu.dart';
 
 
 class MainMenu extends StatefulWidget{
@@ -21,17 +26,18 @@ class _MainMenuState extends State<MainMenu> {
   final AuthService _auth = AuthService();
 
   void babyClick(String path){
-
+    print(path);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path)),
+      MaterialPageRoute(builder: (context) =>  BabyMenu(baby: path, userEntry: userEntry)),
     );
   }
 
   void addBabyClick(){
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddBaby()),
+      //MaterialPageRoute(builder: (context) => AddBaby(userEntry:userEntry)),
+      MaterialPageRoute(builder: (context) => PlusMenu(user:userEntry)),
     );
   }
 
@@ -120,17 +126,17 @@ class _MainMenuState extends State<MainMenu> {
       body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
 
 
+
           stream: FirebaseFirestore.instance
-              .collection('Users')  //takes from the user table
-              .doc(userEntry)       //finds the users document
-              .collection("Babies")   //goes into users subcollectino for their babies
-              .snapshots(),           //takes a snapshot
+              .collectionGroup('Babies')
+              .where('caretaker', arrayContains: userEntry )
+              .snapshots(),
 
           builder: (context, snapshot){      //builds the list of widgets to display based on users babies
             if(!snapshot.hasData)                     //if the snapshot has any data in it
-              return const Text('Loading...');
+              return const Text('Loading...no data');
             if(snapshot.data.docs == null)            //if the collectino is empty
-              return const Text('Loading...');
+              return const Text('Loading...no docs');
             return ListView.builder(                  //builds each tile for each baby
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index){           //builds individual widgets
@@ -138,7 +144,8 @@ class _MainMenuState extends State<MainMenu> {
               }
             );
           }
-        )
+        ),
+
 
     );
   }
