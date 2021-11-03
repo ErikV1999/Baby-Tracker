@@ -14,6 +14,7 @@ class _EditNoteState extends State<EditNote> {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
 
+
   @override
   void initState() {
     title = TextEditingController(text: widget.document['title']);
@@ -26,13 +27,50 @@ class _EditNoteState extends State<EditNote> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('New Note'),
+        title: Text('Edit Note'),
         backgroundColor: Colors.amber,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
+            color: Colors.amber,
+            child: ElevatedButton(
+              child: Icon(Icons.delete),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              onPressed: () => {
+                showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                    title: Text('Confirm Deletion'),
+                    content: Text('Confirm deletion of note'),
+                    actions: [
+                      TextButton(
+                        child: Text('Confirm'),
+                        onPressed: () {
+                          widget.document.reference.delete().whenComplete(() => Navigator.pop(context))
+                              .then((value) => Navigator.pop(context));
+                        },
+                      ),
+
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  )
+                ),
+              },
+            ),
+          ),
+
+
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
             color: Colors.amber,
