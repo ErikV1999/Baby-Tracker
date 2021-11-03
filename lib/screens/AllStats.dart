@@ -1,3 +1,5 @@
+import 'package:baby_tracker/screens/diaperchange.dart';
+import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/SleepingStats.dart';
 
@@ -32,7 +34,7 @@ class _AllStatsState extends State<AllStats> {
             children: [
               Icon(Icons.fastfood_sharp),
               SleepingStats(),
-              Icon(Icons.baby_changing_station),
+              diaperstats(),
             ],
           ),
         )

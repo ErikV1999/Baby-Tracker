@@ -152,7 +152,7 @@ class _BabyMenuState extends State<BabyMenu> {
                 },
               ),
           ),
-          Card(     //all stats card
+          Card(     //diaper change card
               child: ListTile(
                 title: Text("All Stats"),
                 onTap: () {
@@ -179,5 +179,3 @@ class _BabyMenuState extends State<BabyMenu> {
     );
   }
 }
-
-
