@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
+import 'package:baby_tracker/screens/AllStats.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -85,7 +86,7 @@ class _BabyMenuState extends State<BabyMenu> {
           ]
         )
       ),*/
-      body: Column( //contains all the cards seen (5 cards)
+      body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
             child: ListTile(
@@ -151,21 +152,17 @@ class _BabyMenuState extends State<BabyMenu> {
                   );
                 },
               ),
-
           ),
           Card(     //diaper change card
               child: ListTile(
-                  title: Text("All Stats"),
-                  subtitle: Row(
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => allStats(baby: babyPath)),
-                    );
-                  }
-
-              )
+                title: Text("All Stats"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllStats(baby: babyPath)),
+                  );
+                },
+              ),
           ),
           Card(
             child: ListTile(
