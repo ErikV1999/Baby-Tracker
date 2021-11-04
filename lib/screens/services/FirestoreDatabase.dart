@@ -130,6 +130,8 @@ class FirestoreDatabase {
     //what should I do here 
     final uid = await AuthService().getUID();
     CollectionReference adddiaper = users.doc(uid).collection('DiaperChange');
+    //.collection(babies).collection('DiaperChange')
+    //use baby path and document reference to access diaperchange document
 
     await adddiaper.add({
       'date' : date,
