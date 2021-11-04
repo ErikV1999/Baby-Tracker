@@ -20,6 +20,9 @@ class _FeedingState extends State<Feeding> {
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+  Color orangeYellow = Color(0xFFFED766);
+  Color blueSapphire = Color(0xFF006992);
+
 
   bool leftIsPress = true;
   bool rightIsPress = false;
@@ -46,7 +49,7 @@ class _FeedingState extends State<Feeding> {
   int stopSec = 0;
   int totalFeed = 0;
 
-  String notes = 'note';
+  var notes = 'note';
   String amount = 'amount';
 
   DateTime? _chosenDateTime;
@@ -259,256 +262,51 @@ class _FeedingState extends State<Feeding> {
     return Scaffold(
       backgroundColor: Colors.white38,
       appBar: AppBar(
-        title: Text('Feeding'),
+        title: Text(
+          'Sleeping',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 30,
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.cyanAccent,
-        actions: [
-          Icon(Icons.more_vert_outlined),
-        ],
+        backgroundColor: orangeYellow,
       ),
       body: Form(
         key: _formKey,
         child: ListView(
           children: <Widget>[
             /*
-              *
               * date container to show date and change date
-              *
               * */
-
-            Container(
-              alignment: Alignment.centerLeft,
-              width: 250,
-              height: 50,
-              padding: EdgeInsets.all(1.0),
-              color: Colors.purpleAccent,
-              child: ListTile(
-                title: Text(
-                    "Date: ${_startDate.year}/${_startDate.month}/${_startDate.day}",
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400)),
-                trailing: Icon(Icons.keyboard_arrow_down),
-                onTap: _pickStartDate,
-              ),
-            ),
-            _buildTime(),
-            //SizedBox(height: 60),
+            _buildDate(),
             /*
-              *
               * button container to show and click on buttons
-              *
               * */
-            Container(
-              color: Colors.greenAccent,
-              height: 100,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  /*
-                    * row of buttons
-                    * */
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      /*
-                        * Left breast button
-                        * */
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25.0,
-                            vertical: 25.0,
-                          ),
-                        ), //styleFrom
-                        onPressed:
-                            leftBreastButton, //activates stopwatch buttons
-                        child: Text(
-                          "LB",
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      /*
-                        * Right Breast Button
-                        * */
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25.0,
-                            vertical: 25.0,
-                          ),
-                        ), //styleFrom
-                        onPressed:
-                            rightBreastButton, //activates stopwatch buttons
-                        child: Text(
-                          "RB",
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      /*
-                        * Bottle Button
-                        * */
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25.0,
-                            vertical: 25.0,
-                          ),
-                        ), //styleFrom
-                        onPressed: bottleButton, //deactivates stopwatch buttons
-                        child: Text(
-                          "Bottle",
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      /*
-                        * Food Button
-                        * */
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 25.0,
-                            vertical: 25.0,
-                          ),
-                        ), //styleFrom
-                        onPressed: foodButton, //deactivates stopwatch buttons
-                        child: Text(
-                          "Food",
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
+            _buildButtons(),
+            /*
+              * time container to show the timers time
+              * */
             _buildTimer(),
-
-            Container(
-              height: 75,
-              color: Colors.pinkAccent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.orangeAccent,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40.0,
-                            vertical: 15.0,
-                          ),
-                        ), //styleFrom
-                        onPressed: startIsPress ? null : startStopwatch,
-                        child: Text(
-                          "Start",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40.0,
-                            vertical: 15.0,
-                          ),
-                        ), //styleFrom
-                        onPressed: stopIsPress ? null : stopStopwatch,
-                        child: Text(
-                          "Stop",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.teal,
-                          onPrimary: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40.0,
-                            vertical: 15.0,
-                          ),
-                        ), //styleFrom
-                        onPressed: resetIsPress ? null : resetStopwatch,
-                        child: Text(
-                          "Reset",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            /*
+              * button container to show and click buttons for the timer
+              * */
+            _buildTimerButtons(),
+            /*
+              * amount container to edit notes
+              * */
             _buildAmount(),
-            Container(
-              color: Colors.blueGrey,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  // The validator receives the text that the user has entered.
-                  decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Notes',
-                    fillColor: Colors.white,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.white, width: 4.0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Colors.yellow, width: 4.0)),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some notes';
-                    }
-                    notes = value;
-                    return null;
-                  },
-                ),
-              ),
-            ),
+            /*
+              * note container to edit notes
+              * */
+            _buildNotes(),
+            /*
+              * button container to submit data to firebase
+              * */
             Container(
               width: 500,
               height: 100,
-              color: Colors.lime,
+              color: Colors.white,
               alignment: Alignment.center,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -538,18 +336,127 @@ class _FeedingState extends State<Feeding> {
     );
   }
 
-  Widget _buildTime() {
+  Widget _buildDate() {
     return Container(
       alignment: Alignment.centerLeft,
       width: 250,
-      height: 50,
+      height: 75,
       padding: EdgeInsets.all(1.0),
-      color: Colors.purple,
+      color: Colors.white,
       child: ListTile(
-        title: Text("Start Time: ${_startTime.format(context)}",
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400)),
+        title: Text(
+            "Date: ${_startDate.year}/${_startDate.month}/${_startDate.day}",
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600)),
         trailing: Icon(Icons.keyboard_arrow_down),
-        onTap: _pickStartTime,
+        onTap: _pickStartDate,
+      ),
+    );
+  }
+
+  Widget _buildButtons() {
+    return Container(
+      color: Colors.white,
+      height: 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          /*
+                    * row of buttons
+                    * */
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              /*
+                        * Left breast button
+                        * */
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: blueSapphire,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 25.0,
+                  ),
+                ), //styleFrom
+                onPressed: leftBreastButton, //activates stopwatch buttons
+                child: Text(
+                  "LB",
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              /*
+                        * Right Breast Button
+                        * */
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: blueSapphire,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 25.0,
+                  ),
+                ), //styleFrom
+                onPressed: rightBreastButton, //activates stopwatch buttons
+                child: Text(
+                  "RB",
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              /*
+                        * Bottle Button
+                        * */
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: blueSapphire,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 25.0,
+                  ),
+                ), //styleFrom
+                onPressed: bottleButton, //deactivates stopwatch buttons
+                child: Text(
+                  "Bottle",
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              /*
+                        * Food Button
+                        * */
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: blueSapphire,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 25.0,
+                  ),
+                ), //styleFrom
+                onPressed: foodButton, //deactivates stopwatch buttons
+                child: Text(
+                  "Food",
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -557,45 +464,103 @@ class _FeedingState extends State<Feeding> {
   Widget _buildTimer() {
     return Container(
       height: 100,
-      color: Colors.cyanAccent,
+      color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
-              onPrimary: Colors.white,
-              padding: EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 15.0,
-              ),
-            ), //styleFrom
-
-            onPressed: () => _pickEndTime(context),
-
-            child: StreamBuilder<int>(
-              stream: _stopWatchTimer.rawTime,
-              initialData: _stopWatchTimer.rawTime.value,
-              builder: (context, snap) {
-                final value = snap.data!;
-                final displayTime =
-                    StopWatchTimer.getDisplayTime(value, hours: _isHours);
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        displayTime,
-                        style: const TextStyle(
-                            fontSize: 40,
-                            fontFamily: 'Helvetica',
-                            fontWeight: FontWeight.bold),
+            children: [
+              StreamBuilder<int>(
+                stream: _stopWatchTimer.rawTime,
+                initialData: _stopWatchTimer.rawTime.value,
+                builder: (context, snap) {
+                  final value = snap.data!;
+                  final displayTime =
+                      StopWatchTimer.getDisplayTime(value, hours: _isHours);
+                  return Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          displayTime,
+                          style: const TextStyle(
+                              fontSize: 40,
+                              fontFamily: 'Helvetica',
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                    ],
+                  );
+                },
+              ),
+            ],
+      ),
+    );
+  }
+
+  Widget _buildTimerButtons() {
+    return Container(
+      height: 75,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 15.0,
+                  ),
+                ), //styleFrom
+                onPressed: startIsPress ? null : startStopwatch,
+                child: Text(
+                  "Start",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 15.0,
+                  ),
+                ), //styleFrom
+                onPressed: stopIsPress ? null : stopStopwatch,
+                child: Text(
+                  "Stop",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.lightBlueAccent,
+                  onPrimary: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 15.0,
+                  ),
+                ), //styleFrom
+                onPressed: resetIsPress ? null : resetStopwatch,
+                child: Text(
+                  "Reset",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -604,7 +569,7 @@ class _FeedingState extends State<Feeding> {
 
   Widget _buildAmount() {
     return Container(
-      color: Colors.greenAccent,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
@@ -630,4 +595,34 @@ class _FeedingState extends State<Feeding> {
       ),
     );
   }
+
+  Widget _buildNotes() {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          // The validator receives the text that the user has entered.
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(),
+            labelText: 'Notes',
+            fillColor: Colors.white,
+            filled: true,
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 4.0)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.yellow, width: 4.0)),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some notes';
+            }
+            notes = value;
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+
 }
