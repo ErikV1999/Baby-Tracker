@@ -23,7 +23,6 @@ class _FeedingState extends State<Feeding> {
   Color orangeYellow = Color(0xFFFED766);
   Color blueSapphire = Color(0xFF006992);
 
-
   bool leftIsPress = true;
   bool rightIsPress = false;
   bool bottleIsPress = false;
@@ -200,50 +199,6 @@ class _FeedingState extends State<Feeding> {
       });
   }
 
-  void _pickEndTime(ctx) async {
-    // showCupertinoModalPopup is a built-in function of the cupertino library
-    showCupertinoModalPopup(
-        context: ctx,
-        builder: (_) => Container(
-              height: 500,
-              color: Color.fromARGB(255, 255, 255, 255),
-              child: Column(
-                children: [
-                  Container(
-                    height: 400,
-                    child: CupertinoTimerPicker(
-                      initialTimerDuration: duration,
-                      mode: CupertinoTimerPickerMode.hms,
-                      onTimerDurationChanged: (duration) => setState(() {
-                        _stopWatchTimer.setPresetSecondTime(1);
-                      }),
-                    ),
-                  ),
-                  // Close the modal
-                  CupertinoButton(
-                    child: Text('OK'),
-                    onPressed: () => Navigator.of(ctx).pop(),
-                  ),
-                ],
-              ),
-            ));
-  }
-
-  void _pickStartTime() async {
-    final TimeOfDay? timeResult =
-        await showTimePicker(context: context, initialTime: _startTime);
-    if (timeResult != null) {
-      setState(() {
-        _startTime = timeResult;
-        timeString = timeResult.format(context);
-      });
-      print(timeResult.period); // DayPeriod.pm or DayPeriod.am
-      print(timeResult.hour);
-      print(timeResult.minute);
-      timetodisplay = "$timeResult.hour";
-    }
-  }
-
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -276,41 +231,26 @@ class _FeedingState extends State<Feeding> {
         key: _formKey,
         child: ListView(
           children: <Widget>[
-            /*
-              * date container to show date and change date
-              * */
             _buildDate(),
-            /*
-              * button container to show and click on buttons
-              * */
             _buildButtons(),
-            /*
-              * time container to show the timers time
-              * */
-            _buildTimer(),
-            /*
-              * button container to show and click buttons for the timer
-              * */
-            _buildTimerButtons(),
-            /*
-              * amount container to edit notes
-              * */
-            _buildAmount(),
-            /*
-              * note container to edit notes
-              * */
+            if (leftIsPress == true) _buildTimer(),
+            if (leftIsPress == true) _buildTimerButtons(),
+            if (rightIsPress == true) _buildTimer(),
+            if (rightIsPress == true) _buildTimerButtons(),
+            if (bottleIsPress == true) _buildAmount(),
+            if (foodIsPress == true) _buildFoodType(),
+            if (foodIsPress == true) _buildAmount(),
             _buildNotes(),
             /*
               * button container to submit data to firebase
               * */
             Container(
-              width: 500,
-              height: 100,
+              padding: EdgeInsets.all(20),
               color: Colors.white,
               alignment: Alignment.center,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.deepOrangeAccent,
+                  primary: blueSapphire,
                   onPrimary: Colors.white,
                   padding: EdgeInsets.symmetric(
                     horizontal: 40.0,
@@ -327,7 +267,14 @@ class _FeedingState extends State<Feeding> {
                       "${_startDate.year}/${_startDate.month}/${_startDate.day}",
                       babyPath);
                 },
-                child: Text('Submit'),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
@@ -336,6 +283,9 @@ class _FeedingState extends State<Feeding> {
     );
   }
 
+  /*
+              * date container to show date and change date
+              * */
   Widget _buildDate() {
     return Container(
       alignment: Alignment.centerLeft,
@@ -353,6 +303,9 @@ class _FeedingState extends State<Feeding> {
     );
   }
 
+  /*
+              * button container to show and click on buttons
+              * */
   Widget _buildButtons() {
     return Container(
       color: Colors.white,
@@ -461,41 +414,47 @@ class _FeedingState extends State<Feeding> {
     );
   }
 
+  /*
+              * time container to show the timers time
+              * */
   Widget _buildTimer() {
     return Container(
       height: 100,
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              StreamBuilder<int>(
-                stream: _stopWatchTimer.rawTime,
-                initialData: _stopWatchTimer.rawTime.value,
-                builder: (context, snap) {
-                  final value = snap.data!;
-                  final displayTime =
-                      StopWatchTimer.getDisplayTime(value, hours: _isHours);
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          displayTime,
-                          style: const TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Helvetica',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
+        children: [
+          StreamBuilder<int>(
+            stream: _stopWatchTimer.rawTime,
+            initialData: _stopWatchTimer.rawTime.value,
+            builder: (context, snap) {
+              final value = snap.data!;
+              final displayTime =
+                  StopWatchTimer.getDisplayTime(value, hours: _isHours);
+              return Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      displayTime,
+                      style: const TextStyle(
+                          fontSize: 40,
+                          fontFamily: 'Helvetica',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
+  /*
+              * button timer container to control timer
+              * */
   Widget _buildTimerButtons() {
     return Container(
       height: 75,
@@ -567,6 +526,38 @@ class _FeedingState extends State<Feeding> {
     );
   }
 
+  /*
+              * food enter container to edit food type
+              * */
+  Widget _buildFoodType() {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          // The validator receives the text that the user has entered.
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(),
+            labelText: 'Food',
+            fillColor: Colors.white,
+            filled: true,
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 4.0)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.yellow, width: 4.0)),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter an Amount';
+            }
+            amount = value;
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _buildAmount() {
     return Container(
       color: Colors.white,
@@ -624,5 +615,4 @@ class _FeedingState extends State<Feeding> {
       ),
     );
   }
-
 }
