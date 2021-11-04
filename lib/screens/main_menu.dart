@@ -57,6 +57,18 @@ class _MainMenuState extends State<MainMenu> {
     return
       Card(                                 //card encapsulates 1 Listtile
         child: ListTile(                    //each list tile is a baby
+          trailing: IconButton(
+            icon: Icon(Icons.clear),
+            iconSize: 25,
+            padding: EdgeInsets.all(0),
+            alignment: Alignment.topRight,
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => _buildAlert(document),
+              );
+            },
+          ),
           title: Text(document['Name']),    //pulls the babys name
           subtitle: Text("Last Feeding: " + document['Feeding'].toString() +
             " Last Sleep: " + document['Sleeping'].toString() +
@@ -64,7 +76,8 @@ class _MainMenuState extends State<MainMenu> {
           onTap: (){
             babyClick(document.reference.path);
           },
-        )
+        ),
+
       );
   }
 
@@ -147,6 +160,28 @@ class _MainMenuState extends State<MainMenu> {
         ),
 
 
+    );
+  }
+
+  Widget _buildAlert(DocumentSnapshot document) {
+    return AlertDialog(
+      title: Text('Confirm Deletion'),
+      content: Text('Confirm deletion of ${document['Name']}'),
+      actions: [
+        TextButton(
+          child: Text('Confirm'),
+          onPressed: () {
+            document.reference.delete().whenComplete(() => Navigator.pop(context));
+          },
+        ),
+
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
