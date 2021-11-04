@@ -125,7 +125,11 @@ class FirestoreDatabase {
   }
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
-    CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
+    //CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
+
+    //what should I do here 
+    final uid = await AuthService().getUID();
+    CollectionReference adddiaper = users.doc(uid).collection('DiaperChange');
 
     await adddiaper.add({
       'date' : date,
@@ -134,6 +138,7 @@ class FirestoreDatabase {
     })
         .then((value) => print('diaper change Added'))
         .catchError((error) => print("Failed to add diaper change data"));
+
   }
   Future<void> updatediaperchange(DateTime date, String notes, String status, String path) async {
     FirebaseFirestore.instance
