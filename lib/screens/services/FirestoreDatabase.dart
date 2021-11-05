@@ -8,8 +8,8 @@ class FirestoreDatabase {
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');   //ref to user collection
   CollectionReference displayToUid = FirebaseFirestore.instance.collection('DisplayNames'); //ref to collection that maps displayID to uid
-  
-  
+
+
   //adds user to database with uid as its document id
   //creates displayID by combining name with random number
   Future<void> addUser(String uid, String name) async {
@@ -108,12 +108,22 @@ class FirestoreDatabase {
 
 
 
-  Future<void> addFeeding(String date, String time, String notes, String path) async {
-    CollectionReference feeding = FirebaseFirestore.instance.doc(path).collection('feeding');
+  Future<void> addFeeding(bool leftBreast, bool rightBreast, bool bottle, bool food, int month, int day, int year, int totalTimeSec, String foodType, String amount, String notes, String path) async {
+    final uid = await AuthService().getUID();
 
-    await feeding.add({
-      'date': date,
-      'time': time,
+    CollectionReference feedingPath = FirebaseFirestore.instance.doc(path).collection('feeding');
+
+    await feedingPath.add({
+      'left breast': leftBreast,
+      'right breast': rightBreast,
+      'bottle': bottle,
+      'food': food,
+      'date month': month,
+      'date day': day,
+      'date year': year,
+      'total Time in seconds': totalTimeSec,
+      'food type': foodType,
+      'amount': amount,
       'notes': notes,
     })
         .then((value) => print('Feeding Added'))

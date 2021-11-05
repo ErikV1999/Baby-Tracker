@@ -23,10 +23,10 @@ class _FeedingState extends State<Feeding> {
   Color orangeYellow = Color(0xFFFED766);
   Color blueSapphire = Color(0xFF006992);
 
-  bool leftIsPress = true;
-  bool rightIsPress = false;
-  bool bottleIsPress = false;
-  bool foodIsPress = false;
+  bool leftBreast = true; //
+  bool rightBreast = false; //
+  bool bottle = false; //
+  bool food = false; //
 
   bool startIsPress = false;
   bool stopIsPress = true;
@@ -34,48 +34,37 @@ class _FeedingState extends State<Feeding> {
 
   String timetodisplay = "00:00:00";
   DateTime _startDate = DateTime.now();
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
   String? timeString;
 
   int month = DateTime.now().month;
   int day = DateTime.now().day;
   int year = DateTime.now().year;
-  int startHour = TimeOfDay.now().hour;
-  int startMin = TimeOfDay.now().minute;
-  int stopHour = 0;
-  int stopMin = 0;
-  int stopSec = 0;
-  int totalFeed = 0;
+  int totalTimeSec = 0; //
 
-  var notes = 'note';
+  String notes = 'note';
   String amount = 'amount';
+  String foodType = 'food';
 
-  DateTime? _chosenDateTime;
+  final fieldTextFood = TextEditingController();
+  final fieldTextAmount = TextEditingController();
+  final fieldTextNotes = TextEditingController();
+
   Duration duration = Duration(); //set duration to zero in other functions
   final _isHours = true;
 
   //set StopWatchTimer mode to count up
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(
     mode: StopWatchMode.countUp,
-    onChange: (value) {
-      final displayTime = StopWatchTimer.getDisplayTime(value);
-      print('displayTime $displayTime');
-    },
-    onChangeRawSecond: (value) =>
-        print('onChangeRawSecond $value'), //can comment out if needed
-    onChangeRawMinute: (value) =>
-        print('onChangeRawMinute $value'), //can comment out if needed
+    //onChange: (value) {
+    //final displayTime = StopWatchTimer.getDisplayTime(value);
+    //print('displayTime $displayTime');
+    //}
   );
 
   //stop watch constructor
   @override
   void initState() {
     super.initState();
-    _stopWatchTimer.rawTime.listen((value) =>
-        print('rawTime $value ${StopWatchTimer.getDisplayTime(value)}'));
-    _stopWatchTimer.minuteTime.listen((value) => print('minuteTime $value'));
-    _stopWatchTimer.secondTime.listen((value) => print('secondTime $value'));
   }
 
   //stopwatch destructor
@@ -85,11 +74,17 @@ class _FeedingState extends State<Feeding> {
     await _stopWatchTimer.dispose(); // Need to call dispose function.
   }
 
+  void clearText() {
+    fieldTextFood.clear();
+    fieldTextAmount.clear();
+    fieldTextNotes.clear();
+  }
+
   void turnStopWatchOn() {
     setState(() {
       startIsPress = false;
-      stopIsPress = false;
-      resetIsPress = false;
+      stopIsPress = true;
+      resetIsPress = true;
     });
     _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
     _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
@@ -107,44 +102,48 @@ class _FeedingState extends State<Feeding> {
 
   void leftBreastButton() {
     setState(() {
-      leftIsPress = true;
-      rightIsPress = false;
-      bottleIsPress = false;
-      foodIsPress = false;
+      leftBreast = true;
+      rightBreast = false;
+      bottle = false;
+      food = false;
 
+      clearText();
       turnStopWatchOn();
     });
   }
 
   void rightBreastButton() {
     setState(() {
-      leftIsPress = false;
-      rightIsPress = true;
-      bottleIsPress = false;
-      foodIsPress = false;
+      leftBreast = false;
+      rightBreast = true;
+      bottle = false;
+      food = false;
 
+      clearText();
       turnStopWatchOn();
     });
   }
 
   void bottleButton() {
     setState(() {
-      leftIsPress = false;
-      rightIsPress = false;
-      bottleIsPress = true;
-      foodIsPress = false;
+      leftBreast = false;
+      rightBreast = false;
+      bottle = true;
+      food = false;
 
+      clearText();
       turnStopWatchOff();
     });
   }
 
   void foodButton() {
     setState(() {
-      leftIsPress = false;
-      rightIsPress = false;
-      bottleIsPress = false;
-      foodIsPress = true;
+      leftBreast = false;
+      rightBreast = false;
+      bottle = false;
+      food = true;
 
+      clearText();
       turnStopWatchOff();
     });
   }
@@ -183,8 +182,8 @@ class _FeedingState extends State<Feeding> {
   void _pickStartDate() async {
     final DateTime? dateResult = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().year - 5),
-      lastDate: DateTime(DateTime.now().year + 5),
+      firstDate: DateTime(DateTime.now().year - 1),
+      lastDate: DateTime.now(),
       initialDate: _startDate,
     );
     if (dateResult != null)
@@ -193,9 +192,9 @@ class _FeedingState extends State<Feeding> {
         year = dateResult.year;
         month = dateResult.month;
         day = dateResult.day;
-        print("year: $year");
-        print("month: $month");
-        print("day: $day");
+        //print("year: $year");
+        //print("month: $month");
+        //print("day: $day");
       });
   }
 
@@ -215,10 +214,10 @@ class _FeedingState extends State<Feeding> {
     * APP BAR Header
     * */
     return Scaffold(
-      backgroundColor: Colors.white38,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'Sleeping',
+          'Feeding',
           style: TextStyle(
             color: Colors.black,
             fontSize: 30,
@@ -230,22 +229,23 @@ class _FeedingState extends State<Feeding> {
       body: Form(
         key: _formKey,
         child: ListView(
+          scrollDirection: Axis.vertical,
           children: <Widget>[
             _buildDate(),
             _buildButtons(),
-            if (leftIsPress == true) _buildTimer(),
-            if (leftIsPress == true) _buildTimerButtons(),
-            if (rightIsPress == true) _buildTimer(),
-            if (rightIsPress == true) _buildTimerButtons(),
-            if (bottleIsPress == true) _buildAmount(),
-            if (foodIsPress == true) _buildFoodType(),
-            if (foodIsPress == true) _buildAmount(),
+            if (leftBreast == true) _buildTimer(),
+            if (leftBreast == true) _buildTimerButtons(),
+            if (rightBreast == true) _buildTimer(),
+            if (rightBreast == true) _buildTimerButtons(),
+            if (bottle == true) _buildAmount(),
+            if (food == true) _buildFoodType(),
+            if (food == true) _buildAmount(),
             _buildNotes(),
             /*
               * button container to submit data to firebase
               * */
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               color: Colors.white,
               alignment: Alignment.center,
               child: ElevatedButton(
@@ -258,9 +258,37 @@ class _FeedingState extends State<Feeding> {
                   ),
                 ),
                 onPressed: () {
+                  stopStopwatch();
+                  totalTimeSec = _stopWatchTimer.secondTime.value;
+                  print(leftBreast);
+                  print(food);
+                  print(month);
+                  print(day);
+                  print(year);
+                  print(totalTimeSec);
+                  if (fieldTextFood.text.isEmpty) foodType = 'n/a';
+                  if (fieldTextFood.text.isNotEmpty)
+                    foodType = fieldTextFood.text;
+
+                  if (fieldTextAmount.text.isEmpty) amount = 'n/a';
+                  if (fieldTextAmount.text.isNotEmpty)
+                    amount = fieldTextFood.text;
+
+                  if (fieldTextNotes.text.isEmpty) notes = 'n/a';
+                  if (fieldTextNotes.text.isNotEmpty)
+                    notes = fieldTextFood.text;
+
                   FirestoreDatabase().addFeeding(
-                      "${_startDate.year}/${_startDate.month}/${_startDate.day}",
-                      timetodisplay,
+                      leftBreast,
+                      rightBreast,
+                      bottle,
+                      food,
+                      month,
+                      day,
+                      year,
+                      totalTimeSec,
+                      foodType,
+                      amount,
                       notes,
                       babyPath);
                   FirestoreDatabase().updateLastFeed(
@@ -295,9 +323,13 @@ class _FeedingState extends State<Feeding> {
       color: Colors.white,
       child: ListTile(
         title: Text(
-            "Date: ${_startDate.year}/${_startDate.month}/${_startDate.day}",
+            "Date: ${_startDate.month}/${_startDate.day}/${_startDate.year}",
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600)),
-        trailing: Icon(Icons.keyboard_arrow_down),
+        trailing: Icon(
+          Icons.keyboard_arrow_down,
+          color: Colors.black,
+          size: 30,
+        ),
         onTap: _pickStartDate,
       ),
     );
@@ -534,25 +566,12 @@ class _FeedingState extends State<Feeding> {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          // The validator receives the text that the user has entered.
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            labelText: 'Food',
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 4.0)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow, width: 4.0)),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Enter Food',
+            focusColor: Colors.black,
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter an Amount';
-            }
-            amount = value;
-            return null;
-          },
+          controller: fieldTextFood,
         ),
       ),
     );
@@ -563,25 +582,12 @@ class _FeedingState extends State<Feeding> {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          // The validator receives the text that the user has entered.
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            labelText: 'Amount',
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 4.0)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow, width: 4.0)),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Amount',
+            focusColor: Colors.black,
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter an Amount';
-            }
-            amount = value;
-            return null;
-          },
+          controller: fieldTextAmount,
         ),
       ),
     );
@@ -592,25 +598,12 @@ class _FeedingState extends State<Feeding> {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          // The validator receives the text that the user has entered.
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            labelText: 'Notes',
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 4.0)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow, width: 4.0)),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Notes',
+            focusColor: Colors.black,
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter some notes';
-            }
-            notes = value;
-            return null;
-          },
+          controller: fieldTextNotes,
         ),
       ),
     );
