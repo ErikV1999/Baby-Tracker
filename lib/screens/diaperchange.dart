@@ -148,7 +148,7 @@ class _diaperchangeState extends State<diaperchange> {
                           /*print(notes);
                           print(status);
                           print(selectedDate);*/
-                          FirestoreDatabase().addDiaper(selectedDate, notes, status, path);
+                          FirestoreDatabase().addDiaper(selectedDate, notes, status, babyPath);
                           FirestoreDatabase().updatediaperchange(selectedDate, notes, status, path);
                           },
                         ),

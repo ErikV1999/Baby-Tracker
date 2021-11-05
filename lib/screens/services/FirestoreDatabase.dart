@@ -125,15 +125,9 @@ class FirestoreDatabase {
   }
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
-    //CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
+    CollectionReference diaperChangePath = FirebaseFirestore.instance.doc(path).collection('diaper change');
 
-    //what should I do here 
-    final uid = await AuthService().getUID();
-    CollectionReference adddiaper = users.doc(uid).collection('DiaperChange');
-    //.collection(babies).collection('DiaperChange')
-    //use baby path and document reference to access diaperchange document
-
-    await adddiaper.add({
+    await diaperChangePath.add({
       'date' : date,
       'status' : status,
       'Notes': notes,
