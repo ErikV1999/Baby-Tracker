@@ -22,7 +22,7 @@ class _diaperstats extends State<diaperstats> {
     children: <Widget>[
       Container(
         padding: const EdgeInsets.all(10),
-        height: 550,
+        height: 450,
         color: Colors.blue,
         child: LineChart(
           LineChartData(
@@ -32,7 +32,7 @@ class _diaperstats extends State<diaperstats> {
             minY: 0,
             maxY: 6,
             gridData: FlGridData(
-              show: true,
+              show: false,
             ),
             borderData: FlBorderData(
             show: true,
@@ -47,10 +47,10 @@ class _diaperstats extends State<diaperstats> {
                   FlSpot(7,3),
                   FlSpot(8,4),
                   ],
-                isCurved: true,
-                barWidth: 7,
+                isCurved: false,
+                barWidth: 20,
                 belowBarData: BarAreaData(
-                show: true,
+                show: false,
                 )
               )
             ]
