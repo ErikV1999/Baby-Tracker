@@ -11,6 +11,7 @@ import 'package:async/async.dart';
 
 import 'package:baby_tracker/screens/baby_menu.dart';
 import 'package:baby_tracker/screens/plus_menu.dart';
+import 'package:baby_tracker/models/changeTheme.dart';
 
 
 class MainMenu extends StatefulWidget{
@@ -130,7 +131,9 @@ class _MainMenuState extends State<MainMenu> {
 
             },
             label: Text('logout'),
-          )
+          ),
+
+          ChangeThemeButton(),
         ],
       ),
       floatingActionButton: FloatingActionButton(   //button for the "add baby" at the bottom
