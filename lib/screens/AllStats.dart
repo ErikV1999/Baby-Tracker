@@ -16,6 +16,7 @@ class _AllStatsState extends State<AllStats> {
 
   @override
   Widget build(BuildContext context) {
+    String babyPath = widget.baby;
     return Scaffold(
       body: DefaultTabController(
         length: 3,
@@ -33,7 +34,7 @@ class _AllStatsState extends State<AllStats> {
           body: TabBarView(
             children: [
               Icon(Icons.fastfood_sharp),
-              SleepingStats(),
+              SleepingStats(baby: babyPath),
               diaperstats(),
             ],
           ),

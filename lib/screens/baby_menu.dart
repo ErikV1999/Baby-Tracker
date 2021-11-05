@@ -7,6 +7,7 @@ import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
 import 'package:baby_tracker/screens/AllStats.dart';
+import 'package:baby_tracker/screens/debugPage.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -173,6 +174,18 @@ class _BabyMenuState extends State<BabyMenu> {
                 );
               }
             )
+          ),
+          Card(     //diaper change card
+              child: ListTile(
+                  title: Text("arturo's Debug page (ignore)"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => debugPage(baby: babyPath)),
+                    );
+                  }
+
+              )
           ),
         ]
       ),

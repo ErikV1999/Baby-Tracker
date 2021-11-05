@@ -5,49 +5,17 @@ import 'package:baby_tracker/screens/SleepingGraphs.dart';
 
 class SleepingStats extends StatefulWidget {
 
+  final String baby;
+
+  const SleepingStats({Key? key, required this.baby}) : super(key: key);
   @override
   _SleepingStatsState createState() => _SleepingStatsState();
 }
-/*
 class _SleepingStatsState extends State<SleepingStats> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          Card(
-            child: ListTile(
-              title: Text('View Past Sleeping Entries'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SleepingEntries()),
-                );
-              }
-            ),
-          ),
-          Card(
-            child: ListTile(
-                title: Text('View Sleeping Graphs'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SleepingGraphs()),
-                  );
-                }
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/
-class _SleepingStatsState extends State<SleepingStats> {
-
-  @override
-  Widget build(BuildContext context) {
+    String babyPath = widget.baby;
     return Scaffold(
       body: DefaultTabController(
           length: 2,
@@ -69,7 +37,7 @@ class _SleepingStatsState extends State<SleepingStats> {
             ),
             body: TabBarView(
               children: [
-                SleepingEntries(),
+                SleepingEntries(baby: babyPath),
                 SleepingGraphs(),
               ],
             ),
