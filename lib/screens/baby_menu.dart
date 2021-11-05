@@ -30,7 +30,7 @@ class is the "real" widget for BabyMenu due to the statefulness of the widget
 
  */
 class _BabyMenuState extends State<BabyMenu> {
-  dynamic babyName = "Placeholder";
+  dynamic baby = "Placeholder";
 
 
   void addCaretakerClick(){
@@ -60,31 +60,25 @@ class _BabyMenuState extends State<BabyMenu> {
    */
   Widget screen(BuildContext context,snapshot){
     String babyPath = widget.baby;    //gets the babies path to input into next component
-    babyName = snapshot.data;
+    baby = snapshot.data;             //contains the document of the baby from the db
+    Color bannerColor = Color(0xFF006992);
     return Scaffold(
       appBar: AppBar(
-        title: Text(babyName["Name"]),    //ets the name from the snapshotdoc
-        //title: Text(babyPath),
-       /* title: StreamBuilder(
-          stream: FirebaseFirestore.instance.doc(babyPath).snapshots(),
-          builder: (context, snapshot){
-            if(!snapshot.hasData)
-              return Text("Jane Doe");
-            dynamic babyName = snapshot.data;
-            return Text(babyName["Name"]);
-          }
-        ),*/
-        backgroundColor: Colors.cyanAccent,
+        title: Text(baby["Name"]),    //ets the name from the snapshotdoc
+        actions: <Widget>[      //sign out button at the appbar
+          TextButton(
+
+            onPressed: () async {
+
+
+            },
+            child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+
+          )
+        ],
+        backgroundColor: bannerColor,
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () => addCaretakerClick(),
-        child: Row(
-          children:[
-            Text("Add Caretaker"),
-            Icon(Icons.add)
-          ]
-        )
-      ),*/
+
       body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
@@ -169,7 +163,7 @@ class _BabyMenuState extends State<BabyMenu> {
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: babyName)),
+                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: baby)),
                 );
               }
             )
