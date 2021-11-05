@@ -2,6 +2,8 @@ import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/SleepingStats.dart';
+import 'package:baby_tracker/screens/FeedingStats.dart';
+
 
 class AllStats extends StatefulWidget {
 
@@ -32,7 +34,7 @@ class _AllStatsState extends State<AllStats> {
           ),
           body: TabBarView(
             children: [
-              Icon(Icons.fastfood_sharp),
+              FeedingStats(),
               SleepingStats(),
               diaperstats(),
             ],
