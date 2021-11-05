@@ -4,40 +4,61 @@ import 'package:baby_tracker/screens/invites.dart';
 
 class AddCaretaker extends StatefulWidget {
 
-  final String baby;
-  final String userEntry;
-  final dynamic babyDoc;
+  final String baby;      //baby path
+  final String userEntry;   //users doc ID
+  final dynamic babyDoc;    //full baby doc form the db
   const AddCaretaker({Key? key, required this.baby, required this.userEntry, required this.babyDoc}) : super(key: key);
 
   @override
   State<AddCaretaker> createState() => _AddCaretakerState();
 }
 
+/*
+This is the class for the screen for sending caretaker invites. Contains a textbox
+and an add button.
+
+Takes a "baby" which is the baby path
+userEntry which is the users doc ID
+babyDoc which is the full document from the database for the baby
+ */
 class _AddCaretakerState extends State<AddCaretaker> {
 
-  String userID = "";
-  dynamic msgController = TextEditingController();
+  String userInputID = "";                          //defaul value for the variable that holds the user input ID
+  dynamic msgController = TextEditingController();  //allows for other components and functions to control the text box
 
+  /*
+  This functino is used to validate the input user display ID is valid
+  Takes a user ID as input.
+  outputs a future boolean
+   */
   static Future<bool> validateUser(String userID) async {
-    bool exists = false;
+    bool exists = false;            //tells if the user exists
     try {
-      await FirebaseFirestore.instance.collection("DisplayNames").doc(userID).get()
+      await FirebaseFirestore.instance
+          .collection("DisplayNames")     //looks through display names
+          .doc(userID)                    //gets the userID document
+          .get()
       .then((doc) {
-        if (doc.exists)
+        if (doc.exists)             //if it worked, return true
           exists = true;
-        else
+        else                        //else it doesnt exist
           exists = false;
       });
       return exists;
     } catch (e) {
-      return exists;
+      return exists;            //uses default of false if it fails
     }
   }
+  /*
+  A function that fires when the add button is pressed
+  Takes no input and has no output.
+  verifies the input is valid, sends the message to the database, then alerts the user of the result
+   */
   void addPressed() async{
 
-    if(widget.babyDoc["parent"]!=widget.userEntry){
+    if(widget.babyDoc["parent"]!=widget.userEntry){   //ensures the user is the parent of the child
 
-      print("User is not parent");
+      print("User is not parent");                    //tells the user they arent the parent
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -49,14 +70,14 @@ class _AddCaretakerState extends State<AddCaretaker> {
       );
       return;
     }
-    bool valid = await validateUser(userID);
-    print(userID);
-    if(valid) {
+    bool valid = await validateUser(userInputID);       //finds out if hte user exists
+
+    if(valid) {                                         //user is valid
       CollectionReference invites = FirebaseFirestore.instance.collection("Invites");
 
-      await invites.add({
+      await invites.add({                               //add invite for the caretaker to see
         "babyPath" : widget.baby,
-        "receiver" : userID,
+        "receiver" : userInputID,
         "babyName" : widget.babyDoc["Name"]
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,11 +89,11 @@ class _AddCaretakerState extends State<AddCaretaker> {
 
           )
       );
-      setState(()=>userID = "");
-      msgController.clear();
+      setState(()=>userInputID = "");                //sets variable to clear
+      msgController.clear();                        //clear the userinput bar
 
     }
-    else{
+    else{                                           //user is not valid
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -87,28 +108,29 @@ class _AddCaretakerState extends State<AddCaretaker> {
   }
 
   Widget build(BuildContext context) {
+    Color bannerColor = Color(0xFF006992);
     return Scaffold(
       appBar: AppBar(
-
+        backgroundColor: bannerColor,
       ),
       body: Container(
         child: Form(
           child: ListView(
             children: [
-              TextFormField(
-                controller: msgController,
+              TextFormField(                    //takes user input
+                controller: msgController,      //allows it to be controlled externally
                 decoration: InputDecoration(
                   labelText: "users ID: ",
 
                 ),
-                onChanged: (val) {
-                  setState(() => userID = val);
+                onChanged: (val) {              //changes the internal veriable of the text when form changes
+                  setState(() => userInputID = val);
                 }
               ),
               Container(
                   child: ElevatedButton(
                   child: Text("Add"),
-                  onPressed: () async {
+                  onPressed: () async {         //runs the pressed function
                     addPressed();
                   }
 

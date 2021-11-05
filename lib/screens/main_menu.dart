@@ -104,9 +104,11 @@ class _MainMenuState extends State<MainMenu> {
     //_auth.getUID();
     //userEntry = _auth.getUID();
     userEntry = text.data;
+    Color bannerColor = Color(0xFF006992);
     //userName = FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots().data['Name'];
     return Scaffold(
       appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
+        backgroundColor: bannerColor,
         title: StreamBuilder(   //streambuilder here creates the title based on the users name in the database
           stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots(),
           builder: (context, snapshot){
@@ -119,7 +121,6 @@ class _MainMenuState extends State<MainMenu> {
           }
         ),
         centerTitle: true,
-        backgroundColor: Colors.cyanAccent,
         actions: <Widget>[      //sign out button at the appbar
           TextButton.icon(
             icon: Icon(Icons.person),
