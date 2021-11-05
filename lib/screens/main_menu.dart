@@ -1,4 +1,5 @@
 import 'package:baby_tracker/screens/addbaby.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
@@ -57,6 +58,18 @@ class _MainMenuState extends State<MainMenu> {
     return
       Card(                                 //card encapsulates 1 Listtile
         child: ListTile(                    //each list tile is a baby
+          trailing: IconButton(             //deletes a baby when tapped
+            icon: Icon(Icons.clear),
+            iconSize: 25,
+            padding: EdgeInsets.all(0),
+            alignment: Alignment.topRight,
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => _buildAlert(document),
+              );
+            },
+          ),
           title: Text(document['Name']),    //pulls the babys name
           subtitle: Text("Last Feeding: " + document['Feeding'].toString() +
             " Last Sleep: " + document['Sleeping'].toString() +
@@ -64,7 +77,8 @@ class _MainMenuState extends State<MainMenu> {
           onTap: (){
             babyClick(document.reference.path);
           },
-        )
+        ),
+
       );
   }
 
@@ -148,6 +162,53 @@ class _MainMenuState extends State<MainMenu> {
         ),
 
 
+    );
+  }
+
+  /*builds Alert to confirm baby deletion
+    If parent of baby then delete baby document
+    If caretaker then delete parent from baby's caretaker list
+   */
+  Widget _buildAlert(DocumentSnapshot document) {
+    return AlertDialog(
+      title: Text('Confirm Deletion'),
+      content: Text('Confirm deletion of ${document['Name']}'),
+      actions: [
+        TextButton(
+          child: Text('Confirm'),
+          onPressed: () {
+
+            String uid = FirebaseAuth.instance.currentUser!.uid;
+            if(document['parent'] == uid) {
+              print('Is a parent delete baby doc');
+              document.reference.delete().whenComplete(() => Navigator.pop(context));   //deletes baby doc if parent
+            } else{
+              var caretaker = [];
+              caretaker = document['caretaker'];
+              if(caretaker.remove(uid)) {               //if uid is in baby's caretaker list, remove it
+                print('LOCAL: Removed from caretaker');
+                document.reference.update({
+                  'caretaker': caretaker,               //update caretaker list with
+                }).whenComplete(() => {
+                  print('Database: Removed form caretaker'),
+                  Navigator.pop(context),
+                });
+              } else {
+                print('Error: User is not a caretaker');  //Error: user is not a caretaker
+              }
+
+            }
+
+          },
+        ),
+
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
