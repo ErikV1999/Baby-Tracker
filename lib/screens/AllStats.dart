@@ -18,8 +18,9 @@ class _AllStatsState extends State<AllStats> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
+    String babyPath = widget.baby;
+    return Scaffold(
+      body: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
@@ -35,7 +36,7 @@ class _AllStatsState extends State<AllStats> {
           body: TabBarView(
             children: [
               FeedingStats(),
-              SleepingStats(),
+              SleepingStats(baby: babyPath),
               diaperstats(),
             ],
           ),

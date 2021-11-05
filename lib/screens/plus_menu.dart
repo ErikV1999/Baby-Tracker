@@ -15,8 +15,11 @@ class PlusMenu extends StatefulWidget{
 class _PlusMenuState extends State<PlusMenu> {
   @override
   Widget build(BuildContext context) {
+    Color bannerColor = Color(0xFF006992);
     return Scaffold(
-      appBar : AppBar(),
+      appBar : AppBar(
+        backgroundColor: bannerColor,
+      ),
       body: ListView(
         children: [
           ElevatedButton(
