@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:baby_tracker/models/diaperchangechart.dart';
 
 class diaperstats extends StatefulWidget {
 
