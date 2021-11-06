@@ -1,11 +1,11 @@
-import 'package:baby_tracker/models/theme_provider.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
 import 'package:baby_tracker/screens/baby_menu.dart';
 import 'package:baby_tracker/screens/plus_menu.dart';
-import 'package:baby_tracker/models/changeTheme.dart';
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
 
 
 class MainMenu extends StatefulWidget{

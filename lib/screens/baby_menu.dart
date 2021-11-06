@@ -1,5 +1,5 @@
-import 'package:baby_tracker/models/changeTheme.dart';
-import 'package:baby_tracker/models/theme_provider.dart';
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/notes.dart';
 import 'package:flutter/material.dart';

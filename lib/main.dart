@@ -1,4 +1,4 @@
-import 'package:baby_tracker/models/theme_provider.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
 import 'package:baby_tracker/models/myuser.dart';
 
-import 'models/theme_provider.dart';
+import 'models/Themes/theme_provider.dart';
 
 
 void main() async {
