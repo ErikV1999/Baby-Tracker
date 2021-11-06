@@ -133,7 +133,6 @@ class _SleepingState extends State<Sleeping> {
     String path = babyPath.substring(42);
     // appBar header
     return Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           //title: Text(babyPath),
           title: Text('Sleeping',
@@ -286,7 +285,7 @@ class _SleepingState extends State<Sleeping> {
                       decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
                         labelText: 'Notes',
-                        fillColor: Colors.white,
+                        //fillColor: Colors.white,
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xFF006992), width: 4.0),
