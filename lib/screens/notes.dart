@@ -1,3 +1,4 @@
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
 import 'package:baby_tracker/screens/addnote.dart';
 import 'package:baby_tracker/screens/editNote.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +23,10 @@ class _NotesState extends State<Notes> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          ChangeThemeButton(),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
