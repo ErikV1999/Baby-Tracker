@@ -1,3 +1,4 @@
+import 'package:baby_tracker/models/theme_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _AddNoteState extends State<AddNote> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('New Note'),
-        backgroundColor: Colors.amber,
+       //backgroundColor: Colors.amber,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -27,9 +28,12 @@ class _AddNoteState extends State<AddNote> {
         actions: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
-            color: Colors.amber,
             child: ElevatedButton(
-              child: Text('Save'),
+              style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent),
+              child: Text(
+                  'Save',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () => add(),
             ),
           ),
@@ -52,7 +56,6 @@ class _AddNoteState extends State<AddNote> {
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
                         ),
 
                         onChanged: (val) {
@@ -70,7 +73,6 @@ class _AddNoteState extends State<AddNote> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                           maxLines: 20,
 

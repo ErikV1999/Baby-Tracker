@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
-import 'dart:async';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -214,7 +213,6 @@ class _FeedingState extends State<Feeding> {
     * APP BAR Header
     * */
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           'Feeding',
@@ -224,7 +222,6 @@ class _FeedingState extends State<Feeding> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: orangeYellow,
       ),
       body: Form(
         key: _formKey,
@@ -246,7 +243,6 @@ class _FeedingState extends State<Feeding> {
               * */
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              color: Colors.white,
               alignment: Alignment.center,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -300,7 +296,6 @@ class _FeedingState extends State<Feeding> {
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -320,14 +315,12 @@ class _FeedingState extends State<Feeding> {
       width: 250,
       height: 75,
       padding: EdgeInsets.all(1.0),
-      color: Colors.white,
       child: ListTile(
         title: Text(
             "Date: ${_startDate.month}/${_startDate.day}/${_startDate.year}",
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600)),
         trailing: Icon(
           Icons.keyboard_arrow_down,
-          color: Colors.black,
           size: 30,
         ),
         onTap: _pickStartDate,
@@ -340,7 +333,6 @@ class _FeedingState extends State<Feeding> {
               * */
   Widget _buildButtons() {
     return Container(
-      color: Colors.white,
       height: 100,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -369,7 +361,6 @@ class _FeedingState extends State<Feeding> {
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -391,7 +382,6 @@ class _FeedingState extends State<Feeding> {
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -413,7 +403,6 @@ class _FeedingState extends State<Feeding> {
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -435,7 +424,6 @@ class _FeedingState extends State<Feeding> {
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -452,7 +440,7 @@ class _FeedingState extends State<Feeding> {
   Widget _buildTimer() {
     return Container(
       height: 100,
-      color: Colors.white,
+      //color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -490,7 +478,7 @@ class _FeedingState extends State<Feeding> {
   Widget _buildTimerButtons() {
     return Container(
       height: 75,
-      color: Colors.white,
+      //color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -511,7 +499,6 @@ class _FeedingState extends State<Feeding> {
                   "Start",
                   style: TextStyle(
                     fontSize: 20.0,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -529,7 +516,6 @@ class _FeedingState extends State<Feeding> {
                   "Stop",
                   style: TextStyle(
                     fontSize: 20.0,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -547,7 +533,6 @@ class _FeedingState extends State<Feeding> {
                   "Reset",
                   style: TextStyle(
                     fontSize: 20.0,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -563,7 +548,6 @@ class _FeedingState extends State<Feeding> {
               * */
   Widget _buildFoodType() {
     return Container(
-      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
@@ -579,7 +563,6 @@ class _FeedingState extends State<Feeding> {
 
   Widget _buildAmount() {
     return Container(
-      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
@@ -595,7 +578,6 @@ class _FeedingState extends State<Feeding> {
 
   Widget _buildNotes() {
     return Container(
-      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
