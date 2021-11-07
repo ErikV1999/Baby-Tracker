@@ -1,9 +1,12 @@
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
 import 'package:baby_tracker/models/myuser.dart';
+
+import 'models/Themes/theme_provider.dart';
 
 
 void main() async {
@@ -23,10 +26,20 @@ class MyApp extends StatelessWidget {
       initialData: null,
       catchError: (User, CustomUser) => null,
       value:  AuthService().user,
-      child: MaterialApp(
-        title: 'Flutter Firebase',
-        home: Wrapper(),
-      ),
+      child: ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+        builder: (context, _) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+
+          return MaterialApp(
+            title: 'Flutter Firebase',
+            themeMode: themeProvider.themeMode,
+            theme: MyThemes.lightTheme,
+            darkTheme: MyThemes.darkTheme,
+            home: Wrapper(),
+          );
+        },
+      )
 //=======
     //return MaterialApp(
 

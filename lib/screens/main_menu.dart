@@ -1,15 +1,11 @@
-import 'package:baby_tracker/screens/addbaby.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/services/auth.dart';
-
-import 'dart:async';
-import 'package:async/async.dart';
-
-
-
 import 'package:baby_tracker/screens/baby_menu.dart';
 import 'package:baby_tracker/screens/plus_menu.dart';
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
 
 
 class MainMenu extends StatefulWidget{
@@ -53,10 +49,31 @@ class _MainMenuState extends State<MainMenu> {
 
   */
   Widget _buildBabyItem(BuildContext context, DocumentSnapshot document){
-
+    Color cardColor;
+    if(document['gender'] == 'male') {
+      if(Brightness.dark == Theme.of(context).brightness)
+        cardColor = MyThemes.blueSapphire;
+      else
+        cardColor = MyThemes.blizzardBlue;
+    }else {
+      cardColor = MyThemes.kobiPink;
+    }
     return
-      Card(                                 //card encapsulates 1 Listtile
+      Card(//card encapsulates 1 Listtile
+        color: cardColor,
         child: ListTile(                    //each list tile is a baby
+          trailing: IconButton(             //deletes a baby when tapped
+            icon: Icon(Icons.clear),
+            iconSize: 25,
+            padding: EdgeInsets.all(0),
+            alignment: Alignment.topRight,
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => _buildAlert(document),
+              );
+            },
+          ),
           title: Text(document['Name']),    //pulls the babys name
           subtitle: Text("Last Feeding: " + document['Feeding'].toString() +
             " Last Sleep: " + document['Sleeping'].toString() +
@@ -64,7 +81,8 @@ class _MainMenuState extends State<MainMenu> {
           onTap: (){
             babyClick(document.reference.path);
           },
-        )
+        ),
+
       );
   }
 
@@ -91,11 +109,10 @@ class _MainMenuState extends State<MainMenu> {
     //_auth.getUID();
     //userEntry = _auth.getUID();
     userEntry = text.data;
-    Color bannerColor = Color(0xFF006992);
+   // Color bannerColor = Color(0xFF006992);
     //userName = FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots().data['Name'];
     return Scaffold(
       appBar: AppBar(     //app bar is the bar at the top of the screen with the user's name
-        backgroundColor: bannerColor,
         title: StreamBuilder(   //streambuilder here creates the title based on the users name in the database
           stream: FirebaseFirestore.instance.collection('Users').doc(userEntry).snapshots(),
           builder: (context, snapshot){
@@ -110,19 +127,27 @@ class _MainMenuState extends State<MainMenu> {
         centerTitle: true,
         actions: <Widget>[      //sign out button at the appbar
           TextButton.icon(
-            icon: Icon(Icons.person),
+            icon: Icon(
+                Icons.person,
+              color: Colors.black,
+            ),
             onPressed: () async {
               await _auth.signOut();
 
             },
-            label: Text('logout'),
-          )
+            label: Text(
+                'logout',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+
+          ChangeThemeButton(),
         ],
       ),
       floatingActionButton: FloatingActionButton(   //button for the "add baby" at the bottom
         onPressed: () => addBabyClick(),
         child: Icon(Icons.add),
-        backgroundColor: Colors.grey[800],
+        //backgroundColor: Colors.grey[800],
       ),
       body: StreamBuilder<dynamic>(          //the body is a list of tiles showing each baby
 
@@ -148,6 +173,53 @@ class _MainMenuState extends State<MainMenu> {
         ),
 
 
+    );
+  }
+
+  /*builds Alert to confirm baby deletion
+    If parent of baby then delete baby document
+    If caretaker then delete parent from baby's caretaker list
+   */
+  Widget _buildAlert(DocumentSnapshot document) {
+    return AlertDialog(
+      title: Text('Confirm Deletion'),
+      content: Text('Confirm deletion of ${document['Name']}'),
+      actions: [
+        TextButton(
+          child: Text('Confirm'),
+          onPressed: () {
+
+            String uid = FirebaseAuth.instance.currentUser!.uid;
+            if(document['parent'] == uid) {
+              print('Is a parent delete baby doc');
+              document.reference.delete().whenComplete(() => Navigator.pop(context));   //deletes baby doc if parent
+            } else{
+              var caretaker = [];
+              caretaker = document['caretaker'];
+              if(caretaker.remove(uid)) {               //if uid is in baby's caretaker list, remove it
+                print('LOCAL: Removed from caretaker');
+                document.reference.update({
+                  'caretaker': caretaker,               //update caretaker list with
+                }).whenComplete(() => {
+                  print('Database: Removed form caretaker'),
+                  Navigator.pop(context),
+                });
+              } else {
+                print('Error: User is not a caretaker');  //Error: user is not a caretaker
+              }
+
+            }
+
+          },
+        ),
+
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

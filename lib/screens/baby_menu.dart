@@ -1,3 +1,5 @@
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/notes.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +67,7 @@ class _BabyMenuState extends State<BabyMenu> {
     Color bannerColor = Color(0xFF006992);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(baby["Name"]),    //ets the name from the snapshotdoc
         actions: <Widget>[      //sign out button at the appbar
           TextButton(
@@ -75,14 +78,15 @@ class _BabyMenuState extends State<BabyMenu> {
             },
             child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
 
-          )
+          ),
+          ChangeThemeButton(),
         ],
-        backgroundColor: bannerColor,
       ),
 
       body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
+            color: Theme.of(context).primaryColor,
             child: ListTile(
               title: Text("Feeding"),
               subtitle: Row(
@@ -101,6 +105,7 @@ class _BabyMenuState extends State<BabyMenu> {
             )
           ),
           Card(     //sleeping card
+              color: MyThemes.kobiPink,
               child: ListTile(
                   title: Text("Sleeping"),
                   subtitle: Row(
@@ -118,6 +123,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //diaper change card
+              color: Theme.of(context).cardColor,
               child: ListTile(
                   title: Text("Diaper Change"),
                   subtitle: Row(
@@ -137,7 +143,8 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //notes card
-              child: ListTile(
+            color: Theme.of(context).primaryColor,
+            child: ListTile(
                 title: Text("Notes"),
                 onTap: () {
                   Navigator.push(
@@ -148,7 +155,8 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(     //diaper change card
-              child: ListTile(
+            color: MyThemes.kobiPink,
+            child: ListTile(
                 title: Text("All Stats"),
                 onTap: () {
                   Navigator.push(
@@ -159,6 +167,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(
+            color: Theme.of(context).cardColor,
             child: ListTile(
               title: Text("Add Caretakers"),
               onTap: (){
@@ -170,6 +179,7 @@ class _BabyMenuState extends State<BabyMenu> {
             )
           ),
           Card(     //diaper change card
+              color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("arturo's Debug page (ignore)"),
                   onTap: () {

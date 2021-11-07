@@ -14,6 +14,7 @@ class _EditNoteState extends State<EditNote> {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
 
+
   @override
   void initState() {
     title = TextEditingController(text: widget.document['title']);
@@ -26,8 +27,7 @@ class _EditNoteState extends State<EditNote> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('New Note'),
-        backgroundColor: Colors.amber,
+        title: Text('Edit Note'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -35,9 +35,48 @@ class _EditNoteState extends State<EditNote> {
         actions: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
-            color: Colors.amber,
             child: ElevatedButton(
-              child: Text('Save'),
+              child: Icon(Icons.delete, color: Colors.white,),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              onPressed: () => {
+                showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                    title: Text('Confirm Deletion'),
+                    content: Text('Confirm deletion of note'),
+                    actions: [
+                      TextButton(
+                        child: Text('Confirm'),
+                        onPressed: () {
+                          widget.document.reference.delete().whenComplete(() => Navigator.pop(context))
+                              .then((value) => Navigator.pop(context));
+                        },
+                      ),
+
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  )
+                ),
+              },
+            ),
+          ),
+
+
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent),
+              child: Text(
+                  'Save',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () => {
                 widget.document.reference.update({
                   'title': title.text,
@@ -65,11 +104,9 @@ class _EditNoteState extends State<EditNote> {
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                           controller: title,
-
-                          onChanged: (val) {}
+                            onChanged: (val) {}
                         ),
 
                         Container(
@@ -82,7 +119,6 @@ class _EditNoteState extends State<EditNote> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
                             ),
                             controller: description,
                             maxLines: 20,
