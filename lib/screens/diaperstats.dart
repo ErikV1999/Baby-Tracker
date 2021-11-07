@@ -10,7 +10,6 @@ class diaperstats extends StatefulWidget {
   _diaperstats createState() => _diaperstats();
 }
 
-/*
 class _diaperstats extends State<diaperstats> {
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class _diaperstats extends State<diaperstats> {
           LineChartData(
             backgroundColor: Colors.white,
             minX: 0,
-            maxX: 11,
+            maxX: 10,
             minY: 0,
             maxY: 6,
             gridData: FlGridData(
@@ -42,13 +41,7 @@ class _diaperstats extends State<diaperstats> {
             ),
             lineBarsData: [
               LineChartBarData(
-                spots: [
-                  FlSpot(0,3),
-                  FlSpot(2,2),
-                  FlSpot(5,5),
-                  FlSpot(7,3),
-                  FlSpot(8,4),
-                  ],
+                spots: spots3,
                 isCurved: false,
                 barWidth: 20,
                 belowBarData: BarAreaData(
@@ -63,17 +56,15 @@ class _diaperstats extends State<diaperstats> {
   ),
     );
   }
-}*/
-
-
-class _diaperstats extends State<diaperstats> {
-
-  
-
-
-
-  @override
-  Widget build(BuildContext context){
-    return Container();
-  }
 }
+List<List<double>> data = [
+  [1, 2],
+  [2, 2],
+  [3, 1],
+  [4, 5],
+];
+final spots3 = <FlSpot>[
+  for(int i = 0; i < data.length; i++)
+    FlSpot(data[i][0], data[i][1])
+
+];
