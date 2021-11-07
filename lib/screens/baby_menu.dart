@@ -1,3 +1,5 @@
+import 'package:baby_tracker/models/Themes/changeTheme.dart';
+import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/notes.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:baby_tracker/screens/Sleeping.dart';
 import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
 import 'package:baby_tracker/screens/AllStats.dart';
+import 'package:baby_tracker/screens/debugPage.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -30,7 +33,7 @@ class is the "real" widget for BabyMenu due to the statefulness of the widget
 
  */
 class _BabyMenuState extends State<BabyMenu> {
-  dynamic babyName = "Placeholder";
+  dynamic baby = "Placeholder";
 
 
   void addCaretakerClick(){
@@ -60,34 +63,30 @@ class _BabyMenuState extends State<BabyMenu> {
    */
   Widget screen(BuildContext context,snapshot){
     String babyPath = widget.baby;    //gets the babies path to input into next component
-    babyName = snapshot.data;
+    baby = snapshot.data;             //contains the document of the baby from the db
+    Color bannerColor = Color(0xFF006992);
     return Scaffold(
       appBar: AppBar(
-        title: Text(babyName["Name"]),    //ets the name from the snapshotdoc
-        //title: Text(babyPath),
-       /* title: StreamBuilder(
-          stream: FirebaseFirestore.instance.doc(babyPath).snapshots(),
-          builder: (context, snapshot){
-            if(!snapshot.hasData)
-              return Text("Jane Doe");
-            dynamic babyName = snapshot.data;
-            return Text(babyName["Name"]);
-          }
-        ),*/
-        backgroundColor: Colors.cyanAccent,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(baby["Name"]),    //ets the name from the snapshotdoc
+        actions: <Widget>[      //sign out button at the appbar
+          TextButton(
+
+            onPressed: () async {
+
+
+            },
+            child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+
+          ),
+          ChangeThemeButton(),
+        ],
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () => addCaretakerClick(),
-        child: Row(
-          children:[
-            Text("Add Caretaker"),
-            Icon(Icons.add)
-          ]
-        )
-      ),*/
+
       body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
+            color: Theme.of(context).primaryColor,
             child: ListTile(
               title: Text("Feeding"),
               subtitle: Row(
@@ -106,6 +105,7 @@ class _BabyMenuState extends State<BabyMenu> {
             )
           ),
           Card(     //sleeping card
+              color: MyThemes.kobiPink,
               child: ListTile(
                   title: Text("Sleeping"),
                   subtitle: Row(
@@ -123,6 +123,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //diaper change card
+              color: Theme.of(context).cardColor,
               child: ListTile(
                   title: Text("Diaper Change"),
                   subtitle: Row(
@@ -142,7 +143,8 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //notes card
-              child: ListTile(
+            color: Theme.of(context).primaryColor,
+            child: ListTile(
                 title: Text("Notes"),
                 onTap: () {
                   Navigator.push(
@@ -153,7 +155,8 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(     //diaper change card
-              child: ListTile(
+            color: MyThemes.kobiPink,
+            child: ListTile(
                 title: Text("All Stats"),
                 onTap: () {
                   Navigator.push(
@@ -164,15 +167,29 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(
+            color: Theme.of(context).cardColor,
             child: ListTile(
               title: Text("Add Caretakers"),
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: babyName)),
+                  MaterialPageRoute(builder: (context) => AddCaretaker(baby: babyPath, userEntry: widget.userEntry, babyDoc: baby)),
                 );
               }
             )
+          ),
+          Card(     //diaper change card
+              color: Theme.of(context).primaryColor,
+              child: ListTile(
+                  title: Text("arturo's Debug page (ignore)"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => debugPage(baby: babyPath)),
+                    );
+                  }
+
+              )
           ),
         ]
       ),

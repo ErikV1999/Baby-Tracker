@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 
 class Sleeping extends StatefulWidget {
@@ -21,14 +22,32 @@ class _SleepingState extends State<Sleeping> {
   // not a GlobalKey<MyCustomFormState>.
   String? _selectedTime1;
   String? _selectedTime2;
+  int time1Hour = 0;
+  int time1Min = 0;
+  int time2Hour = 0;
+  int time2Min = 0;
+  String? _Time3;
   int totalSleep = 0;
   String notes = 'empty!';
   String path = 'path';
   Color blueSapphire = Color(0xFF006992);
   Color orangeYellow = Color(0xFFFED766);
   TimeOfDay updateTime = TimeOfDay.now();
+  TimeOfDay time1 = TimeOfDay.now();
+  TimeOfDay time2 = TimeOfDay.now();
+  double doubleT1 = 0;
+  double doubleT2 = 0;
+  double doubleT3 = 0;
+  int totalHour = 0;
+  int totalMin = 0;
+  String Date1 = '';
+  String Date2 = '';
+  String Date3 = '';
+  String conDate = '';
+  int indexDate = 0;
 
   DateTime _selectedDate = DateTime.now();
+  DateFormat formatter = DateFormat('MM-dd-yyyy');
   String? _dateString;
   void _presentDatePicker() {
     // showDatePicker is a pre-made funtion of Flutter
@@ -45,7 +64,17 @@ class _SleepingState extends State<Sleeping> {
       setState(() {
         // using state so that the UI will be rerendered when date is picked
         _selectedDate = pickedDate;
-        _dateString = "${_selectedDate.month.toString()}-${_selectedDate.day.toString()}-${_selectedDate.year.toString()}";
+        _dateString = formatter.format(_selectedDate);
+        print(_dateString);
+        print(_dateString!.substring(3, 5));
+        Date1 = _dateString.toString().substring(0,2);
+        Date2 = _dateString.toString().substring(3,5);
+        Date3 = _dateString.toString().substring(6,10);
+        conDate = Date1 + Date2 + Date3;
+        print(conDate);
+        indexDate = int.parse(conDate);
+        print(indexDate);
+        //_dateString = "${_selectedDate.month.toString()}-${_selectedDate.day.toString()}-${_selectedDate.year.toString()}";
       });
     });
   }
@@ -55,10 +84,12 @@ class _SleepingState extends State<Sleeping> {
     if(result != null){
       setState(() {
         _selectedTime1 = result.format(context);
+        time1 = result;
       }
       );
       updateTime = TimeOfDay.now();
       print(_selectedTime1);
+      print(time1);
       print(updateTime);
     }
   }
@@ -68,9 +99,30 @@ class _SleepingState extends State<Sleeping> {
     if (result != null) {
       setState(() {
         _selectedTime2 = result.format(context);
+        time2 = result;
       });
     }
   }
+
+  //getting the elapsed time from the start sleeping time and
+  //the woke up time.
+  void elapsedTime(){
+    //print(time1.toString().substring(13,15));
+    time1Hour = int.parse(time1.toString().substring(10,12));
+    time1Min = int.parse(time1.toString().substring(13,15));
+    time2Hour = int.parse(time2.toString().substring(10,12));
+    time2Min = int.parse(time2.toString().substring(13,15));
+
+    totalHour = time2Hour - time1Hour;
+    if (time1Min > time2Min){
+      time1Min = time1Min - 60;
+    }
+    totalMin = time2Min - time1Min;
+
+
+    print("$totalHour , $totalMin");
+    return;
+}
 
   final _formKey = GlobalKey<FormState>();
 
@@ -81,7 +133,6 @@ class _SleepingState extends State<Sleeping> {
     String path = babyPath.substring(42);
     // appBar header
     return Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           //title: Text(babyPath),
           title: Text('Sleeping',
@@ -234,7 +285,7 @@ class _SleepingState extends State<Sleeping> {
                       decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
                         labelText: 'Notes',
-                        fillColor: Colors.white,
+                        //fillColor: Colors.white,
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xFF006992), width: 4.0),
@@ -264,15 +315,18 @@ class _SleepingState extends State<Sleeping> {
                                     'Notes: $notes'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'Cancel'),
+                                    onPressed: () {
+                                      elapsedTime();
+                      Navigator.pop(context, 'Cancel');
+                      },
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(
                                     onPressed: () {
+                                      elapsedTime();
                                     Navigator.pop(context, 'OK');
-                                    FirestoreDatabase().addSleepTime(_selectedDate, _selectedTime1.toString(), _selectedTime2.toString(), notes, babyPath);
-                                    FirestoreDatabase().updateLastSleep(updateTime, path);
+                                    FirestoreDatabase().addSleepTime(_dateString, _selectedTime1, _selectedTime2, totalHour, totalMin, indexDate, notes, babyPath);
+                                    //FirestoreDatabase().updateLastSleep(updateTime, path);
                                     },
                                     child: const Text('OK'),
                                   ),

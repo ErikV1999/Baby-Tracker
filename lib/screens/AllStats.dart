@@ -2,6 +2,8 @@ import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/SleepingStats.dart';
+import 'package:baby_tracker/screens/FeedingStats.dart';
+
 
 class AllStats extends StatefulWidget {
 
@@ -16,8 +18,9 @@ class _AllStatsState extends State<AllStats> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
+    String babyPath = widget.baby;
+    return Scaffold(
+      body: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
@@ -32,8 +35,8 @@ class _AllStatsState extends State<AllStats> {
           ),
           body: TabBarView(
             children: [
-              Icon(Icons.fastfood_sharp),
-              SleepingStats(),
+              FeedingStats(),
+              SleepingStats(baby: babyPath),
               diaperstats(),
             ],
           ),

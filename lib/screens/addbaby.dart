@@ -45,7 +45,6 @@ class _AddBabyState extends State<AddBaby> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
           backgroundColor: Color( 0xFFFED766),
           elevation:0.0,
@@ -72,8 +71,6 @@ class _AddBabyState extends State<AddBaby> {
                 'Gender:',
                 style: TextStyle(
                   fontSize: 24,
-                  //fontWeight: FontWeight.bold,
-                  color: Colors.black,
                 ),
               ),
               _buildGender(),
@@ -100,13 +97,10 @@ class _AddBabyState extends State<AddBaby> {
       decoration: InputDecoration(
         labelText: 'Name:',
         labelStyle: TextStyle(
+          color: Theme.of(context).textTheme.bodyText1!.color,
           fontSize: 24,
-          //fontWeight: FontWeight.bold,
-          color: Colors.black,
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(width: 1.5)
-        ),
+
       ),
 
       validator: (val) => val!.isEmpty ? 'Enter a name' : null,
@@ -168,8 +162,6 @@ class _AddBabyState extends State<AddBaby> {
           'Height:',
           style: TextStyle(
             fontSize: 24,
-           // fontWeight: FontWeight.bold,
-            color: Colors.black,
           ),
         ),
 
@@ -252,8 +244,6 @@ class _AddBabyState extends State<AddBaby> {
           'Date of Birth:',
           style: TextStyle(
             fontSize: 24,
-            //fontWeight: FontWeight.bold,
-            color: Colors.black,
           ),
         ),
 

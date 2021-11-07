@@ -40,12 +40,10 @@ class _diaperchangeState extends State<diaperchange> {
     return Scaffold(
       // resizeToAvoidBottonInset use to fix overflow by X pixels
       resizeToAvoidBottomInset: true,
-      backgroundColor: DefaultScreen.pageBackground,
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black,),
           title: Text('Diaper Change',
             style: TextStyle(color: DefaultScreen.appBarFont),),
-          backgroundColor: DefaultScreen.appBarBackground,
         ),
         body: ListView(
             padding: const EdgeInsets.all(0.0),
@@ -58,12 +56,12 @@ class _diaperchangeState extends State<diaperchange> {
                       children: <Widget>[
                         Text('Enter date and time of diaper change',
                           style: TextStyle(fontSize:20,
-                              color: DefaultScreen.bodyFont,
                               fontWeight: FontWeight.bold),
                         ),
                         Container(
                           height: 200,
                           child: CupertinoDatePicker(
+                            backgroundColor: Theme.of(context).accentColor,
                             mode: CupertinoDatePickerMode.dateAndTime,
                             initialDateTime: selectedDate,
                             onDateTimeChanged: (val) {
@@ -78,7 +76,6 @@ class _diaperchangeState extends State<diaperchange> {
                             children: <Widget>[
                               Text('Please choose best description',
                                 style: TextStyle(fontSize:20,
-                                    color: DefaultScreen.bodyFont,
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(width: 20),
@@ -88,7 +85,7 @@ class _diaperchangeState extends State<diaperchange> {
                                 ),
                                 child: Text(
                                   'Wet',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(),
                                 ),
                                 onPressed: () async {
                                   status = 'Wet';
@@ -102,7 +99,7 @@ class _diaperchangeState extends State<diaperchange> {
                                   ),
                                   child: Text(
                                     'Dry',
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(),
                                   ),
                                   onPressed: () async {
                                     status = 'Dry';
@@ -116,7 +113,7 @@ class _diaperchangeState extends State<diaperchange> {
                                   ),
                                   child: Text(
                                     'Mix',
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(),
                                   ),
                                   onPressed: () async {
                                     status = 'Mix';
@@ -142,7 +139,7 @@ class _diaperchangeState extends State<diaperchange> {
                             ),
                           child: Text(
                             'Add Diaper Change',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(),
                           ),
                           onPressed: () async{
                           /*print(notes);
