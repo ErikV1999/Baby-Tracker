@@ -35,7 +35,7 @@ class _AllStatsState extends State<AllStats> {
           ),
           body: TabBarView(
             children: [
-              FeedingStats(),
+              FeedingStats(baby: babyPath),
               SleepingStats(baby: babyPath),
               diaperstats(),
             ],

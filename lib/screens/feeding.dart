@@ -44,9 +44,9 @@ class _FeedingState extends State<Feeding> {
   String amount = 'amount';
   String foodType = 'food';
 
-  final fieldTextFood = TextEditingController();
-  final fieldTextAmount = TextEditingController();
-  final fieldTextNotes = TextEditingController();
+  var fieldTextFood = TextEditingController();
+  var fieldTextAmount = TextEditingController();
+  var fieldTextNotes = TextEditingController();
 
   Duration duration = Duration(); //set duration to zero in other functions
   final _isHours = true;
@@ -262,18 +262,17 @@ class _FeedingState extends State<Feeding> {
                   print(day);
                   print(year);
                   print(totalTimeSec);
-                  if (fieldTextFood.text.isEmpty) foodType = 'n/a';
+                  if (fieldTextFood.text.isEmpty) foodType = 'food';
                   if (fieldTextFood.text.isNotEmpty)
                     foodType = fieldTextFood.text;
 
-                  if (fieldTextAmount.text.isEmpty) amount = 'n/a';
+                  if (fieldTextAmount.text.isEmpty) amount = '0';
                   if (fieldTextAmount.text.isNotEmpty)
                     amount = fieldTextFood.text;
 
-                  if (fieldTextNotes.text.isEmpty) notes = 'n/a';
+                  if (fieldTextNotes.text.isEmpty) notes = '!';
                   if (fieldTextNotes.text.isNotEmpty)
-                    notes = fieldTextFood.text;
-
+                    setState(() => notes = fieldTextNotes.text);
                   FirestoreDatabase().addFeeding(
                       leftBreast,
                       rightBreast,
