@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:baby_tracker/models/chartContainer.dart';
 import 'package:baby_tracker/models/barChart.dart';
 import 'package:baby_tracker/models/sleepingChartData.dart';
@@ -18,22 +19,23 @@ class _debugPageState extends State<debugPage> {
   Widget build(BuildContext context) {
     String babyPath = widget.baby;
     return Scaffold(
-        appBar: AppBar(
-          title: Text('debug page, messing with graphs',
-          style: TextStyle(fontSize: 15),),
-        ),
-        body: Container(
-          color: Color(0xfff0f0f0),
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-            children: <Widget>[
-              ChartContainer(
-                title: 'Line Chart',
-                color: Color.fromRGBO(45, 108, 223, 1),
-                chart: BarChartContent(),
-              ),
-            ],
+      appBar: AppBar(
+        title: Text('debug'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+        padding: const EdgeInsets.all(10),
+        color: Colors.blue,
+        height: 200,
+        child: BarChart(
+          BarChartData (
+            maxY: 20,
+            barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: 10)])],
           ),
-        ));
+        ),
+        ),
+      ),
+    );
   }
 }

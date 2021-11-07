@@ -16,21 +16,21 @@ List<BarChartGroupData> barChartGroupData = [
     BarChartRodData(y: 15.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 2, barRods: [
-    BarChartRodData(y: y1, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 10.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 3, barRods: [
-    BarChartRodData(y: y2, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 9.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 4, barRods: [
-    BarChartRodData(y: y3, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 5.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 5, barRods: [
-    BarChartRodData(y: y4, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 6.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 6, barRods: [
-    BarChartRodData(y: y5, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 7.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 7, barRods: [
-    BarChartRodData(y: y5, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 14.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
 ];
