@@ -28,7 +28,6 @@ class _EditNoteState extends State<EditNote> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Edit Note'),
-        backgroundColor: Colors.amber,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -36,9 +35,8 @@ class _EditNoteState extends State<EditNote> {
         actions: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
-            color: Colors.amber,
             child: ElevatedButton(
-              child: Icon(Icons.delete),
+              child: Icon(Icons.delete, color: Colors.white,),
               style: ElevatedButton.styleFrom(
                 primary: Colors.red,
               ),
@@ -73,9 +71,12 @@ class _EditNoteState extends State<EditNote> {
 
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
-            color: Colors.amber,
             child: ElevatedButton(
-              child: Text('Save'),
+              style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent),
+              child: Text(
+                  'Save',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () => {
                 widget.document.reference.update({
                   'title': title.text,
@@ -103,11 +104,9 @@ class _EditNoteState extends State<EditNote> {
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
                           ),
                           controller: title,
-
-                          onChanged: (val) {}
+                            onChanged: (val) {}
                         ),
 
                         Container(
@@ -120,7 +119,6 @@ class _EditNoteState extends State<EditNote> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
                             ),
                             controller: description,
                             maxLines: 20,
