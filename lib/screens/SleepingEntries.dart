@@ -1,3 +1,4 @@
+import 'package:baby_tracker/models/sleepingChartData.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/SleepingStats.dart';
@@ -12,11 +13,36 @@ class SleepingEntries extends StatefulWidget {
 }
 
 class _SleepingEntriesState extends State<SleepingEntries> {
-  dynamic babyName = "Placeholder";
+
+  Future<void> generate() async{
+    Query _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _sleepRef2.get();
+    int count = 0;
+    int temp = 0;
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    print(dayArr[0]);
+
+    querySnapshot.docs.forEach((doc) {
+      if (count < 7) {
+        dayArr[count] = doc["TotalHoursSlept"].toDouble();
+        //print(doc["TotalHoursSlept"].runtimeType);
+        print(doc["TotalHoursSlept"]);
+        count++;
+      }
+    });
+    count = 0;
+
+    print(dayArr[0]);
+  }
 
   @override
   Widget build(BuildContext context) {
     Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
+    CollectionReference _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping');
     String babyPath = widget.baby;
 
     return Scaffold(
@@ -34,6 +60,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
         future: sleepRef.get(),
         builder: (context, snapshot) {
           if(snapshot.hasData) {
+            generate();
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
