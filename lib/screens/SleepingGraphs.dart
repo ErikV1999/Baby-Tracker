@@ -13,17 +13,18 @@ class SleepingGraphs extends StatefulWidget {
 }
 
 class _SleepingGraphsState extends State<SleepingGraphs> {
-  var list1 = List<double>.filled(7,1.0);
+  var listy = List<double>.filled(7,1.0);
+  var listx = List<int>.filled(7,0);
 
   Future<void> generate() async{
     setState(() {
-      list1[0] = dayArr[0];
-      list1[1] = dayArr[1];
-      list1[2] = dayArr[2];
-      list1[3] = dayArr[3];
-      list1[4] = dayArr[4];
-      list1[5] = dayArr[5];
-      list1[6] = dayArr[6];
+      listy[0] = dayArr[0];
+      listy[1] = dayArr[1];
+      listy[2] = dayArr[2];
+      listy[3] = dayArr[3];
+      listy[4] = dayArr[4];
+      listy[5] = dayArr[5];
+      listy[6] = dayArr[6];
     });
   }
 
@@ -42,13 +43,13 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
             child: BarChart(
               BarChartData (
                 maxY: 25,
-                barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: list1[0])]),
-                  BarChartGroupData(x: 2, barRods: [BarChartRodData(y: list1[1])]),
-                  BarChartGroupData(x: 3, barRods: [BarChartRodData(y: list1[2])]),
-                  BarChartGroupData(x: 4, barRods: [BarChartRodData(y: list1[3])]),
-                  BarChartGroupData(x: 5, barRods: [BarChartRodData(y: list1[4])]),
-                  BarChartGroupData(x: 6, barRods: [BarChartRodData(y: list1[5])]),
-                  BarChartGroupData(x: 7, barRods: [BarChartRodData(y: list1[6])]),],
+                barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[0])]),
+                  BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[1])]),
+                  BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[2])]),
+                  BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[3])]),
+                  BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[4])]),
+                  BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[5])]),
+                  BarChartGroupData(x: 7, barRods: [BarChartRodData(y: listy[6])]),],
               ),
             ),
           ),
@@ -58,36 +59,13 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
           child: Container(
             child: ElevatedButton.icon(
               onPressed: () => generate(),
-              label: Text(''),
+              label: Text('Generate 7 Day Graph'),
               icon: Icon(
                 Icons.check,
               ),
             ),
           ),
         ),],
-    );
-  }
-
-  Widget _daySeven() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        color: Colors.blue,
-        height: 200,
-        child: BarChart(
-          BarChartData (
-            maxY: 20,
-            barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: list1[0])]),
-              BarChartGroupData(x: 2, barRods: [BarChartRodData(y: list1[1])]),
-              BarChartGroupData(x: 3, barRods: [BarChartRodData(y: list1[2])]),
-              BarChartGroupData(x: 4, barRods: [BarChartRodData(y: list1[3])]),
-              BarChartGroupData(x: 5, barRods: [BarChartRodData(y: list1[4])]),
-              BarChartGroupData(x: 6, barRods: [BarChartRodData(y: list1[5])]),
-              BarChartGroupData(x: 7, barRods: [BarChartRodData(y: list1[6])]),],
-          ),
-        ),
-      ),
     );
   }
 }
