@@ -3,20 +3,13 @@ import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 
 List<double> dayArr = List.filled(10,0.0);
-double y0 = 0.0;
-double y1 = 0.0;
-double y2 = 0.0;
-double y3 = 0.0;
-double y4 = 0.0;
-double y5 = 0.0;
-
 
 List<BarChartGroupData> barChartGroupData = [
   BarChartGroupData(x: 1, barRods: [
     BarChartRodData(y: 9.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 2, barRods: [
-    BarChartRodData(y: y1, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+    BarChartRodData(y: 8.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
   ]),
   BarChartGroupData(x: 3, barRods: [
     BarChartRodData(y: dayArr[2], colors: [Color(0xff43dde6), Color(0xff43dde6)]),

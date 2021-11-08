@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:baby_tracker/models/chartContainer.dart';
-import 'package:baby_tracker/models/barChart.dart';
 import 'package:baby_tracker/models/sleepingChartData.dart';
 
 class debugPage extends StatefulWidget {
