@@ -23,21 +23,47 @@ class _diaperstats extends State<diaperstats> {
     var docSnapshot = await collection.doc('doc_id').get();
     Map<String, dynamic>? data = docSnapshot.data();
   }*/
+
+  List<List<double>> datalisto = [
+    [1, 2],
+    [2, 2],
+    [3, 1],
+    [4, 4],
+  ];
+  /*List<DateTime> datatiempo= [];
+  List<String> datastatus = [];*/
+  List<diaperChange> myList = [];
+
   Future<void> generateData() async{
     Query _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _sleepRef2.get();
-    int count = 0;
-    double temp = 0.0;
-    int currDate = 0;
+
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     //print(dayArr[0]);
-
-    print(querySnapshot.docs);
+    print("PRINTING SNAPSHOT");
+    //datalisto.clear();
+    querySnapshot.docs.forEach((doc) {
+      final Timestamp timestop = doc['date'];
+      final DateTime date = timestop.toDate();
+      for(int i = 0; i < myList.length; i++) {
+        //datatiempo[i].(timestop);
+        diaperChange newdiaperc = new diaperChange(date, doc['status'],);
+        myList.add(newdiaperc);
+      }
+      print(date.day);
+      print("Status of " + doc["status"]);
+    });
+    //print(allData.toString());
+    //print(querySnapshot.docs);
+    print(myList);
+    print("AFTER PRINT");
   }
+
+
   
   Widget build(BuildContext context) {
     Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("indexDate", descending: true);
