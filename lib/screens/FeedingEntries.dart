@@ -16,7 +16,7 @@ class _FeedingEntriesState extends State<FeedingEntries> {
 
   @override
   Widget build(BuildContext context) {
-    Query feedRef = FirebaseFirestore.instance.doc(widget.baby).collection('feeding').orderBy("date day", descending: true);
+    Query feedRef = FirebaseFirestore.instance.doc(widget.baby).collection('feeding').orderBy("date day", descending: true);//change to index day :p
     String babyPath = widget.baby;
 
     return Scaffold(
