@@ -38,7 +38,7 @@ class _SleepingStatsState extends State<SleepingStats> {
             body: TabBarView(
               children: [
                 SleepingEntries(baby: babyPath),
-                SleepingGraphs(),
+                SleepingGraphs(baby: babyPath),
               ],
             ),
           )

@@ -70,7 +70,7 @@ class _SleepingState extends State<Sleeping> {
         Date1 = _dateString.toString().substring(0,2);
         Date2 = _dateString.toString().substring(3,5);
         Date3 = _dateString.toString().substring(6,10);
-        conDate = Date1 + Date2 + Date3;
+        conDate = Date3 + Date1 + Date2;
         print(conDate);
         indexDate = int.parse(conDate);
         print(indexDate);
