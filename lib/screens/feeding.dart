@@ -299,7 +299,7 @@ class _FeedingState extends State<Feeding> {
 
                   if (fieldTextAmount.text.isEmpty) amount = '0';
                   if (fieldTextAmount.text.isNotEmpty)
-                    setState(() => amount = fieldTextFood.text);
+                    setState(() => amount = fieldTextAmount.text);
 
                   if (fieldTextNotes.text.isEmpty) notes = 'none';
                   if (fieldTextNotes.text.isNotEmpty)
