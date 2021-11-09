@@ -21,7 +21,6 @@ class _FeedingEntriesState extends State<FeedingEntries> {
     String babyPath = widget.baby;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         //title: Text(babyPath),
         title: Text(
@@ -58,10 +57,14 @@ class _FeedingEntriesState extends State<FeedingEntries> {
                               color: Colors.black,
                             ),
                           ),
-                          if("${data['feeding type']}" == 'Left Breast') _BreastEntry(data),
-                          if("${data['feeding type']}" == 'Right Breast') _BreastEntry(data),
-                          if("${data['feeding type']}" == 'Bottle') _BottleEntry(data),
-                          if("${data['feeding type']}" == 'Food') _FoodEntry(data),
+                          if ("${data['feeding type']}" == 'Left Breast')
+                            _BreastEntry(data),
+                          if ("${data['feeding type']}" == 'Right Breast')
+                            _BreastEntry(data),
+                          if ("${data['feeding type']}" == 'Bottle')
+                            _BottleEntry(data),
+                          if ("${data['feeding type']}" == 'Food')
+                            _FoodEntry(data),
                         ],
                       ),
                     ),
@@ -76,6 +79,7 @@ class _FeedingEntriesState extends State<FeedingEntries> {
       ),
     );
   }
+
   Widget _BreastEntry(Map data) {
     return Text(
         "Date: " +
@@ -89,6 +93,7 @@ class _FeedingEntriesState extends State<FeedingEntries> {
           color: Colors.black,
         ));
   }
+
   Widget _BottleEntry(Map data) {
     return Text(
         "Date: " +
@@ -102,13 +107,16 @@ class _FeedingEntriesState extends State<FeedingEntries> {
           color: Colors.black,
         ));
   }
+
   Widget _FoodEntry(Map data) {
     return Text(
         "Date: " +
             "${data['date']}\n" +
             "food type: " +
             "${data['food type']}\n" +
-            "notes: " +
+            "Amount: " +
+            "${data['amount']}\n"+
+                "notes: " +
             "${data['notes']}",
         style: TextStyle(
           fontSize: 18,

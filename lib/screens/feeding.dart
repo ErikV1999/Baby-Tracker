@@ -284,11 +284,11 @@ class _FeedingState extends State<Feeding> {
                   print(totalTimeSec);
                   if (fieldTextFood.text.isEmpty) foodType = 'food';
                   if (fieldTextFood.text.isNotEmpty)
-                    foodType = fieldTextFood.text;
+                    setState(() => foodType = fieldTextFood.text);
 
                   if (fieldTextAmount.text.isEmpty) amount = '0';
                   if (fieldTextAmount.text.isNotEmpty)
-                    amount = fieldTextFood.text;
+                    setState(() => amount = fieldTextFood.text);
 
                   if (fieldTextNotes.text.isEmpty) notes = 'none';
                   if (fieldTextNotes.text.isNotEmpty)
