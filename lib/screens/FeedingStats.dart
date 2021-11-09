@@ -1,6 +1,4 @@
-import 'package:baby_tracker/screens/feeding.dart';
 import 'package:flutter/material.dart';
-import 'package:baby_tracker/screens/AllStats.dart';
 import 'package:baby_tracker/screens/FeedingEntries.dart';
 import 'package:baby_tracker/screens/FeedingGraph.dart';
 
@@ -41,7 +39,7 @@ class _FeedingStatsState extends State<FeedingStats> {
         body: TabBarView(
           children: [
             FeedingEntries(baby: babyPath),
-            FeedingGraphs(),
+            FeedingGraphs(baby: babyPath),
           ],
         ),
       ),

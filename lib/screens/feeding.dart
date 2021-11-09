@@ -227,7 +227,18 @@ class _FeedingState extends State<Feeding> {
   Widget build(BuildContext context) {
     String babyPath = widget.baby;
     String path = babyPath.substring(42);
-    _dateString = formatter.format(_startDate);
+    setState(() {
+      _dateString = formatter.format(_startDate);
+      print(_dateString);
+      print(_dateString.substring(3, 5));
+      Date1 = _dateString.toString().substring(0, 2);
+      Date2 = _dateString.toString().substring(3, 5);
+      Date3 = _dateString.toString().substring(6, 10);
+      conDate = Date3 + Date1 + Date2;
+      print(conDate);
+      indexDate = int.parse(conDate);
+      print(indexDate);
+    });
 
     /*
     * APP BAR Header
