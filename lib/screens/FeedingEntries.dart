@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/FeedingStats.dart';
 
 class FeedingEntries extends StatefulWidget {
-
   final String baby;
 
   const FeedingEntries({Key? key, required this.baby}) : super(key: key);
@@ -12,19 +11,25 @@ class FeedingEntries extends StatefulWidget {
 }
 
 class _FeedingEntriesState extends State<FeedingEntries> {
-  dynamic babyName = "Placeholder";
-
   @override
   Widget build(BuildContext context) {
-    Query feedRef = FirebaseFirestore.instance.doc(widget.baby).collection('feeding').orderBy("date day", descending: true);//change to index day :p
+    Query feedRef = FirebaseFirestore.instance
+        .doc(widget.baby)
+        .collection('feeding')
+        .orderBy("index date", descending: true); //change to index day :p
+    //CollectionReference _feedRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('feeding');
     String babyPath = widget.baby;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         //title: Text(babyPath),
-        title: Text('Feeding Entries',
-          style: TextStyle(color: Colors.black, fontSize: 20,),
+        title: Text(
+          'Feeding Entries',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.blueGrey,
@@ -33,7 +38,7 @@ class _FeedingEntriesState extends State<FeedingEntries> {
       body: FutureBuilder<QuerySnapshot>(
         future: feedRef.get(),
         builder: (context, snapshot) {
-          if(snapshot.hasData) {
+          if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -41,24 +46,22 @@ class _FeedingEntriesState extends State<FeedingEntries> {
                 return GestureDetector(
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${data['notes']}",
+                            "${data['feeding type']}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
-                          Text("Date: " "${data['date month']}/${data['date day']}/${data['date year']} ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              )
-                          ),
+                          if("${data['feeding type']}" == 'Left Breast') _BreastEntry(data),
+                          if("${data['feeding type']}" == 'Right Breast') _BreastEntry(data),
+                          if("${data['feeding type']}" == 'Bottle') _BottleEntry(data),
+                          if("${data['feeding type']}" == 'Food') _FoodEntry(data),
                         ],
                       ),
                     ),
@@ -66,11 +69,50 @@ class _FeedingEntriesState extends State<FeedingEntries> {
                 );
               },
             );
-          }else {
+          } else {
             return Center(child: Text('Loading...'));
           }
         },
       ),
     );
+  }
+  Widget _BreastEntry(Map data) {
+    return Text(
+        "Date: " +
+            "${data['date']}\n" +
+            "Time Fed: " +
+            "${data['total Time in seconds']} seconds\n" +
+            "notes: " +
+            "${data['notes']}",
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+        ));
+  }
+  Widget _BottleEntry(Map data) {
+    return Text(
+        "Date: " +
+            "${data['date']}\n" +
+            "Amount: " +
+            "${data['amount']}\n" +
+            "notes: " +
+            "${data['notes']}",
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+        ));
+  }
+  Widget _FoodEntry(Map data) {
+    return Text(
+        "Date: " +
+            "${data['date']}\n" +
+            "food type: " +
+            "${data['food type']}\n" +
+            "notes: " +
+            "${data['notes']}",
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+        ));
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Feeding extends StatefulWidget {
   final String baby;
@@ -27,12 +28,21 @@ class _FeedingState extends State<Feeding> {
   bool bottle = false; //
   bool food = false; //
 
+  String feedingType = 'Left Breast';
+
   bool startIsPress = false;
   bool stopIsPress = true;
   bool resetIsPress = true;
 
+  String Date1 = '';
+  String Date2 = '';
+  String Date3 = '';
+  String conDate = '';
+  int indexDate = 0;
   String timetodisplay = "00:00:00";
   DateTime _startDate = DateTime.now();
+  DateFormat formatter = DateFormat('MM-dd-yyyy');
+  String _dateString = ' ';
   String? timeString;
 
   int month = DateTime.now().month;
@@ -105,6 +115,7 @@ class _FeedingState extends State<Feeding> {
       rightBreast = false;
       bottle = false;
       food = false;
+      feedingType = 'Left Breast';
 
       clearText();
       turnStopWatchOn();
@@ -117,6 +128,7 @@ class _FeedingState extends State<Feeding> {
       rightBreast = true;
       bottle = false;
       food = false;
+      feedingType = 'Right Breast';
 
       clearText();
       turnStopWatchOn();
@@ -129,6 +141,7 @@ class _FeedingState extends State<Feeding> {
       rightBreast = false;
       bottle = true;
       food = false;
+      feedingType = 'Bottle';
 
       clearText();
       turnStopWatchOff();
@@ -141,6 +154,7 @@ class _FeedingState extends State<Feeding> {
       rightBreast = false;
       bottle = false;
       food = true;
+      feedingType = 'Food';
 
       clearText();
       turnStopWatchOff();
@@ -191,6 +205,16 @@ class _FeedingState extends State<Feeding> {
         year = dateResult.year;
         month = dateResult.month;
         day = dateResult.day;
+        _dateString = formatter.format(_startDate);
+        print(_dateString);
+        print(_dateString.substring(3, 5));
+        Date1 = _dateString.toString().substring(0, 2);
+        Date2 = _dateString.toString().substring(3, 5);
+        Date3 = _dateString.toString().substring(6, 10);
+        conDate = Date3 + Date1 + Date2;
+        print(conDate);
+        indexDate = int.parse(conDate);
+        print(indexDate);
         //print("year: $year");
         //print("month: $month");
         //print("day: $day");
@@ -203,11 +227,7 @@ class _FeedingState extends State<Feeding> {
   Widget build(BuildContext context) {
     String babyPath = widget.baby;
     String path = babyPath.substring(42);
-    print(babyPath);
-    print(path);
-
-    //print("$month / $day / $year");
-    //print("$startHour : $startMin ");
+    _dateString = formatter.format(_startDate);
 
     /*
     * APP BAR Header
@@ -270,17 +290,13 @@ class _FeedingState extends State<Feeding> {
                   if (fieldTextAmount.text.isNotEmpty)
                     amount = fieldTextFood.text;
 
-                  if (fieldTextNotes.text.isEmpty) notes = '!';
+                  if (fieldTextNotes.text.isEmpty) notes = 'none';
                   if (fieldTextNotes.text.isNotEmpty)
                     setState(() => notes = fieldTextNotes.text);
                   FirestoreDatabase().addFeeding(
-                      leftBreast,
-                      rightBreast,
-                      bottle,
-                      food,
-                      month,
-                      day,
-                      year,
+                      feedingType,
+                      _dateString,
+                      indexDate,
                       totalTimeSec,
                       foodType,
                       amount,
