@@ -10,6 +10,7 @@ import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
 import 'package:baby_tracker/screens/AllStats.dart';
 import 'package:baby_tracker/screens/debugPage.dart';
+import 'package:baby_tracker/screens/emergency.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -73,7 +74,10 @@ class _BabyMenuState extends State<BabyMenu> {
           TextButton(
 
             onPressed: () async {
-
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Emergency(baby: babyPath, userEntry: widget.userEntry)),
+              );
 
             },
             child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
