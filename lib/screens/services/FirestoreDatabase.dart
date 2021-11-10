@@ -134,15 +134,16 @@ class FirestoreDatabase {
   }
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
-    CollectionReference adddiaper = FirebaseFirestore.instance.doc(path).collection('diaper');
+    CollectionReference diaperChangePath = FirebaseFirestore.instance.doc(path).collection('diaper change');
 
-    await adddiaper.add({
+    await diaperChangePath.add({
       'date' : date,
       'status' : status,
       'Notes': notes,
     })
         .then((value) => print('diaper change Added'))
         .catchError((error) => print("Failed to add diaper change data"));
+
   }
   Future<void> updatediaperchange(DateTime date, String notes, String status, String path) async {
     FirebaseFirestore.instance
