@@ -1,3 +1,4 @@
+import 'package:baby_tracker/models/feedingChartData.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
 import 'dart:async';
@@ -14,116 +15,98 @@ class diaperstats extends StatefulWidget {
 }
 
 class _diaperstats extends State<diaperstats> {
+  var listy = List<double>.filled(7,0.0);
   @override
   void initState()
     {
       super.initState();
-      generateData();
+      generate(); // puts data in charts
+      generateData(); //gets data from database
+
+
     }
-  //final locationCollection = FirebaseFirestore.instance.collection("diaper change");
 
-  /*Future<void> getData() async{
-    var collection = FirebaseFirestore.instance.collection('diaper change');
-    var docSnapshot = await collection.doc('doc_id').get();
-    Map<String, dynamic>? data = docSnapshot.data();
-  }*/
-
-  List<List<double>> datalisto = [
-    [1, 2],
-    [2, 2],
-    [3, 1],
-    [4, 4],
-  ];
-  /*List<DateTime> datatiempo= [];
-  List<String> datastatus = [];*/
   List<diaperChange> myList = [];
 
   Future<void> generateData() async{
     Query _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _sleepRef2.get();
+    for(int i = 0; i < dayArrDC.length;i++)
+      {
+        dayArrDC[i] = 0.0;
+      }
 
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-
-    //print(dayArr[0]);
-    print("PRINTING SNAPSHOT");
-    //datalisto.clear();
     querySnapshot.docs.forEach((doc) {
       final Timestamp timestop = doc['date'];
       final DateTime date = timestop.toDate();
-      for(int i = 0; i < myList.length; i++) {
-        //datatiempo[i].(timestop);
-        diaperChange newdiaperc = new diaperChange(date, doc['status'],);
-        myList.add(newdiaperc);
+      diaperChange newdiaperc = new diaperChange(date, doc['status'],);
+      myList.add(newdiaperc);
+      });
+    //checks if day is a dry day and adds to list, will change in next sprint with more columns
+    for( var i = 0; i < myList.length;i++){
+      //print((myList[i].dateOf).day.toString() + " and " + dayArr[i].toString());
+
+      if(myList[i].statusOf == "Dry" && (i< 7)){
+        dayArrDC[i] += 1;
+        print(i.toString() + " is this " + myList[i].statusOf + " and " + dayArrDC[i].toString());
       }
-      print(date.day);
-      print("Status of " + doc["status"]);
-    });
-    //print(allData.toString());
-    //print(querySnapshot.docs);
-    print(myList);
+    }
     print("AFTER PRINT");
   }
-
+  Future<void> generate() async{//set up chart data
+    setState(() {
+      listy[0] = dayArrDC[0];
+      listy[1] = dayArrDC[1];
+      listy[2] = dayArrDC[2];
+      listy[3] = dayArrDC[3];
+      listy[4] = dayArrDC[4];
+      listy[5] = dayArrDC[5];
+      listy[6] = dayArrDC[6];
+    });
+  }
 
   
   Widget build(BuildContext context) {
     Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("indexDate", descending: true);
     CollectionReference _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change');
     String babyPath = widget.baby;
-    return Scaffold(
-      appBar: AppBar(
-      title: Text("Diaper Change Graph"),
-      backgroundColor: Colors.cyanAccent,
+    return ListView(
+      children: [Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          color: Colors.blue,
+          height: 200,
+          child: BarChart(
+            BarChartData (
+              maxY: 5,
+              barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[0])]),
+                BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[1])]),
+                BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[2])]),
+                BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[3])]),
+                BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[4])]),
+                BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[5])]),
+                BarChartGroupData(x: 7, barRods: [BarChartRodData(y: listy[6])]),],
+            ),
+          ),
+        ),
       ),
-      /*body: FutureBuilder<QuerySnapshot>(
-        future: _sleepRef2.get(),
-        builder: (context, snapshot) {
-          if(snapshot.hasData) {
-            generateData();
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index){
-                Map data = snapshot.data!.docs[index].data() as Map;
-                return GestureDetector(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${data['Notes']}",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text("Notes: " "${data['Notes']}, " +
-                              "date:" + "${data['date']}," +
-                              "Status:" + "${data['status']},",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              )
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-            //Text("Hi");
-          }else{
-            return Center(child: Text('Loading'));
-          }
-      },
-      ),*/
-
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: ElevatedButton.icon(
+              onPressed: () => generate(),
+              label: Text('Generate 7 Day Graph'),
+              icon: Icon(
+                Icons.check,
+              ),
+            ),
+          ),
+        ),],
     );
   }
 }
