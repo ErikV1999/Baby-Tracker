@@ -15,7 +15,11 @@ class diaperstats extends StatefulWidget {
 
 class _diaperstats extends State<diaperstats> {
   @override
-
+  void initState()
+    {
+      super.initState();
+      generateData();
+    }
   //final locationCollection = FirebaseFirestore.instance.collection("diaper change");
 
   /*Future<void> getData() async{
@@ -74,7 +78,7 @@ class _diaperstats extends State<diaperstats> {
       title: Text("Diaper Change Graph"),
       backgroundColor: Colors.cyanAccent,
       ),
-      body: FutureBuilder<QuerySnapshot>(
+      /*body: FutureBuilder<QuerySnapshot>(
         future: _sleepRef2.get(),
         builder: (context, snapshot) {
           if(snapshot.hasData) {
@@ -113,11 +117,12 @@ class _diaperstats extends State<diaperstats> {
                 );
               },
             );
+            //Text("Hi");
           }else{
             return Center(child: Text('Loading'));
           }
       },
-      ),
+      ),*/
 
     );
   }
