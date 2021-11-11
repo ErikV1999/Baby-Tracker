@@ -120,7 +120,7 @@ class _MainMenuState extends State<MainMenu> {
               return Text("Jane Doe");
             }
             userName = snapshot.data;
-            return Text(userName["name"]);
+            return Text(userName["displayID"]);
 
           }
         ),

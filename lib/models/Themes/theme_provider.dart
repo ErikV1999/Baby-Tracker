@@ -18,7 +18,8 @@ class MyThemes {
   static final kobiPink = Color(0xFFDD99BB);
   static final blueSapphire = Color(0xFF006992);
   static final blizzardBlue = Color(0xFF79E6F1);
-  static final orangeYellow = Color(0xFFEFC648);
+  static final orangeYellow = Color(0xFFEABE25);
+  static final orangeYellow1 = Color(0xFFEFC648);
 
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
