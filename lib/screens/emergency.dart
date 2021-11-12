@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/screens/baby_menu.dart';
 import  'package:baby_tracker/screens/EditBio.dart';
+import 'package:baby_tracker/screens/edit_pic.dart';
 
 class Emergency extends StatefulWidget{
 
@@ -37,10 +38,22 @@ class _EmergencyState extends State<Emergency> {
   Widget screen(snapshot){
     return ListView(
       children: [
-        buildProfile(),
+        buildProfile(snapshot),
         buildName(snapshot['Name'].toString()),
-        buildBio(snapshot),
-        buildEmergencyInfo(snapshot),
+        Container(
+          child: buildBio(snapshot),
+          padding: EdgeInsets.fromLTRB(0, 20, 12, 10),
+        ),
+        Container(
+          child:buildEmergencyInfo(snapshot),
+          padding: EdgeInsets.fromLTRB(0,20,12,20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+            ),
+            borderRadius: BorderRadius.circular(10.0)
+          ),
+        ),
         Align(
           alignment: Alignment.topLeft,
             child: TextButton(
@@ -64,12 +77,14 @@ class _EmergencyState extends State<Emergency> {
       //return Text("Add emergency info");
     //return Text(snapshotDoc.data['emergency']);
     try{
-      setState(() {
+      //setState(() {
         bio = snapshot['emergency'];
-      });
+      //});
       //return Text(snapshot['emergency']);
     }
     on StateError catch(e){
+      bio = "";
+      return Text("No emergency information yet!");
       //return Text("No bio yet");
     }
     return Text(bio);
@@ -98,23 +113,52 @@ class _EmergencyState extends State<Emergency> {
         )
     );
   }
-  Widget buildProfile(){
+  Widget buildProfile(snapshot){
+
+    String imagePath;
+
+    try{
+      imagePath = snapshot['image'];
+    }
+    on StateError catch(e){
+      imagePath = "https://www.w3schools.com/images/w3schools_green.jpg";
+    }
+
     return Center(
       child: Stack(
         children: [
-          buildProfilePic(),
+          buildProfilePic(imagePath),
           Positioned(
-            child: Icon(
-              Icons.edit,
-              size: 20,
-            )
+            child: CircleAvatar(
+              backgroundColor: Colors.green,
+              child: IconButton(
+                icon: Icon(Icons.edit),
+                color: Colors.black,
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  EditPic(baby: widget.baby, userEntry: widget.userEntry)),
+                  );
+                }
+
+              )
+            ),
+            //child: Container(
+            //  color: Colors.green,
+            //  child:  IconButton(
+            //    iconSize: 40,
+            //    onPressed: (){
+//
+             //   }
+             // )
+            //),
           )
         ]
       )
     );
   }
-  Widget buildProfilePic() {
-    final imagePath = "https://www.w3schools.com/images/w3schools_green.jpg";
+  Widget buildProfilePic(String imagePath) {
+    //final imagePath = "https://www.w3schools.com/images/w3schools_green.jpg";
     final image = NetworkImage(imagePath);
     return ClipOval(
       child: Material(

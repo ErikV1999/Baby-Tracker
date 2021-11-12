@@ -17,13 +17,15 @@ class _EditBioState extends State<EditBio> {
   TextEditingController bio = TextEditingController();
 
   @override
-  //void initState() {
-  //  bio = TextEditingController(text: widget.bio);
-  //  super.initState();
-  //}
+  void initState() {
+    bio = TextEditingController(text: widget.bio);
+    super.initState();
+  }
 
   void updateBio () async{
-
+    FirebaseFirestore.instance.doc(widget.baby).update({
+      'emergency' : bio.text,
+    }).whenComplete(()=>Navigator.pop(context));
   }
 
   Widget build(context){
@@ -46,13 +48,19 @@ class _EditBioState extends State<EditBio> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.doc(widget.baby).snapshots(),
-        builder: (context, snapshot){
-          return buildBio(snapshot);
-        }
-
-      )
+      body: SingleChildScrollView(
+        child: Container(
+          child: Form(
+            child:TextFormField(
+              controller: bio,
+              maxLines: 20,
+              decoration: InputDecoration.collapsed(
+                hintText: 'Enter Emergency Information',
+              ),
+            )
+          )
+        )
+      ),
     );
   }
 
