@@ -11,6 +11,7 @@ import 'package:baby_tracker/screens/add_caretaker.dart';
 import 'package:baby_tracker/screens/AllStats.dart';
 import 'package:baby_tracker/screens/debugPage.dart';
 import 'package:baby_tracker/screens/emergency.dart';
+import 'package:baby_tracker/screens/measure.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -141,6 +142,26 @@ class _BabyMenuState extends State<BabyMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => diaperchange(baby: babyPath)),
+                    );
+                  }
+
+              )
+          ),
+          Card(     //diaper change card
+              color: MyThemes.kobiPink,
+              child: ListTile(
+                  title: Text("Height and Weight"),
+                  subtitle: Row(
+                      children: [
+                        //Text("Last Changed"),
+                        //Text("Pooped"),
+                        //Text("Peed")
+                      ]
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Measure(baby: babyPath, userEntry:widget.userEntry)),
                     );
                   }
 

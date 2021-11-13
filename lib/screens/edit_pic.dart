@@ -54,7 +54,7 @@ class _EditPicState extends State<EditPic> {
           ),
           Container(          //send file as profile pic
               child: ElevatedButton(
-                  child: Text("Upload Profile Pic"),
+                  child: Text("Set As Pic"),
                   onPressed: (){
                     upload();
                   }
