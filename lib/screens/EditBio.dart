@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditBio extends StatefulWidget{
 
-  final String baby;
-  final String userEntry;
-  final String bio;
+  final String baby;    //babies path
+  final String userEntry;   //users doc ID
+  final String bio;     //bio or emergency info being passed
   EditBio({Key? key, required this.baby, required this.userEntry, required this.bio}) : super(key: key);
 
   @override
@@ -14,28 +14,41 @@ class EditBio extends StatefulWidget{
 
 class _EditBioState extends State<EditBio> {
 
-  TextEditingController bio = TextEditingController();
-
+  TextEditingController info = TextEditingController();   //controlls the form text field
+/*
+creates an initial state of the function with the babies info already used as the
+text field to start
+ */
   @override
-  void initState() {
-    bio = TextEditingController(text: widget.bio);
+  void initState() {          //sets the inital text form field to being what ever the baby had
+    info = TextEditingController(text: widget.bio);
     super.initState();
   }
+/*
+updates the emergency info in the firestore database
 
-  void updateBio () async{
+takes no parameters
+
+returns nothign
+ */
+  void updateBio () async{    //updates the babies value to what ever the user inputs into the field
     FirebaseFirestore.instance.doc(widget.baby).update({
-      'emergency' : bio.text,
-    }).whenComplete(()=>Navigator.pop(context));
+      'emergency' : info.text,
+    }).whenComplete(()=>Navigator.pop(context));    //go back to babies emergency page
   }
+/*
+standard build function required
 
+context: build context boilerplate
+ */
   Widget build(context){
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Edit Emergency Info'),
+        title: Text('Edit Emergency Info'),   //title on bar
         //backgroundColor: Colors.amber,
         actions: [
-          Container(
+          Container(      //contains the save button on the bar
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.lightBlueAccent),
@@ -48,11 +61,11 @@ class _EditBioState extends State<EditBio> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: SingleChildScrollView(    //contains the form text field
         child: Container(
           child: Form(
             child:TextFormField(
-              controller: bio,
+              controller: info,
               maxLines: 20,
               decoration: InputDecoration.collapsed(
                 hintText: 'Enter Emergency Information',
@@ -64,7 +77,7 @@ class _EditBioState extends State<EditBio> {
     );
   }
 
-  Widget buildBio(snapshot){
-    return Text("Im going to bed");
-  }
+  //Widget buildBio(snapshot){  //this is nothing
+  //  return Text("Im going to bed");
+ // }
 }
