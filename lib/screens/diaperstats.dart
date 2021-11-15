@@ -20,7 +20,7 @@ class _diaperstats extends State<diaperstats> {
   void initState()
     {
       super.initState();
-      generate(); // puts data in charts
+      //generate(); // puts data in charts
       generateData(); //gets data from database
 
 
@@ -55,6 +55,13 @@ class _diaperstats extends State<diaperstats> {
         print(i.toString() + " is this " + myList[i].statusOf + " and " + dayArrDC[i].toString());
       }
     }
+    listy[0] = dayArrDC[0];
+    listy[1] = dayArrDC[1];
+    listy[2] = dayArrDC[2];
+    listy[3] = dayArrDC[3];
+    listy[4] = dayArrDC[4];
+    listy[5] = dayArrDC[5];
+    listy[6] = dayArrDC[6];
     print("AFTER PRINT");
   }
   Future<void> generate() async{//set up chart data
