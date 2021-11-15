@@ -10,6 +10,8 @@ import 'package:baby_tracker/screens/feeding.dart';
 import 'package:baby_tracker/screens/add_caretaker.dart';
 import 'package:baby_tracker/screens/AllStats.dart';
 import 'package:baby_tracker/screens/debugPage.dart';
+import 'package:baby_tracker/screens/emergency.dart';
+import 'package:baby_tracker/screens/measure.dart';
 //import 'package:baby_tracker/screens/diaper.dart';
 
 
@@ -67,13 +69,16 @@ class _BabyMenuState extends State<BabyMenu> {
     Color bannerColor = Color(0xFF006992);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).cardColor,
         title: Text(baby["Name"]),    //ets the name from the snapshotdoc
         actions: <Widget>[      //sign out button at the appbar
           TextButton(
 
             onPressed: () async {
-
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Emergency(baby: babyPath, userEntry: widget.userEntry)),
+              );
 
             },
             child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
@@ -86,7 +91,7 @@ class _BabyMenuState extends State<BabyMenu> {
       body: ListView( //contains all the cards seen (5 cards)
         children: [
           Card(     //feeding card
-            color: Theme.of(context).primaryColor,
+            color: MyThemes.kobiPink,
             child: ListTile(
               title: Text("Feeding"),
               subtitle: Row(
@@ -105,7 +110,7 @@ class _BabyMenuState extends State<BabyMenu> {
             )
           ),
           Card(     //sleeping card
-              color: MyThemes.kobiPink,
+              color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("Sleeping"),
                   subtitle: Row(
@@ -123,7 +128,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //diaper change card
-              color: Theme.of(context).cardColor,
+              color: MyThemes.kobiPink,
               child: ListTile(
                   title: Text("Diaper Change"),
                   subtitle: Row(
@@ -137,6 +142,26 @@ class _BabyMenuState extends State<BabyMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => diaperchange(baby: babyPath)),
+                    );
+                  }
+
+              )
+          ),
+          Card(     //diaper change card
+              color: MyThemes.kobiPink,
+              child: ListTile(
+                  title: Text("Height and Weight"),
+                  subtitle: Row(
+                      children: [
+                        //Text("Last Changed"),
+                        //Text("Pooped"),
+                        //Text("Peed")
+                      ]
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Measure(baby: babyPath, userEntry:widget.userEntry)),
                     );
                   }
 
@@ -167,7 +192,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).primaryColor,
             child: ListTile(
               title: Text("Add Caretakers"),
               onTap: (){
