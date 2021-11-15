@@ -20,9 +20,9 @@ class _diaperstats extends State<diaperstats> {
   void initState()
     {
       super.initState();
-      //generate(); // puts data in charts
-      generateData(); //gets data from database
 
+      generateData(); //gets data from database
+      generate(); // puts data in charts
 
     }
 
