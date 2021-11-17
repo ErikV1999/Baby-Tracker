@@ -21,23 +21,37 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     int count = 0;
     double temp = 0.0;
     int currDate = 0;
+    String dateStr = 'a';
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     //print(dayArr[0]);
 
+
     querySnapshot.docs.forEach((doc) {
+      // get the first current date, should be the latest entry
       if (currDate == 0) {
         currDate = doc["indexDate"];
       }
+      // if the next entry has the same currDate, meaning data was enter
+      // on the same day, temp will add total hours slept to current temp
+      // will total all hours slept on the specified indexDate
       if (currDate == doc["indexDate"]){
         temp = temp + doc["TotalHoursSlept"].toDouble();
       }
+      // when the currDate changes, indicated a new date of data entries,
+      // will save the totaled hours slept to dayArr in one of the 7 indexes.
+      // also substring the sleeping date to remove the year and leave only the
+      // month-date. assign that to dayArr2. set the new currdate and begin
+      // totaling the new total hours slept.
       else {
         print("$temp, $count");
         if (count < 7) {
           dayArr[count] = temp;
+          dateStr = doc["SleepingDate"];
+          dateStr = dateStr.substring(0,5);
+          dayArr2[count] = dateStr;
           currDate = doc["indexDate"];
           temp = 0;
           temp = temp + doc["TotalHoursSlept"].toDouble();
@@ -54,7 +68,6 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     String babyPath = widget.baby;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         //title: Text(babyPath),
         title: Text('Sleeping Entries',

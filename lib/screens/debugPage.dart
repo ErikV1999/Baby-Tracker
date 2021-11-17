@@ -14,6 +14,8 @@ class debugPage extends StatefulWidget {
 }
 
 class _debugPageState extends State<debugPage> {
+
+  late final String title;
   dynamic baby = "Placeholder";
   var list1 = List<double>.filled(7,1.0);
 
@@ -30,58 +32,103 @@ class _debugPageState extends State<debugPage> {
     });
   }
 
-  @override
   Widget build(BuildContext context) {
-    String babyPath = widget.baby;
-    Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
-
+    const cutOffYValue = 0.0;
+    const yearTextStyle =
+    TextStyle(
+        fontSize: 10,
+        color: Colors.black,
+        fontWeight: FontWeight.bold
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: Text('debug'),
-      ),
+      appBar: AppBar(),
+
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(8.0, 15.0, 8.0, 0.0),
         child: Container(
-          padding: const EdgeInsets.all(10),
-          color: Colors.blue,
-          height: 200,
-          child: BarChart(
-            BarChartData (
-              maxY: 20,
-              barGroups: [
-                BarChartGroupData(x: 1, barRods: [
-                  BarChartRodData(y: list1[0], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 2, barRods: [
-                  BarChartRodData(y: list1[1], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 3, barRods: [
-                  BarChartRodData(y: list1[2], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 4, barRods: [
-                  BarChartRodData(y: list1[3], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 5, barRods: [
-                  BarChartRodData(y: list1[4], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 6, barRods: [
-                  BarChartRodData(y: list1[5], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 7, barRods: [
-                  BarChartRodData(y: list1[6], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
+          width: 330,
+          height: 180,
+          child: LineChart(
+            LineChartData(
+              lineTouchData: LineTouchData(enabled: false),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: [
+                    FlSpot(0, 0),
+                    FlSpot(1, 1),
+                    FlSpot(2, 3),
+                    FlSpot(3, 3),
+                    FlSpot(4, 5),
+                    FlSpot(4, 4)
+                  ],
+                  isCurved: false,
+                  barWidth: 1,
+                  colors: [
+                    Colors.black,
+                  ],
+                  belowBarData: BarAreaData(
+                    show: true,
+                    colors: [Colors.orange.withOpacity(0.4)],
+                    cutOffY: cutOffYValue,
+                    applyCutOffY: true,
+                  ),
+                  aboveBarData: BarAreaData(
+                    show: true,
+                    colors: [Colors.red.withOpacity(0.6)],
+                    cutOffY: cutOffYValue,
+                    applyCutOffY: true,
+                  ),
+                  dotData: FlDotData(
+                    show: false,
+                  ),
+                ),
               ],
+              minY: 0,
+              titlesData: FlTitlesData(
+                bottomTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 6,
+                    getTitles: (value) {
+                      switch (value.toInt()) {
+                        case 0:
+                          return '2017';
+                        case 1:
+                          return '2018';
+                        case 2:
+                          return '2019';
+                        case 3:
+                          return '2020';
+                        case 4:
+                          return '2021';
+                        default:
+                          return '';
+                      }
+                    }),
+                leftTitles: SideTitles(
+                  showTitles: true,
+                  getTitles: (value) {
+                    return '\$ ${value + 20}';
+                  },
+                ),
+              ),
+              axisTitleData: FlAxisTitleData(
+                  leftTitle: AxisTitle(showTitle: true, titleText: 'Value', margin: 10),
+                  bottomTitle: AxisTitle(
+                      showTitle: true,
+                      margin: 10,
+                      titleText: 'Year',
+                      textStyle: yearTextStyle,
+                      textAlign: TextAlign.right)),
+              gridData: FlGridData(
+                show: true,
+                checkToShowHorizontalLine: (double value) {
+                  return value == 1 || value == 2 || value == 3 || value == 4;
+                },
+              ),
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          generate();
-        },
-        child: const Icon(Icons.check),
-      ),
-
     );
   }
 }

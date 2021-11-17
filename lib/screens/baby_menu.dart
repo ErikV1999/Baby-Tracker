@@ -203,7 +203,7 @@ class _BabyMenuState extends State<BabyMenu> {
               }
             )
           ),
-          /*Card(     //diaper change card
+          Card(     //diaper change card
               color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("arturo's Debug page (ignore)"),
@@ -215,7 +215,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   }
 
               )
-          ),*/
+          ),
         ]
       ),
     );

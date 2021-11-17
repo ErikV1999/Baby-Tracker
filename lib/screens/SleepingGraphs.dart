@@ -14,7 +14,7 @@ class SleepingGraphs extends StatefulWidget {
 
 class _SleepingGraphsState extends State<SleepingGraphs> {
   var listy = List<double>.filled(7,1.0);
-  var listx = List<int>.filled(7,0);
+  var listx = List<String>.filled(7,'A');
 
   Future<void> generate() async{
     setState(() {
@@ -25,6 +25,13 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
       listy[4] = dayArr[4];
       listy[5] = dayArr[5];
       listy[6] = dayArr[6];
+      listx[0] = dayArr2[0];
+      listx[1] = dayArr2[1];
+      listx[2] = dayArr2[2];
+      listx[3] = dayArr2[3];
+      listx[4] = dayArr2[4];
+      listx[5] = dayArr2[5];
+      listx[6] = dayArr2[6];
     });
   }
 
@@ -43,13 +50,45 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
             child: BarChart(
               BarChartData (
                 maxY: 25,
-                barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[0])]),
-                  BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[1])]),
-                  BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[2])]),
-                  BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[3])]),
-                  BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[4])]),
-                  BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[5])]),
-                  BarChartGroupData(x: 7, barRods: [BarChartRodData(y: listy[6])]),],
+                titlesData: FlTitlesData(
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 6,
+                  getTitles: (value) {
+                  switch (value.toInt()) {
+                    case 0:
+                      return listx[0];
+                    case 1:
+                      return listx[1];
+                    case 2:
+                      return listx[2];
+                    case 3:
+                      return listx[3];
+                    case 4:
+                      return listx[4];
+                    case 5:
+                      return listx[5];
+                    case 6:
+                      return listx[6];
+                    default:
+                      return '';
+                  }
+                  }
+                  ),
+                  topTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                  rightTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+                barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: listy[0])]),
+                  BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[1])]),
+                  BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[2])]),
+                  BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[3])]),
+                  BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[4])]),
+                  BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[5])]),
+                  BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[6])]),],
               ),
             ),
           ),
