@@ -60,7 +60,7 @@ context: required parameter boilerplate
                   onDateTimeChanged: (val){
                     selectedDate = val;
                   },
-                  initialDateTime: selectedDate,
+                  initialDateTime: DateTime.now(),
                   mode: CupertinoDatePickerMode.date,
                   minimumDate: dob,
                   maximumDate: DateTime.now(),
