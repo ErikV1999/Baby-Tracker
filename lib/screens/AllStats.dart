@@ -3,7 +3,7 @@ import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/screens/SleepingStats.dart';
 import 'package:baby_tracker/screens/FeedingStats.dart';
-
+import 'package:baby_tracker/screens/MeasureStats.dart';
 
 class AllStats extends StatefulWidget {
 
@@ -21,7 +21,7 @@ class _AllStatsState extends State<AllStats> {
     String babyPath = widget.baby;
     return Scaffold(
       body: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
@@ -29,6 +29,7 @@ class _AllStatsState extends State<AllStats> {
                 Tab(icon: Icon(Icons.fastfood_sharp)),
                 Tab(icon: Icon(Icons.access_time_outlined)),
                 Tab(icon: Icon(Icons.baby_changing_station)),
+                Tab(icon: Icon(Icons.insights)),
               ],
             ),
             title: const Text('All Stats'),
@@ -38,6 +39,7 @@ class _AllStatsState extends State<AllStats> {
               FeedingStats(baby: babyPath),
               SleepingStats(baby: babyPath),
               diaperstats(baby: babyPath),
+              MeasureStats(baby:babyPath)
             ],
           ),
         )
