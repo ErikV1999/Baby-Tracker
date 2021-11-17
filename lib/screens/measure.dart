@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class Measure extends StatefulWidget{
 
@@ -18,12 +19,32 @@ class _MeasureState extends State<Measure> {
   int feet = 0;                               //internal storage of the feet input
   int inches = 0;                             //internal storage of the inches input
   String notes = "";                          //stores the notes until it upload
+
+  DateTime selectedDate = DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch  );
+
 /*
 build function required for statefulwidget implementation
 
 context: required parameter boilerplate
  */
   Widget build(context){
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.doc(widget.baby).snapshots(),
+      builder: (context, snapshot){
+        return screen(context,snapshot);
+      }
+    );
+  }
+  Widget screen(context, snapshot){
+
+
+    DateTime dob = DateTime.fromMillisecondsSinceEpoch(snapshot.data['dob'] );
+    if(snapshot.data['dob'] > DateTime.now().millisecondsSinceEpoch){
+      return Scaffold(
+        appBar: AppBar(),
+        body: Text("Baby isn't born yet"),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Update Height and Weight")
@@ -33,6 +54,22 @@ context: required parameter boilerplate
           key: formKey,
           child: ListView(
             children: [
+              Container(
+                height: 200,
+                child: CupertinoDatePicker(
+                  onDateTimeChanged: (val){
+                    selectedDate = val;
+                  },
+                  initialDateTime: DateTime.now(),
+                  mode: CupertinoDatePickerMode.date,
+                  minimumDate: dob,
+                  maximumDate: DateTime.now(),
+                ),
+              ),
+              Text(
+                "Can only enter dates between Date of Birth and current time"
+              ),
+              SizedBox(height: 60.0),
               Row(
                   children:[
                     Text("Weight: "),
@@ -54,7 +91,7 @@ context: required parameter boilerplate
                     )
                   ]
               ),
-              SizedBox(height: 60.0),
+              SizedBox(height: 20.0),
               buildSubmitHeight(),
               SizedBox(height: 60.0),
 
@@ -186,16 +223,19 @@ returns the row of widgets
               .collection('heights');
           DocumentReference baby = FirebaseFirestore.instance         //udates the baby doc with the current height and weight
               .doc(widget.baby);
-          weights.add({
+
+          //weights.add({
+          weights.doc(selectedDate.year.toString()+selectedDate.month.toString()+selectedDate.day.toString()).set({
             'weight' : weight,
-            'time' : DateTime.now(),
+            'notes' : notes,
+            'time' : selectedDate,
 
           });
-          heights.add({
+          heights.doc(selectedDate.year.toString()+selectedDate.month.toString()+selectedDate.day.toString()).set({
             'feet' : feet,
             'inches' : inches,
             'notes' : notes,
-            'time' : DateTime.now(),
+            'time' : selectedDate,
           });
           baby.update({
             'inches' : inches,
