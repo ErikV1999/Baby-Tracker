@@ -36,10 +36,16 @@ context: required parameter boilerplate
     );
   }
   Widget screen(context, snapshot){
+    if(!snapshot.hasData)
+      return Text("No baby data");
+    if(snapshot.data == null)
+      return Text("No baby data");
 
-
-    DateTime dob = DateTime.fromMillisecondsSinceEpoch(snapshot.data['dob'] );
-    if(snapshot.data['dob'] > DateTime.now().millisecondsSinceEpoch){
+    var baby = snapshot.data;
+    DateTime dob = DateTime.fromMillisecondsSinceEpoch(baby['dob']);
+    //DateTime dob = DateTime.fromMillisecondsSinceEpoch(snapshot.data['dob'] );
+    //if(snapshot.data['dob'] > DateTime.now().millisecondsSinceEpoch){
+    if(baby['dob'] > DateTime.now().millisecondsSinceEpoch){
       return Scaffold(
         appBar: AppBar(),
         body: Text("Baby isn't born yet"),
@@ -150,6 +156,8 @@ returns the row of widgets
               dynamic isInt = int.tryParse(val);
               if(isInt == null)
                 return 'Enter a valid Integer';
+              if(int.parse(val) > 5)
+                return 'can\'t enter a height above 5\' 11\"';
             },
             onChanged: (val){
               setState(() {
