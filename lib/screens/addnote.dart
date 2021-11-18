@@ -1,6 +1,9 @@
 import 'package:baby_tracker/models/Themes/theme_provider.dart';
+import 'package:baby_tracker/screens/Milestones.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'notes.dart';
 
 class AddNote extends StatefulWidget {
   final String baby;
@@ -11,7 +14,7 @@ class AddNote extends StatefulWidget {
 }
 
 class _AddNoteState extends State<AddNote> {
-  late String title;
+  late String title = 'Title';
   late String description;
 
   @override
@@ -43,45 +46,43 @@ class _AddNoteState extends State<AddNote> {
 
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(12),
           child: Column(
             children: [
+              InkWell(
+                onTap: () async {
+                  title = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Milestones())
+                  );
+                  setState(() {});
+                },
+                child: Container(
+                  child: Text(
+                      title,
+                    style: TextStyle(fontSize: 34),
+                  ),
+                  color: Colors.blue,
+                  width: double.infinity,
+                ),
+              ),
               Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration.collapsed(
-                          hintText: 'Title',
-                        ),
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-
-                        onChanged: (val) {
-                          title = val;
-                        },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height*0.75,
+                    padding: const EdgeInsets.all(12),
+                    child: TextFormField(
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Note Description',
                       ),
-
-                      Container(
-                        height: MediaQuery.of(context).size.height*0.75,
-                        padding: const EdgeInsets.only(top: 12),
-                        child: TextFormField(
-                          decoration: InputDecoration.collapsed(
-                            hintText: 'Note Description',
-                          ),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 20,
-
-                          onChanged: (val) {
-                            description = val;
-                          },
-                        ),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ]
+                      maxLines: 20,
+
+                      onChanged: (val) {
+                        description = val;
+                      },
+                    ),
                   ),
               )
             ],
