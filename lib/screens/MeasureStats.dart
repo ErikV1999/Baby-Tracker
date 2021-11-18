@@ -38,8 +38,8 @@ class _MeasureStatsState extends State<MeasureStats> {
           children: [
             HeightEntries(baby:widget.baby),
             WeightEntries(baby:widget.baby),
-            HeightGraphs(baby:widget.baby),
-            WeightGraphs(baby: widget.baby),
+            WeightGraphs(baby:widget.baby, weight:false),
+            WeightGraphs(baby: widget.baby, weight:true),
           ]
         )
       ),
