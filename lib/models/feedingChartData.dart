@@ -2,6 +2,19 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 
+class FeedingData{
+  final DateTime dateOf;
+  final String statusOf;
+  FeedingData(this.dateOf, this.statusOf);
+
+  //check if null or not, if not then assign to
+  FeedingData.fromMap(Map<String,dynamic> map)
+      :assert(map['dateOf']!=null),
+        assert(map['statusOf']!=null),
+        dateOf=map['dateOf'],
+        statusOf=map['statusOf'];
+}
+
 List<double> dayArr = List.filled(10,0.0);
 
 List<BarChartGroupData> barChartGroupData = [

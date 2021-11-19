@@ -287,11 +287,7 @@ class _FeedingState extends State<Feeding> {
                 onPressed: () {
                   stopStopwatch();
                   totalTimeSec = _stopWatchTimer.secondTime.value;
-                  print(leftBreast);
-                  print(food);
-                  print(month);
-                  print(day);
-                  print(year);
+                  print(_startDate);
                   print(totalTimeSec);
                   if (fieldTextFood.text.isEmpty) foodType = 'food';
                   if (fieldTextFood.text.isNotEmpty)
@@ -306,7 +302,7 @@ class _FeedingState extends State<Feeding> {
                     setState(() => notes = fieldTextNotes.text);
                   FirestoreDatabase().addFeeding(
                       feedingType,
-                      _dateString,
+                      _startDate,
                       indexDate,
                       totalTimeSec,
                       foodType,
@@ -314,7 +310,7 @@ class _FeedingState extends State<Feeding> {
                       notes,
                       babyPath);
                   FirestoreDatabase().updateLastFeed(
-                      "${_startDate.year}/${_startDate.month}/${_startDate.day}",
+                      "${_startDate.month}/${_startDate.day}/${_startDate.year}",
                       babyPath);
                 },
                 child: Text(
