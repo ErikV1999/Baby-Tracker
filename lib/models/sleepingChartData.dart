@@ -2,8 +2,10 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 
-List<double> dayArr = List.filled(10,0.0);
-List<String> dayArr2 = List.filled(10, 'A');
+List<double> dayArr = List.filled(32,0.0);
+List<String> dayArr2 = List.filled(10, '-');
+List<double> monthArr = List.filled(13,0.0);
+List<String> monthArr2 = List.filled(7, '-');
 
 List<BarChartGroupData> barChartGroupData = [
   BarChartGroupData(x: 1, barRods: [

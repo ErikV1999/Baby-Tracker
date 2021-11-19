@@ -21,24 +21,43 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     int count = 0;
     double temp = 0.0;
     int currDate = 0;
+
     String dateStr = 'a';
+    String monthStr = 'a';
+
+    for (int i = 0; i < 32; i++)
+      {
+        dayArr[i] = 0.0;
+      }
+    for (int i = 0; i < 10; i++)
+    {
+      dayArr2[i] = '-';
+    }
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    int len = allData.length;
 
     //print(dayArr[0]);
 
-
     querySnapshot.docs.forEach((doc) {
+
+      len--;
       // get the first current date, should be the latest entry
       if (currDate == 0) {
         currDate = doc["indexDate"];
       }
+      //print(currDate);
+
+
       // if the next entry has the same currDate, meaning data was enter
       // on the same day, temp will add total hours slept to current temp
       // will total all hours slept on the specified indexDate
       if (currDate == doc["indexDate"]){
         temp = temp + doc["TotalHoursSlept"].toDouble();
+        dateStr = doc["SleepingDate"].substring(0,5); // save the date
+        print(dateStr);
+        //print(currDate.toString() + " - " + temp.toString() + " index: " + doc["indexDate"].toString());
       }
       // when the currDate changes, indicated a new date of data entries,
       // will save the totaled hours slept to dayArr in one of the 7 indexes.
@@ -46,18 +65,99 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       // month-date. assign that to dayArr2. set the new currdate and begin
       // totaling the new total hours slept.
       else {
-        print("$temp, $count");
-        if (count < 7) {
-          dayArr[count] = temp;
-          dateStr = doc["SleepingDate"];
-          dateStr = dateStr.substring(0,5);
-          dayArr2[count] = dateStr;
-          currDate = doc["indexDate"];
+        //print("$temp, $count");
+        if (count < 7) { // only want 7 days
+          dayArr[count] = temp; // save the temp total hours for previous day
+          dayArr2[count] = dateStr; // save the date of the previous day
+          print("count: " + count.toString() + " date: " + dateStr + " total: " + temp.toString());
+          currDate = doc["indexDate"]; // change current date to new date
+          dateStr = doc["SleepingDate"].substring(0,5); // set new date
+          print(dateStr);
+          //print("date " + doc["SleepingDate"] + " total hours " + temp.toString());
+          temp = 0; // reset total hours
+          temp = temp + doc["TotalHoursSlept"].toDouble(); // start adding to total hours from new day
+          count++; // increase count
+        }
+      }
+      if (count < 7 && len == 0)
+        {
+          dayArr[count] = temp; // save the temp total hours for previous day
+          dayArr2[count] = dateStr; // save the date of the previous day
+        }
+    });
+  }
+
+  Future<void> generateDataMonthly() async{
+    Query _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _sleepRef2.get();
+    int count = 0;
+    double temp = 0.0;
+    int currDate = 0;
+    int currMonth = 0;
+    String dateStr = 'a';
+    String monthStr = 'a';
+
+    for (int i = 0; i < 13; i++)
+    {
+      monthArr[i] = 0.0;
+    }
+    for (int i = 0; i < 7; i++)
+    {
+      monthArr2[i] = '-';
+    }
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    int len = allData.length;
+
+    //print(dayArr[0]);
+
+    querySnapshot.docs.forEach((doc) {
+      // get the first current date, should be the latest entry
+      len--;
+      //print("date" + doc["indexDate"].toString());
+      if (currDate == 0) {
+        currDate = 1;
+        monthStr = doc["indexDate"].toString().substring(0,6);
+        //print(monthStr);
+      }
+      // if the next entry has the same currDate, meaning data was enter
+      // on the same day, temp will add total hours slept to current temp
+      // will total all hours slept on the specified indexDate
+      if (monthStr == doc["indexDate"].toString().substring(0,6)){
+        temp = temp + doc["TotalHoursSlept"].toDouble();
+        dateStr = doc["SleepingDate"].substring(0,2);
+        dateStr = dateStr + '-' + monthStr.substring(0,4);
+        //print(monthStr);
+      }
+      // when the currDate changes, indicated a new date of data entries,
+      // will save the totaled hours slept to dayArr in one of the 7 indexes.
+      // also substring the sleeping date to remove the year and leave only the
+      // month-date. assign that to dayArr2. set the new currdate and begin
+      // totaling the new total hours slept.
+      else {
+        //print("$temp, $count");
+        if (count < 5) {
+          monthArr[count] = temp; // save the total hours slept for a month
+          monthArr2[count] = dateStr; // save previous date
+          dateStr = doc["SleepingDate"].substring(0,2);
+          dateStr = dateStr + '-' + monthStr.substring(0,4); // format month - year ex: 10-2021
+          monthStr = doc["indexDate"].toString().substring(0,6); // set new month string
+          //print("month total " + temp.toString());
           temp = 0;
           temp = temp + doc["TotalHoursSlept"].toDouble();
           count++;
         }
       }
+      if (count < 5 && len == 0) // reached end of entries but not 5 months yet
+        {
+          monthArr[count] = temp; // save the total hours slept for a month
+          dateStr = doc["SleepingDate"].substring(0,2);
+          dateStr = dateStr + '-' + monthStr.substring(0,4); // format month - year ex: 10-2021
+          monthArr2[count] = dateStr;
+          monthStr = doc["indexDate"].toString().substring(0,6);
+          //print("month total " + temp.toString());
+        }
     });
   }
 
@@ -82,6 +182,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
         builder: (context, snapshot) {
           if(snapshot.hasData) {
             generateData();
+            generateDataMonthly();
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
