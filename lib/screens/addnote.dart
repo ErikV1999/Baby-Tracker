@@ -46,25 +46,11 @@ class _AddNoteState extends State<AddNote> {
 
       body: SingleChildScrollView(
         child: Container(
+          padding: EdgeInsets.all(3),
           child: Column(
             children: [
-              InkWell(
-                onTap: () async {
-                  title = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Milestones())
-                  );
-                  setState(() {});
-                },
-                child: Container(
-                  child: Text(
-                      title,
-                    style: TextStyle(fontSize: 34),
-                  ),
-                  color: Colors.blue,
-                  width: double.infinity,
-                ),
-              ),
+              TitleTile(),
+
               Form(
                   child: Container(
                     height: MediaQuery.of(context).size.height*0.75,
@@ -91,7 +77,33 @@ class _AddNoteState extends State<AddNote> {
       ),
     );
   }
-void add() async {
+
+  Widget TitleTile() {
+    return InkWell(
+      onTap: () async {
+        title = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Milestones())
+        );
+        setState(() {});
+      },
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 34),
+        ),
+        trailing: Icon(
+          Icons.arrow_drop_down,
+          size: 50,
+        ),
+        shape: ContinuousRectangleBorder(
+            side: BorderSide(color: Theme.of(context).dividerColor),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+      ),
+    );
+  }
+
+  void add() async {
     CollectionReference notesRef = FirebaseFirestore.instance.doc(widget.baby).collection('notes');
     var data = {
       'title': title,
