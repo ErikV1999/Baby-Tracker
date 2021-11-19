@@ -40,9 +40,8 @@ class _diaperstats extends State<diaperstats> {
         barGroup6,
         barGroup7,
       ];
-      showingBarGroups = items;
+      showingBarGroups = items; //give graph data 
       generateDataSeven(); //gets data from database
-      //generate(); // puts data in charts
     }
 
   List<diaperChange> myList = [];
@@ -72,50 +71,115 @@ class _diaperstats extends State<diaperstats> {
     DateTime now = new DateTime.now();
     DateTime date = new DateTime(now.year, now.month, now.day);
     DateTime permNow = date;
-    DateTime lastDay = now.subtract(Duration(days: 7));
-    print("NEw " + lastDay.toString() + " \nand old " + permNow.toString());
-    //Going to have to be able to test on days where there is no input as of 11/18 10am it can not 
-    for( int i = 0; i < myList.length;i++){
-      if(permNow.difference(myList[i].dateOf).inDays == 8)
+    DateTime loopTime = date;
+    DateTime loopTime2 = date;
+    DateTime lastDay = now.subtract(Duration(days: 8));
+    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);
+
+    while(!(lastDay2.difference(loopTime).inDays >= 0))
       {
-        break;
+        //loopTime will have next loop, loopTime2 will contain current time to check in database
+        loopTime = loopTime2.subtract(Duration(days: 1));
+        //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
+        for(int i = 0; i < myList.length;i++) {
+          if (((loopTime2
+              .difference(myList[i].dateOf).inDays) == 0) &&
+              (((loopTime2.month) == (myList[i].dateOf).month) &&
+                  ((loopTime2.day) == (myList[i].dateOf).day))) { //if true then check status of diaper and add to list
+            if (myList[i].statusOf == "Dry") { // && (i< 7)){
+              dryTally += 1;
+            }
+            if (myList[i].statusOf == "Wet") { // && (i< 7)){
+              wetTally += 1;
+            }
+            if (myList[i].statusOf == "Mix") { // && (i< 7)) {
+              mixTally += 1;
+            }
+          }
+        }
+        //add data to graph and get ready for next loop
+        final barGrouptemp = makeGroupData(day, dryTally, wetTally, mixTally);
+        dryTally = wetTally = mixTally = 0; //reset for next loop
+        dataList.add(barGrouptemp);
+        day++; //set for next day
+        loopTime2 = loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
       }
-      if( ((date.difference(myList[i].dateOf).inDays)==0) &&
-          ( ((date.month) == (myList[i].dateOf).month) && ((date.day) == (myList[i].dateOf).day)) )
-        {
-          if(myList[i].statusOf == "Dry"){// && (i< 7)){
-            dryTally +=1;
-          }
-          if(myList[i].statusOf == "Wet"){// && (i< 7)){
-            wetTally += 1;
-          }
-          if(myList[i].statusOf == "Mix"){// && (i< 7)) {
-            mixTally += 1;
-          }
-        }
-      else
-        { //new day to reset before getting data
-          date = myList[i].dateOf;
-          //put data in groupdata then check next day
-          final barGrouptemp = makeGroupData(day, dryTally, wetTally, mixTally);
-          dryTally = wetTally = mixTally = 0; //reset for next loop
-          dataList.add(barGrouptemp);
-          day++; //its a new day so let graph show it
-          if(myList[i].statusOf == "Dry"){// && (i< 7)){
-            dryTally +=1;
-          }
-          if(myList[i].statusOf == "Wet"){// && (i< 7)){
-            wetTally += 1;
-          }
-          if(myList[i].statusOf == "Mix"){// && (i< 7)) {
-            mixTally += 1;
-          }
-        }
-    }
     showingBarGroups = dataList;
     generate();
   }
+  Future<void> generateDataThirty() async{
+    Query _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _diaperRef2.get();
+    //Clear previous data
+    myList.clear();
+    dataList.clear();
 
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    querySnapshot.docs.forEach((doc) {
+      final Timestamp timestop = doc['date'];
+      final DateTime date = timestop.toDate();
+      diaperChange newdiaperc = new diaperChange(date, doc['status'],);
+      myList.add(newdiaperc);
+    });
+
+    double dryTally = 0;
+    double wetTally = 0;
+    double mixTally = 0;
+    int day = 0; //keep track how how many days
+    DateTime now = new DateTime.now();
+    DateTime date = new DateTime(now.year, now.month, now.day);
+    DateTime loopTime = date;
+    DateTime loopTime2 = date;
+    DateTime endOfWeek = now.subtract(Duration(days: 7));
+    DateTime endOfWeektemp = now.subtract(Duration(days: 7));
+    DateTime lastDay = now.subtract(Duration(days: 31)); //get final day
+    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);//make it easier to use difference
+
+    while(!(lastDay2.difference(loopTime).inDays >= 0))
+    {
+      //check first week
+      DateTime thisweek = loopTime.subtract(Duration(days: 8));
+      while(!(thisweek.difference(loopTime).inDays >= 0))
+        {
+        //loopTime will have next loop, loopTime2 will contain current time to check in database
+        loopTime = loopTime2.subtract(Duration(days: 1));
+        //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
+        for (int i = 0; i < myList.length; i++) {
+          if (((loopTime2
+              .difference(myList[i].dateOf)
+              .inDays) == 0) &&
+              (((loopTime2.month) == (myList[i].dateOf).month) &&
+                  ((loopTime2.day) == (myList[i].dateOf)
+                      .day))) { //if true then check status of diaper and add to list
+            if (myList[i].statusOf == "Dry") { // && (i< 7)){
+              dryTally += 1;
+            }
+            if (myList[i].statusOf == "Wet") { // && (i< 7)){
+              wetTally += 1;
+            }
+            if (myList[i].statusOf == "Mix") { // && (i< 7)) {
+              mixTally += 1;
+            }
+          }
+        }
+      loopTime2 = loopTime;//set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
+      }//week while loop
+      dryTally = dryTally / 7;
+      wetTally = wetTally / 7;
+      mixTally = mixTally / 7;
+      endOfWeek = endOfWeektemp.subtract(Duration(days: 7));
+      //add data to graph and get ready for next loop
+      final barGrouptemp = makeGroupData(day, dryTally, wetTally, mixTally);
+      dryTally = wetTally = mixTally = 0; //reset for next loop
+      dataList.add(barGrouptemp);
+      day++; //set for next day
+      endOfWeektemp = endOfWeek;//get next week ready
+    }//whole while loop
+    showingBarGroups = dataList;
+    generate();
+  }
   BarChartGroupData makeGroupData(int x, double y1, double y2, double y3) {
     double widths = 7;
     return BarChartGroupData(barsSpace: 1, x: x, barRods: [
@@ -148,7 +212,7 @@ class _diaperstats extends State<diaperstats> {
     Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("indexDate", descending: true);
     CollectionReference _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change');
     String babyPath = widget.baby;
-    String axisMessage = "Past 7 days from " + DateFormat('Md').format(DateTime.now());
+    String axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
     return ListView(
       children: [Padding(
         padding: const EdgeInsets.all(8.0),
@@ -156,6 +220,7 @@ class _diaperstats extends State<diaperstats> {
           padding: const EdgeInsets.all(10),
           color: Colors.white,
           height: 400,
+          //width: 800,
           child: BarChart(
             BarChartData (
               maxY: 5,
@@ -177,6 +242,28 @@ class _diaperstats extends State<diaperstats> {
         ),
       ),
         Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Container(
+            child: RichText(
+              textAlign:  TextAlign.center,
+              text: TextSpan(children: <TextSpan>[
+                TextSpan(
+                  text: "Blue is wet diapers |",
+                  style: TextStyle(color: Colors.blue)
+                ),
+                TextSpan(
+                    text: "| Green is Mix diapers |",
+                    style: TextStyle(color: Colors.green)
+                ),
+                TextSpan(
+                    text: "| Brown is dry diapers |",
+                    style: TextStyle(color: Colors.brown)
+                ),
+              ]),
+            ),
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: ElevatedButton.icon(
@@ -192,8 +279,8 @@ class _diaperstats extends State<diaperstats> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: ElevatedButton.icon(
-              onPressed: () => generateDataSeven(),
-              label: Text('Generate 30 Day Graph'),
+              onPressed: () => generateDataThirty(),
+              label: Text('Generate 4 week summary'),
               icon: Icon(
                 Icons.check,
               ),
