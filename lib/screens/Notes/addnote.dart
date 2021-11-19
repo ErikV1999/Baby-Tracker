@@ -1,5 +1,5 @@
 import 'package:baby_tracker/models/Themes/theme_provider.dart';
-import 'package:baby_tracker/screens/Milestones.dart';
+import 'package:baby_tracker/screens/Notes/Milestones.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

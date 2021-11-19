@@ -1,6 +1,6 @@
 import 'package:baby_tracker/models/Themes/changeTheme.dart';
-import 'package:baby_tracker/screens/addnote.dart';
-import 'package:baby_tracker/screens/editNote.dart';
+import 'package:baby_tracker/screens/Notes/addnote.dart';
+import 'package:baby_tracker/screens/Notes/editNote.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
