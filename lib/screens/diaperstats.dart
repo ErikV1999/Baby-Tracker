@@ -40,9 +40,8 @@ class _diaperstats extends State<diaperstats> {
         barGroup6,
         barGroup7,
       ];
-      showingBarGroups = items;
+      showingBarGroups = items; //give graph data 
       generateDataSeven(); //gets data from database
-      //generate(); // puts data in charts
     }
 
   List<diaperChange> myList = [];
@@ -131,40 +130,53 @@ class _diaperstats extends State<diaperstats> {
     int day = 0; //keep track how how many days
     DateTime now = new DateTime.now();
     DateTime date = new DateTime(now.year, now.month, now.day);
-    DateTime permNow = date;
     DateTime loopTime = date;
     DateTime loopTime2 = date;
-    DateTime lastDay = now.subtract(Duration(days: 31));
-    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);
+    DateTime endOfWeek = now.subtract(Duration(days: 7));
+    DateTime endOfWeektemp = now.subtract(Duration(days: 7));
+    DateTime lastDay = now.subtract(Duration(days: 31)); //get final day
+    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);//make it easier to use difference
 
     while(!(lastDay2.difference(loopTime).inDays >= 0))
     {
-      //loopTime will have next loop, loopTime2 will contain current time to check in database
-      loopTime = loopTime2.subtract(Duration(days: 1));
-      //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
-      for(int i = 0; i < myList.length;i++) {
-        if (((loopTime2
-            .difference(myList[i].dateOf).inDays) == 0) &&
-            (((loopTime2.month) == (myList[i].dateOf).month) &&
-                ((loopTime2.day) == (myList[i].dateOf).day))) { //if true then check status of diaper and add to list
-          if (myList[i].statusOf == "Dry") { // && (i< 7)){
-            dryTally += 1;
-          }
-          if (myList[i].statusOf == "Wet") { // && (i< 7)){
-            wetTally += 1;
-          }
-          if (myList[i].statusOf == "Mix") { // && (i< 7)) {
-            mixTally += 1;
+      //check first week
+      DateTime thisweek = loopTime.subtract(Duration(days: 8));
+      while(!(thisweek.difference(loopTime).inDays >= 0))
+        {
+        //loopTime will have next loop, loopTime2 will contain current time to check in database
+        loopTime = loopTime2.subtract(Duration(days: 1));
+        //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
+        for (int i = 0; i < myList.length; i++) {
+          if (((loopTime2
+              .difference(myList[i].dateOf)
+              .inDays) == 0) &&
+              (((loopTime2.month) == (myList[i].dateOf).month) &&
+                  ((loopTime2.day) == (myList[i].dateOf)
+                      .day))) { //if true then check status of diaper and add to list
+            if (myList[i].statusOf == "Dry") { // && (i< 7)){
+              dryTally += 1;
+            }
+            if (myList[i].statusOf == "Wet") { // && (i< 7)){
+              wetTally += 1;
+            }
+            if (myList[i].statusOf == "Mix") { // && (i< 7)) {
+              mixTally += 1;
+            }
           }
         }
-      }
+      loopTime2 = loopTime;//set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
+      }//week while loop
+      dryTally = dryTally / 7;
+      wetTally = wetTally / 7;
+      mixTally = mixTally / 7;
+      endOfWeek = endOfWeektemp.subtract(Duration(days: 7));
       //add data to graph and get ready for next loop
       final barGrouptemp = makeGroupData(day, dryTally, wetTally, mixTally);
       dryTally = wetTally = mixTally = 0; //reset for next loop
       dataList.add(barGrouptemp);
       day++; //set for next day
-      loopTime2 = loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
-    }
+      endOfWeektemp = endOfWeek;//get next week ready
+    }//whole while loop
     showingBarGroups = dataList;
     generate();
   }
@@ -268,7 +280,7 @@ class _diaperstats extends State<diaperstats> {
           child: Container(
             child: ElevatedButton.icon(
               onPressed: () => generateDataThirty(),
-              label: Text('Generate 30 Day Graph'),
+              label: Text('Generate 4 week summary'),
               icon: Icon(
                 Icons.check,
               ),
