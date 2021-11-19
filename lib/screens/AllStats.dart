@@ -38,7 +38,7 @@ class _AllStatsState extends State<AllStats> {
             children: [
               FeedingStats(baby: babyPath),
               SleepingStats(baby: babyPath),
-              diaperstats(baby: babyPath),
+              DiaperStats(baby: babyPath),
               MeasureStats(baby:babyPath)
             ],
           ),
