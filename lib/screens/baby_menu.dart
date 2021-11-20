@@ -115,8 +115,9 @@ class _BabyMenuState extends State<BabyMenu> {
                   title: Text("Sleeping"),
                   subtitle: Row(
                       children: [
-                        Text("Last Sleep"),
-                        Text("For")
+                        Text("Last Slept For "),
+                        Text(baby["TotalSleeping"]),
+                        Text(" H:M"),
                       ]
                   ),
                   onTap: () {
@@ -203,7 +204,7 @@ class _BabyMenuState extends State<BabyMenu> {
               }
             )
           ),
-          /*Card(     //diaper change card
+          Card(     //diaper change card
               color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("arturo's Debug page (ignore)"),
@@ -215,7 +216,7 @@ class _BabyMenuState extends State<BabyMenu> {
                   }
 
               )
-          ),*/
+          ),
         ]
       ),
     );
