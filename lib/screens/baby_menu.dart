@@ -203,19 +203,6 @@ class _BabyMenuState extends State<BabyMenu> {
               }
             )
           ),
-          /*Card(     //diaper change card
-              color: Theme.of(context).primaryColor,
-              child: ListTile(
-                  title: Text("arturo's Debug page (ignore)"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => debugPage(baby: babyPath)),
-                    );
-                  }
-
-              )
-          ),*/
         ]
       ),
     );
