@@ -123,6 +123,14 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: Text(
+                "Legend: X-axis: Days or Months\nY-axis: Hours slept\nTouch bar to see total hours slept\n5.36 = 5 hours and 36 minutes"
+              ),
+            ),
+          ),
         ],
     );
   }
@@ -212,11 +220,11 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(2.0),
-        height: 200,
+        height: 300,
         child: BarChart(
           BarChartData (
             backgroundColor: MyThemes.blizzardBlue,
-            maxY: 25,
+            maxY: 168,
             titlesData: FlTitlesData(
               bottomTitles: SideTitles(
                   showTitles: true,

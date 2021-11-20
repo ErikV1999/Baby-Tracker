@@ -20,6 +20,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     QuerySnapshot querySnapshot = await _sleepRef2.get();
     int count = 0;
     double temp = 0.0;
+    double minuTemp = 0.0;
     int currDate = 0;
 
     String dateStr = 'a';
@@ -55,6 +56,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       // will total all hours slept on the specified indexDate
       if (currDate == doc["indexDate"]){
         temp = temp + doc["TotalHoursSlept"].toDouble();
+        minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
         dateStr = doc["SleepingDate"].substring(0,5); // save the date
         print(dateStr);
         //print(currDate.toString() + " - " + temp.toString() + " index: " + doc["indexDate"].toString());
@@ -67,6 +69,12 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       else {
         //print("$temp, $count");
         if (count < 7) { // only want 7 days
+          while (minuTemp > 60.0){
+            minuTemp = minuTemp - 60.0;
+            temp = temp + 1.0;
+          }
+          print(minuTemp/100.0);
+          temp = temp + (minuTemp/100.0);
           dayArr[count] = temp; // save the temp total hours for previous day
           dayArr2[count] = dateStr; // save the date of the previous day
           print("count: " + count.toString() + " date: " + dateStr + " total: " + temp.toString());
@@ -76,11 +84,19 @@ class _SleepingEntriesState extends State<SleepingEntries> {
           //print("date " + doc["SleepingDate"] + " total hours " + temp.toString());
           temp = 0; // reset total hours
           temp = temp + doc["TotalHoursSlept"].toDouble(); // start adding to total hours from new day
+          minuTemp = 0;
+          minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
           count++; // increase count
         }
       }
       if (count < 7 && len == 0)
         {
+          while (minuTemp > 60.0){
+            minuTemp = minuTemp - 60.0;
+            temp = temp + 1.0;
+          }
+          print(minuTemp/100.0);
+          temp = temp + (minuTemp/100.0);
           dayArr[count] = temp; // save the temp total hours for previous day
           dayArr2[count] = dateStr; // save the date of the previous day
         }
@@ -93,6 +109,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     QuerySnapshot querySnapshot = await _sleepRef2.get();
     int count = 0;
     double temp = 0.0;
+    double minuTemp = 0.0;
     int currDate = 0;
     int currMonth = 0;
     String dateStr = 'a';
@@ -126,6 +143,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       // will total all hours slept on the specified indexDate
       if (monthStr == doc["indexDate"].toString().substring(0,6)){
         temp = temp + doc["TotalHoursSlept"].toDouble();
+        minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
         dateStr = doc["SleepingDate"].substring(0,2);
         dateStr = dateStr + '-' + monthStr.substring(0,4);
         //print(monthStr);
@@ -138,6 +156,12 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       else {
         //print("$temp, $count");
         if (count < 5) {
+          while (minuTemp > 60.0){
+            minuTemp = minuTemp - 60.0;
+            temp = temp + 1.0;
+          }
+          print(minuTemp/100.0);
+          temp = temp + (minuTemp/100.0);
           monthArr[count] = temp; // save the total hours slept for a month
           monthArr2[count] = dateStr; // save previous date
           dateStr = doc["SleepingDate"].substring(0,2);
@@ -146,11 +170,19 @@ class _SleepingEntriesState extends State<SleepingEntries> {
           //print("month total " + temp.toString());
           temp = 0;
           temp = temp + doc["TotalHoursSlept"].toDouble();
+          minuTemp = 0;
+          minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
           count++;
         }
       }
       if (count < 5 && len == 0) // reached end of entries but not 5 months yet
         {
+          while (minuTemp > 60.0){
+            minuTemp = minuTemp - 60.0;
+            temp = temp + 1.0;
+          }
+          print(minuTemp/100.0);
+          temp = temp + (minuTemp/100.0);
           monthArr[count] = temp; // save the total hours slept for a month
           dateStr = doc["SleepingDate"].substring(0,2);
           dateStr = dateStr + '-' + monthStr.substring(0,4); // format month - year ex: 10-2021
@@ -188,6 +220,34 @@ class _SleepingEntriesState extends State<SleepingEntries> {
               itemBuilder: (context, index) {
                 Map data = snapshot.data!.docs[index].data() as Map;
                 return GestureDetector(
+                  onTap: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AlertDialog(
+                            title: const Text('Delete Sleeping Entry?'),
+                            content: Text("Notes: " + "${data['Notes']}",),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, 'Cancel');
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  snapshot.data!.docs[index].reference.delete();
+                                  setState(() {
+
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: const Text('Delete', style: TextStyle(color: Colors.red),),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
@@ -195,18 +255,19 @@ class _SleepingEntriesState extends State<SleepingEntries> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${data['Notes']}",
+                            "Date: ${data['SleepingDate']}\n"
+                            "Total Sleep: ${data['TotalHoursSlept']} Hours & "
+                            "${data['TotalMinutesSlept']} Minutes",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
-                          Text("Date: " "${data['SleepingDate']}, " +
-                              "Start:" + "${data['StartSleeping']}," +
-                              "Woke Up:" + "${data['StopSleeping']},",
+                          Text("Started: " + "${data['StartSleeping']} " +
+                              "Woke Up: " + "${data['StopSleeping']},",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                           )
                           ),
