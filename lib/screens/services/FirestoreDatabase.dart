@@ -77,7 +77,7 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add baby"));
   }
 
-  Future<void> addSleepTime(String? date, String? startTime, String? stopTime, int totalHour, int totalMin, int indexDate, String notes, String path, String? subDate) async {
+  Future<void> addSleepTime(String? date, String? startTime, String? stopTime, int totalHour, int totalMin, int indexDate, String notes, String path) async {
     final uid = await AuthService().getUID();
 
     CollectionReference sleepingPath = FirebaseFirestore.instance.doc(path).collection('sleeping');
@@ -90,13 +90,12 @@ class FirestoreDatabase {
       'TotalMinutesSlept': totalMin,
       'indexDate': indexDate,
       'Notes': notes,
-      'SubmitDate': subDate,
     })
         .then((value) => print('Sleep Added'))
         .catchError((error) => print("Failed to add sleeping data"));
   }
 
-  Future<void> updateLastSleep(String? sleepTime, String totalSleep, String path) async {
+  Future<void> updateLastSleep(TimeOfDay sleepTime, String path) async {
     final uid = await AuthService().getUID();
     users
       .doc(uid)
@@ -105,13 +104,6 @@ class FirestoreDatabase {
       .update({'Sleeping': sleepTime})
       .then((value) => print('Last Sleep Updated'))
       .catchError((error) => print("Failed to add sleeping data"));
-    users
-        .doc(uid)
-        .collection('Babies')
-        .doc(path)
-        .update({'TotalSleeping': totalSleep})
-        .then((value) => print('Last Sleep Updated'))
-        .catchError((error) => print("Failed to add sleeping data"));
   }
 
 
