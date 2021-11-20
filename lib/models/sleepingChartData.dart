@@ -1,75 +1,29 @@
 //bar_chart_data
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 
-List<double> dayArr = List.filled(32,0.0);
-List<String> dayArr2 = List.filled(10, '-');
-List<double> monthArr = List.filled(13,0.0);
-List<String> monthArr2 = List.filled(7, '-');
-class daysPerMonth {
-  final int MONTH;
-  final int DAYS;
+List<double> dayArr = List.filled(10,0.0);
 
-  const daysPerMonth({
-    required this.MONTH,
-    required this.DAYS,
-});
-}
-class DaysMonth {
-
-  static List<daysPerMonth> dayMonth = [
-    daysPerMonth(
-      MONTH: 1,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 2,
-      DAYS: 28,
-    ),
-    daysPerMonth(
-      MONTH: 3,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 4,
-      DAYS: 30,
-    ),
-    daysPerMonth(
-      MONTH: 5,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 6,
-      DAYS: 30,
-    ),
-    daysPerMonth(
-      MONTH: 7,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 8,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 9,
-      DAYS: 30,
-    ),
-    daysPerMonth(
-      MONTH: 10,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 11,
-      DAYS: 30,
-    ),
-    daysPerMonth(
-      MONTH: 12,
-      DAYS: 31,
-    ),
-    daysPerMonth(
-      MONTH: 22,
-      DAYS: 29,
-    ),
-  ];
-}
+List<BarChartGroupData> barChartGroupData = [
+  BarChartGroupData(x: 1, barRods: [
+    BarChartRodData(y: 9.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 2, barRods: [
+    BarChartRodData(y: 8.0, colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 3, barRods: [
+    BarChartRodData(y: dayArr[2], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 4, barRods: [
+    BarChartRodData(y: dayArr[3], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 5, barRods: [
+    BarChartRodData(y: dayArr[4], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 6, barRods: [
+    BarChartRodData(y: dayArr[5], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+  BarChartGroupData(x: 7, barRods: [
+    BarChartRodData(y: dayArr[6], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
+  ]),
+];

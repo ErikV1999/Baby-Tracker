@@ -1,4 +1,3 @@
-import 'package:baby_tracker/models/feedingChartData.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,6 @@ class AllStats extends StatefulWidget {
 
 class _AllStatsState extends State<AllStats> {
 
-  @override
-  void initState() {
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     String babyPath = widget.baby;
