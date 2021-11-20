@@ -38,15 +38,17 @@ class _MilestonesState extends State<Milestones> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide:  BorderSide(
-                          color: Colors.black,
-                          width: 3,
-                          style: BorderStyle.solid
+                          color: Theme.of(context).dividerColor,
+                          width: 2,
+                          style: BorderStyle.solid,
                       ),
                     ),
 
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        width: 3,
+                        color: Theme.of(context).dividerColor,
+                        width: 2,
+                        style: BorderStyle.solid,
                       ),
                     ),
 
