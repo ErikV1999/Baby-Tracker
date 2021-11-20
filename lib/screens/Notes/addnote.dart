@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:baby_tracker/screens/Notes/Milestones.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,32 +18,21 @@ class AddNote extends StatefulWidget {
 class _AddNoteState extends State<AddNote> {
   late String title = 'Title';
   late String description;
-  List<File> filePaths = [];
-  List<String> fileNames = [];
+  String filePath = '';
+  late File? _file;
+  late UploadTask? uploadTask;
   late Future<FilePickerResult?> result = Future.value(null);
 
   Future<FilePickerResult?> selectImage() async {
     try {
       FilePickerResult? _result = await FilePicker.platform
           .pickFiles(allowMultiple: false, type: FileType.image);
+
+      filePath = _result!.files.single.path.toString();
+      _file = File(filePath);
+
       return _result;
-/*
-      if (result != null) {
-        filePaths.clear();
-        result.files.forEach((selectedFile) {
-          File file = File(selectedFile.path!);
-          filePaths.add(file);
-        });
 
-        setState(() {
-          fileNames.clear();
-          result.files.forEach((i) {
-            fileNames.add(i.name);
-          });
-        });
-      }
-
- */
     } on PlatformException catch (e) {
       print("Select Image Unsupported operation" + e.toString());
     } catch (error) {
@@ -70,7 +60,9 @@ class _AddNoteState extends State<AddNote> {
                   'Save',
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () => add(),
+              onPressed: () {
+                addNote();
+              },
             ),
           ),
         ],
@@ -138,14 +130,26 @@ class _AddNoteState extends State<AddNote> {
                   future: result,
                   builder: (context, snap) {
                     if(snap.hasData) {
-                      //print(snap.data);
-                      return Column(
-                        children: [
-                          Container(
-                            child: Image.file(File(snap.data!.files.single.path.toString())),
-                          ),
-                        ],
-                      );
+                      if(filePath.isNotEmpty ) {
+                        return Stack(
+                          children: [
+                            Image.file(File(filePath)),
+
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  filePath = '';
+                                });
+                              },
+                              icon: Icon(Icons.cancel),
+                              color: Colors.grey,
+                            ),
+                          ],
+                          alignment: AlignmentDirectional.topEnd,
+                        );
+                      } else {
+                        return Text('No images');
+                      }
                     }
                     else {
                       return Text('No images');
@@ -185,12 +189,42 @@ class _AddNoteState extends State<AddNote> {
     );
   }
 
-  void add() async {
+  Future<String> upload() async{
+    if(filePath.isEmpty)        //if no file chosen, dont do anything
+      return '';
+    //if file is chosen
+    final fileName = filePath.split('/').last;
+    final destination = "NotePics/" + fileName;    //sets the file name as the babies path to make it unique and easily overwritten by itself
+    uploadTask = handleStorage(destination, _file);    //sends the file to storage and takes the upload task
+    if(uploadTask == null)      //if the upload task is null, somethings gone wrong, end the function
+      return '';
+    final snapshot = await uploadTask!.whenComplete((){     //take the returned snapshot after it uplads
+
+    });
+    final url = await snapshot.ref.getDownloadURL();    //take the url of the image from the snapshot
+    return url;                                //put the url in the baby
+  }
+
+  UploadTask? handleStorage(destination, file){
+
+    try{      //try to put the image in storage
+      return FirebaseStorage
+          .instance
+          .ref(destination)
+          .putFile(file!);
+    } on FirebaseException catch(e){    //if something goes wrong, return null
+      return null;
+    }
+  }
+
+  void addNote() async {
+    String url = await upload();
     CollectionReference notesRef = FirebaseFirestore.instance.doc(widget.baby).collection('notes');
     var data = {
       'title': title,
       'description': description,
       'timestamp': DateTime.now(),
+      'image': url,
     };
 
     notesRef.add(data);
