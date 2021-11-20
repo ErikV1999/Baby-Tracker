@@ -115,9 +115,8 @@ class _BabyMenuState extends State<BabyMenu> {
                   title: Text("Sleeping"),
                   subtitle: Row(
                       children: [
-                        Text("Last Slept For "),
-                        //Text(baby["TotalSleeping"]),
-                        //Text(" H:M"),
+                        Text("Last Sleep"),
+                        Text("For")
                       ]
                   ),
                   onTap: () {
