@@ -45,10 +45,12 @@ class _SleepingState extends State<Sleeping> {
   String Date3 = '';
   String conDate = '';
   int indexDate = 0;
+  String hourMinuteFormat = '';
 
   DateTime _selectedDate = DateTime.now();
   DateFormat formatter = DateFormat('MM-dd-yyyy');
   String? _dateString;
+  String? dateSubmitted;
   void _presentDatePicker() {
     // showDatePicker is a pre-made funtion of Flutter
     showDatePicker(
@@ -65,6 +67,7 @@ class _SleepingState extends State<Sleeping> {
         // using state so that the UI will be rerendered when date is picked
         _selectedDate = pickedDate;
         _dateString = formatter.format(_selectedDate);
+        dateSubmitted = formatter.format(DateTime.now());
         print(_dateString);
         print(_dateString!.substring(3, 5));
         Date1 = _dateString.toString().substring(0,2);
@@ -325,8 +328,9 @@ class _SleepingState extends State<Sleeping> {
                                     onPressed: () {
                                       elapsedTime();
                                     Navigator.pop(context, 'OK');
-                                    FirestoreDatabase().addSleepTime(_dateString, _selectedTime1, _selectedTime2, totalHour, totalMin, indexDate, notes, babyPath);
-                                    //FirestoreDatabase().updateLastSleep(updateTime, path);
+                                    FirestoreDatabase().addSleepTime(_dateString, _selectedTime1, _selectedTime2, totalHour, totalMin, indexDate, notes, babyPath, dateSubmitted);
+                                    hourMinuteFormat = totalHour.toString() + ":" + totalMin.toString();
+                                    FirestoreDatabase().updateLastSleep(dateSubmitted, hourMinuteFormat, path);
                                     },
                                     child: const Text('OK'),
                                   ),
