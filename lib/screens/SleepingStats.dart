@@ -20,32 +20,32 @@ class _SleepingStatsState extends State<SleepingStats> {
       body: DefaultTabController(
           length: 2,
           child: Scaffold(
-            appBar: PreferredSize(
+              appBar: PreferredSize(
               preferredSize: Size.fromHeight(kToolbarHeight),
-              child: Container(
-                color: Colors.orangeAccent,
-                child: SafeArea(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(child: Container()),
-                      TabBar(
-                        tabs: [
-                          Tab(icon: Icon(Icons.format_align_left)),
-                          Tab(icon: Icon(Icons.show_chart)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          child: Container(
+          color: Colors.orangeAccent,
+          child: SafeArea(
+          child: Column(
+          children: <Widget>[
+          Expanded(child: Container()),
+          TabBar(
+          tabs: [
+          Tab(icon: Icon(Icons.format_align_left)),
+          Tab(icon: Icon(Icons.show_chart)),
+          ],
+          ),
+          ],
+          ),
+          ),
+          ),
+          ),
             body: TabBarView(
               children: [
                 SleepingEntries(baby: babyPath),
                 SleepingGraphs(baby: babyPath),
               ],
             ),
-          )
+    ),
       ),
     );
   }

@@ -105,13 +105,6 @@ class FirestoreDatabase {
       .update({'Sleeping': sleepTime})
       .then((value) => print('Last Sleep Updated'))
       .catchError((error) => print("Failed to add sleeping data"));
-    users
-        .doc(uid)
-        .collection('Babies')
-        .doc(path)
-        .update({'TotalSleeping': totalSleep})
-        .then((value) => print('Last Sleep Updated'))
-        .catchError((error) => print("Failed to add sleeping data"));
   }
 
 

@@ -14,14 +14,14 @@ class SleepingGraphs extends StatefulWidget {
 }
 
 class _SleepingGraphsState extends State<SleepingGraphs> {
+  var listy = List<double>.filled(7, 0.0);
+  var listx = List<String>.filled(7, '-');
+
+  var monthY = List<double>.filled(5, 0.0);
+  var monthX = List<String>.filled(5, '-');
+
   bool show7Day = true;
   bool show5Month = false;
-
-  var listy = List<double>.filled(7,0.0);
-  var listx = List<String>.filled(7,'-');
-
-  var monthY = List<double>.filled(5,0.0);
-  var monthX = List<String>.filled(5,'-');
 
   List<Color> barColor = [Colors.green, Colors.red];
 
@@ -45,7 +45,7 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
     });
   }
 
-  Future<void> generate7() async{
+  Future<void> generate7() async {
     setState(() {
       listy[0] = dayArr[0];
       listy[1] = dayArr[1];
@@ -64,7 +64,7 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
     });
   }
 
-  Future<void> generate5() async{
+  Future<void> generate5() async {
     setState(() {
       monthY[0] = monthArr[0];
       monthY[1] = monthArr[1];
@@ -85,183 +85,183 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
     String babyPath = widget.baby;
 
     return ListView(
-        children: [
-          if (show7Day == true) _build7DayTitle(),
-          if (show7Day == true) _build7Day(),
-          if (show5Month == true) _build5MonthTitle(),
-          if (show5Month == true) _build5Month(),
-          SizedBox(height: 25.0,),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: ElevatedButton.icon(
-                onPressed: () => {
-                  generate7(),
-                  show7Day = true,
-                  show5Month = false,
-                },
-                label: Text('Generate 7 Day Graph'),
-                icon: Icon(
-                  Icons.check,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: ElevatedButton.icon(
-                onPressed: () => {
-                  generate5(),
-                  show7Day = false,
-                  show5Month = true,
-                },
-                label: Text('Generate 5 month Graph'),
-                icon: Icon(
-                  Icons.check,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
+    children: [
+    if (show7Day == true) _build7DayTitle(),
+    if (show7Day == true) _build7Day(),
+    if (show5Month == true) _build5MonthTitle(),
+    if (show5Month == true) _build5Month(),
+    SizedBox(height: 25.0,),
+    Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+    child: ElevatedButton.icon(
+    onPressed: () => {
+    generate7(),
+    show7Day = true,
+    show5Month = false,
+    },
+    label: Text('Generate 7 Day Graph'),
+    icon: Icon(
+    Icons.check,
+    ),
+    ),
+    ),
+    ),
+    Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+    child: ElevatedButton.icon(
+    onPressed: () => {
+    generate5(),
+    show7Day = false,
+    show5Month = true,
+    },
+    label: Text('Generate 5 month Graph'),
+    icon: Icon(
+    Icons.check,
+    ),
+    ),
+    ),
+    ),
+    Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+    child: Text(
+    "Legend: X-axis: Days or Months\nY-axis: Hours slept\nTouch bar to see total hours slept\n5.36 = 5 hours and 36 minutes"
+    ),
+    ),
+    ),
+    ],
+    );
+  }
+
+    Widget _build7DayTitle() {
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
+          child: Container(
+              height: 30,
               child: Text(
-                "Legend: X-axis: Days or Months\nY-axis: Hours slept\nTouch bar to see total hours slept\n5.36 = 5 hours and 36 minutes"
-              ),
-            ),
-          ),
-        ],
-    );
-  }
-
-  Widget _build7DayTitle() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
-      child: Container(
-        height: 30,
-        child: Text(
-          'Generated graph from last 7 days of sleep',
-          textAlign: TextAlign.center,
-        )
-      )
-    );
-  }
-  Widget _build7Day() {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Container(
+                'Generated graph from last 7 days of sleep',
+                textAlign: TextAlign.center,
+              )
+          )
+      );
+    }
+    Widget _build7Day() {
+      return Padding(
         padding: const EdgeInsets.all(2.0),
-        height: 200,
-        child: BarChart(
-          BarChartData (
-            backgroundColor: MyThemes.blizzardBlue,
-            maxY: 25,
-            titlesData: FlTitlesData(
-              bottomTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 6,
-                  rotateAngle: -45,
-                  getTitles: (value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return listx[0];
-                      case 1:
-                        return listx[1];
-                      case 2:
-                        return listx[2];
-                      case 3:
-                        return listx[3];
-                      case 4:
-                        return listx[4];
-                      case 5:
-                        return listx[5];
-                      case 6:
-                        return listx[6];
-                      default:
-                        return '';
-                    }
-                  }
-              ),
-              topTitles: SideTitles(
-                showTitles: false,
-              ),
-              rightTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: listy[0], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[1], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[2], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[3], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[4], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[5], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[6], colors: [barColor[0]], width: 10)]),],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _build5MonthTitle() {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
         child: Container(
-            height: 30,
-            child: Text(
-              'Generated graph from last 5 months of sleep',
-              textAlign: TextAlign.center,
-            )
-        )
-    );
-  }
-  Widget _build5Month() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.all(2.0),
-        height: 300,
-        child: BarChart(
-          BarChartData (
-            backgroundColor: MyThemes.blizzardBlue,
-            maxY: 168,
-            titlesData: FlTitlesData(
-              bottomTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 4,
-                  rotateAngle: -45,
-                  getTitles: (value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return monthX[0];
-                      case 1:
-                        return monthX[1];
-                      case 2:
-                        return monthX[2];
-                      case 3:
-                        return monthX[3];
-                      case 4:
-                        return monthX[4];
-                      default:
-                        return '';
-                    }
-                  }
-              ),
-              topTitles: SideTitles(
-                showTitles: false,
-              ),
-              rightTitles: SideTitles(
-                showTitles: false,
+            padding: const EdgeInsets.all(2.0),
+            height: 200,
+            child: BarChart(
+              BarChartData (
+                backgroundColor: MyThemes.blizzardBlue,
+                maxY: 25,
+                titlesData: FlTitlesData(
+                  bottomTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 6,
+                      rotateAngle: -45,
+                      getTitles: (value) {
+                        switch (value.toInt()) {
+                          case 0:
+                            return listx[0];
+                          case 1:
+                            return listx[1];
+                          case 2:
+                            return listx[2];
+                          case 3:
+                            return listx[3];
+                          case 4:
+                            return listx[4];
+                          case 5:
+                            return listx[5];
+                          case 6:
+                            return listx[6];
+                          default:
+                            return '';
+                        }
+                      }
+                  ),
+                  topTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                  rightTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                ),
+                barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: listy[0], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[1], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[2], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 3, barRods: [BarChartRodData(y: listy[3], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 4, barRods: [BarChartRodData(y: listy[4], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 5, barRods: [BarChartRodData(y: listy[5], colors: [barColor[0]], width: 10)]),
+                  BarChartGroupData(x: 6, barRods: [BarChartRodData(y: listy[6], colors: [barColor[0]], width: 10)]),],
               ),
             ),
-            barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: monthY[0], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 1, barRods: [BarChartRodData(y: monthY[1], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 2, barRods: [BarChartRodData(y: monthY[2], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 3, barRods: [BarChartRodData(y: monthY[3], colors: [barColor[0]], width: 10)]),
-              BarChartGroupData(x: 4, barRods: [BarChartRodData(y: monthY[4], colors: [barColor[0]], width: 10)])],
+      ),
+      );
+    }
+
+    Widget _build5MonthTitle() {
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
+          child: Container(
+              height: 30,
+              child: Text(
+                'Generated graph from last 5 months of sleep',
+                textAlign: TextAlign.center,
+              )
+          )
+      );
+    }
+    Widget _build5Month() {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(2.0),
+          height: 300,
+          child: BarChart(
+            BarChartData (
+              backgroundColor: MyThemes.blizzardBlue,
+              maxY: 168,
+              titlesData: FlTitlesData(
+                bottomTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 4,
+                    rotateAngle: -45,
+                    getTitles: (value) {
+                      switch (value.toInt()) {
+                        case 0:
+                          return monthX[0];
+                        case 1:
+                          return monthX[1];
+                        case 2:
+                          return monthX[2];
+                        case 3:
+                          return monthX[3];
+                        case 4:
+                          return monthX[4];
+                        default:
+                          return '';
+                      }
+                    }
+                ),
+                topTitles: SideTitles(
+                  showTitles: false,
+                ),
+                rightTitles: SideTitles(
+                  showTitles: false,
+                ),
+              ),
+              barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: monthY[0], colors: [barColor[0]], width: 10)]),
+                BarChartGroupData(x: 1, barRods: [BarChartRodData(y: monthY[1], colors: [barColor[0]], width: 10)]),
+                BarChartGroupData(x: 2, barRods: [BarChartRodData(y: monthY[2], colors: [barColor[0]], width: 10)]),
+                BarChartGroupData(x: 3, barRods: [BarChartRodData(y: monthY[3], colors: [barColor[0]], width: 10)]),
+                BarChartGroupData(x: 4, barRods: [BarChartRodData(y: monthY[4], colors: [barColor[0]], width: 10)])],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 }

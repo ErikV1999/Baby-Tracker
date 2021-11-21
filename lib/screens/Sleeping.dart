@@ -47,7 +47,6 @@ class _SleepingState extends State<Sleeping> {
   int indexDate = 0;
   String hourMinuteFormat = '';
 
-
   DateTime _selectedDate = DateTime.now();
   DateFormat formatter = DateFormat('MM-dd-yyyy');
   String? _dateString;
@@ -69,7 +68,7 @@ class _SleepingState extends State<Sleeping> {
         _selectedDate = pickedDate;
         _dateString = formatter.format(_selectedDate);
         dateSubmitted = formatter.format(DateTime.now());
-        print("_dateString" + dateSubmitted.toString());
+        print(_dateString);
         print(_dateString!.substring(3, 5));
         Date1 = _dateString.toString().substring(0,2);
         Date2 = _dateString.toString().substring(3,5);
@@ -321,8 +320,8 @@ class _SleepingState extends State<Sleeping> {
                                   TextButton(
                                     onPressed: () {
                                       elapsedTime();
-                                    Navigator.pop(context, 'Cancel');
-                                    },
+                      Navigator.pop(context, 'Cancel');
+                      },
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(

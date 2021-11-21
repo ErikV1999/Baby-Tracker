@@ -27,9 +27,9 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     String monthStr = 'a';
 
     for (int i = 0; i < 32; i++)
-      {
-        dayArr[i] = 0.0;
-      }
+    {
+      dayArr[i] = 0.0;
+    }
     for (int i = 0; i < 10; i++)
     {
       dayArr2[i] = '-';
@@ -67,29 +67,33 @@ class _SleepingEntriesState extends State<SleepingEntries> {
       // month-date. assign that to dayArr2. set the new currdate and begin
       // totaling the new total hours slept.
       else {
-        //print("$temp, $count");
-        if (count < 7) { // only want 7 days
-          while (minuTemp > 60.0){
-            minuTemp = minuTemp - 60.0;
-            temp = temp + 1.0;
+        print("$temp, $count");
+        if (count < 7) {
+          dayArr[count] = temp;
+          currDate = doc["indexDate"];
+          //print("$temp, $count");
+          if (count < 7) { // only want 7 days
+            while (minuTemp > 60.0){
+              minuTemp = minuTemp - 60.0;
+              temp = temp + 1.0;
+            }
+            print(minuTemp/100.0);
+            temp = temp + (minuTemp/100.0);
+            dayArr[count] = temp; // save the temp total hours for previous day
+            dayArr2[count] = dateStr; // save the date of the previous day
+            print("count: " + count.toString() + " date: " + dateStr + " total: " + temp.toString());
+            currDate = doc["indexDate"]; // change current date to new date
+            dateStr = doc["SleepingDate"].substring(0,5); // set new date
+            print(dateStr);
+            //print("date " + doc["SleepingDate"] + " total hours " + temp.toString());
+            temp = 0; // reset total hours
+            temp = temp + doc["TotalHoursSlept"].toDouble(); // start adding to total hours from new day
+            minuTemp = 0;
+            minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
+            count++; // increase count
           }
-          print(minuTemp/100.0);
-          temp = temp + (minuTemp/100.0);
-          dayArr[count] = temp; // save the temp total hours for previous day
-          dayArr2[count] = dateStr; // save the date of the previous day
-          print("count: " + count.toString() + " date: " + dateStr + " total: " + temp.toString());
-          currDate = doc["indexDate"]; // change current date to new date
-          dateStr = doc["SleepingDate"].substring(0,5); // set new date
-          print(dateStr);
-          //print("date " + doc["SleepingDate"] + " total hours " + temp.toString());
-          temp = 0; // reset total hours
-          temp = temp + doc["TotalHoursSlept"].toDouble(); // start adding to total hours from new day
-          minuTemp = 0;
-          minuTemp = minuTemp + doc["TotalMinutesSlept"].toDouble();
-          count++; // increase count
         }
-      }
-      if (count < 7 && len == 0)
+        if (count < 7 && len == 0)
         {
           while (minuTemp > 60.0){
             minuTemp = minuTemp - 60.0;
@@ -100,8 +104,8 @@ class _SleepingEntriesState extends State<SleepingEntries> {
           dayArr[count] = temp; // save the temp total hours for previous day
           dayArr2[count] = dateStr; // save the date of the previous day
         }
-    });
-  }
+      }});
+    }
 
   Future<void> generateDataMonthly() async{
     Query _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
@@ -176,20 +180,20 @@ class _SleepingEntriesState extends State<SleepingEntries> {
         }
       }
       if (count < 5 && len == 0) // reached end of entries but not 5 months yet
-        {
-          while (minuTemp > 60.0){
-            minuTemp = minuTemp - 60.0;
-            temp = temp + 1.0;
-          }
-          print(minuTemp/100.0);
-          temp = temp + (minuTemp/100.0);
-          monthArr[count] = temp; // save the total hours slept for a month
-          dateStr = doc["SleepingDate"].substring(0,2);
-          dateStr = dateStr + '-' + monthStr.substring(0,4); // format month - year ex: 10-2021
-          monthArr2[count] = dateStr;
-          monthStr = doc["indexDate"].toString().substring(0,6);
-          //print("month total " + temp.toString());
+          {
+        while (minuTemp > 60.0){
+          minuTemp = minuTemp - 60.0;
+          temp = temp + 1.0;
         }
+        print(minuTemp/100.0);
+        temp = temp + (minuTemp/100.0);
+        monthArr[count] = temp; // save the total hours slept for a month
+        dateStr = doc["SleepingDate"].substring(0,2);
+        dateStr = dateStr + '-' + monthStr.substring(0,4); // format month - year ex: 10-2021
+        monthArr2[count] = dateStr;
+        monthStr = doc["indexDate"].toString().substring(0,6);
+        //print("month total " + temp.toString());
+      }
     });
   }
 
@@ -200,6 +204,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
     String babyPath = widget.baby;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         //title: Text(babyPath),
         title: Text('Sleeping Entries',
@@ -256,8 +261,8 @@ class _SleepingEntriesState extends State<SleepingEntries> {
                         children: [
                           Text(
                             "Date: ${data['SleepingDate']}\n"
-                            "Total Sleep: ${data['TotalHoursSlept']} Hours & "
-                            "${data['TotalMinutesSlept']} Minutes",
+                              "Total Sleep: ${data['TotalHoursSlept']} Hours & "
+                              "${data['TotalMinutesSlept']} Minutes",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -269,7 +274,7 @@ class _SleepingEntriesState extends State<SleepingEntries> {
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.black,
-                          )
+                          ),
                           ),
                         ],
                       ),
