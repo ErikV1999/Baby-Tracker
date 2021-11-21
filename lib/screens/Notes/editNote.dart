@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Milestones.dart';
 
 class EditNote extends StatefulWidget {
   final DocumentSnapshot document;
+  final String baby;
 
-  const EditNote({Key? key, required this.document}) : super(key: key);
+  const EditNote({Key? key, required this.document, required this.baby}) : super(key: key);
 
   @override
   _EditNoteState createState() => _EditNoteState();
@@ -16,9 +22,32 @@ class EditNote extends StatefulWidget {
 class _EditNoteState extends State<EditNote> {
   late String title;
   TextEditingController description = TextEditingController();
+  late String filePath;
+  late Future<FilePickerResult?> result = Future.value(null);
+  late File? _file;
+  late UploadTask? uploadTask;
+
+
+  Future<FilePickerResult?> selectImage() async {
+    try {
+      FilePickerResult? _result = await FilePicker.platform
+          .pickFiles(allowMultiple: false, type: FileType.image);
+
+      filePath = _result!.files.single.path.toString();
+      _file = File(filePath);
+
+      return _result;
+
+    } on PlatformException catch (e) {
+      print("Select Image Unsupported operation" + e.toString());
+    } catch (error) {
+      print("select image error");
+    }
+  }
 
   @override
   void initState() {
+    filePath = widget.document['image'].toString();
     title = widget.document['title'];
     description = TextEditingController(text: widget.document['description']);
     super.initState();
@@ -48,11 +77,25 @@ class _EditNoteState extends State<EditNote> {
                 TitleTile(),
                 Form(
                   child: Container(
-                    height: MediaQuery.of(context).size.height*0.75,
-                    padding: const EdgeInsets.only(top: 12, left: 5),
+                    padding: const EdgeInsets.only(left: 3, right: 3, top: 8, bottom: 10),
                     child: TextFormField(
-                      decoration: InputDecoration.collapsed(
+                      decoration:  InputDecoration(
                         hintText: 'Note Description',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Theme.of(context).dividerColor,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Theme.of(context).dividerColor,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
                       ),
                       style: TextStyle(
                         fontSize: 18,
@@ -60,11 +103,76 @@ class _EditNoteState extends State<EditNote> {
                       ),
                       controller: description,
                       maxLines: 20,
-
                       onChanged: (val) {},
                     ),
                   ),
-                )
+                ),
+
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        result = selectImage().whenComplete(() {
+                          setState(() {});
+                        });
+                      },
+                      icon: Icon(Icons.photo_library),
+                      iconSize: 45,
+                    ),
+                  ],
+                ),
+
+                FutureBuilder<FilePickerResult?>(
+                    future: result,
+                    builder: (context, snap) {
+                      if(snap.hasData) {
+                        if(filePath.isNotEmpty ) {
+                          return Stack(
+                            children: [
+                              Image.file(File(filePath)),
+
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    filePath = '';
+                                  });
+                                },
+                                icon: Icon(Icons.cancel),
+                                color: Colors.grey,
+                              ),
+                            ],
+                            alignment: AlignmentDirectional.topEnd,
+                          );
+                        } else {
+                          return Text('No images');
+                        }
+                      }
+                      else {
+                        if(filePath.isEmpty) {
+                          return Text('No image');
+                        }else {
+                          return Stack(
+                            children: [
+                              Image.network(filePath),
+
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    filePath = '';
+                                  });
+                                },
+                                icon: Icon(Icons.cancel),
+                                color: Colors.grey,
+                              ),
+                            ],
+                            alignment: AlignmentDirectional.topEnd,
+                          );
+                        }
+                      }
+                    }
+                ),
+
+                //displayImage(),
               ],
             ),
           )
@@ -72,6 +180,45 @@ class _EditNoteState extends State<EditNote> {
     );
   }
 
+  Future<String> upload() async{
+    if(filePath.isEmpty)        //if no file chosen, dont do anything
+      return '';
+    //if file is chosen
+    final fileName = filePath.split('/').last;
+    final babyID = widget.baby.split('/').last;
+    final destination = "NotePics/${babyID}/${fileName}";    //sets the file name as the babies path to make it unique and easily overwritten by itself
+    uploadTask = handleStorage(destination, _file);    //sends the file to storage and takes the upload task
+    if(uploadTask == null)      //if the upload task is null, somethings gone wrong, end the function
+      return '';
+    final snapshot = await uploadTask!.whenComplete((){     //take the returned snapshot after it uplads
+
+    });
+    final url = await snapshot.ref.getDownloadURL();    //take the url of the image from the snapshot
+    return url;                                //put the url in the baby
+  }
+
+  UploadTask? handleStorage(destination, file){
+
+    try{      //try to put the image in storage
+      return FirebaseStorage
+          .instance
+          .ref(destination)
+          .putFile(file!);
+    } on FirebaseException catch(e){    //if something goes wrong, return null
+      return null;
+    }
+  }
+
+  void updateNote() async {
+    String url = await upload();
+
+    widget.document.reference.update({
+      'title': title,
+      'description': description.text,
+      'timestamp': DateTime.now(),
+      'image': url,
+    }).whenComplete(() => Navigator.pop(context));
+  }
 
   Widget buildSaveButton() {
     return Container(
@@ -82,13 +229,7 @@ class _EditNoteState extends State<EditNote> {
           'Save',
           style: TextStyle(color: Colors.white),
         ),
-        onPressed: () => {
-          widget.document.reference.update({
-            'title': title,
-            'description': description.text,
-            'timestamp': DateTime.now(),
-          }).whenComplete(() => Navigator.pop(context)),
-        },
+        onPressed: () => {updateNote()},
       ),
     );
   }

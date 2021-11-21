@@ -57,7 +57,7 @@ class _NotesState extends State<Notes> {
                     onTap: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => EditNote(document: snapshot.data!.docs[index]))
+                          MaterialPageRoute(builder: (context) => EditNote(document: snapshot.data!.docs[index], baby: widget.baby))
                       ).then((value) {
                         print('Calling Set State');
                         setState(() {});

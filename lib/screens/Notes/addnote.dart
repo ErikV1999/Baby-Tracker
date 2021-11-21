@@ -75,7 +75,6 @@ class _AddNoteState extends State<AddNote> {
           child: Column(
             children: [
               TitleTile(),
-
               Form(
                   child: Container(
                     padding: const EdgeInsets.only(left: 3, right: 3, top: 8, bottom: 10),
@@ -194,7 +193,8 @@ class _AddNoteState extends State<AddNote> {
       return '';
     //if file is chosen
     final fileName = filePath.split('/').last;
-    final destination = "NotePics/" + fileName;    //sets the file name as the babies path to make it unique and easily overwritten by itself
+    final babyID = widget.baby.split('/').last;
+    final destination = "NotePics/${babyID}/${fileName}";   //sets the file name as the babies path to make it unique and easily overwritten by itself
     uploadTask = handleStorage(destination, _file);    //sends the file to storage and takes the upload task
     if(uploadTask == null)      //if the upload task is null, somethings gone wrong, end the function
       return '';
