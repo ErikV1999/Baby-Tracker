@@ -330,7 +330,8 @@ class _SleepingState extends State<Sleeping> {
                                     Navigator.pop(context, 'OK');
                                     FirestoreDatabase().addSleepTime(_dateString, _selectedTime1, _selectedTime2, totalHour, totalMin, indexDate, notes, babyPath, dateSubmitted);
                                     hourMinuteFormat = totalHour.toString() + ":" + totalMin.toString();
-                                    FirestoreDatabase().updateLastSleep(dateSubmitted, hourMinuteFormat, path);
+                                    //FirestoreDatabase().updateLastSleep(dateSubmitted, hourMinuteFormat, path);
+                                      FirestoreDatabase().updateLastSleep(_selectedDate,time2, hourMinuteFormat, babyPath);
                                     },
                                     child: const Text('OK'),
                                   ),

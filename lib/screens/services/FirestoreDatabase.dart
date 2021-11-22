@@ -96,13 +96,18 @@ class FirestoreDatabase {
         .catchError((error) => print("Failed to add sleeping data"));
   }
 
-  Future<void> updateLastSleep(String? sleepTime, String totalSleep, String path) async {
+  Future<void> updateLastSleep(DateTime date, TimeOfDay time, String totalSleep, String path) async {
     final uid = await AuthService().getUID();
-    users
-      .doc(uid)
-      .collection('Babies')
+    int totalEpoch = date.toUtc().millisecondsSinceEpoch + (time.hour * 3600000) + (time.minute * 60000);
+
+    //users
+      //.doc(uid)
+      //.collection('Babies')
+    FirebaseFirestore.instance
       .doc(path)
-      .update({'Sleeping': sleepTime})
+      //.update({'Sleeping': sleepTime.toUtc().millisecondsSinceEpoch})
+      //.update({'Sleeping': DateTime.now().toUtc().millisecondsSinceEpoch})
+      .update({'Sleeping': totalEpoch})
       .then((value) => print('Last Sleep Updated'))
       .catchError((error) => print("Failed to add sleeping data"));
   }
@@ -126,10 +131,10 @@ class FirestoreDatabase {
         .then((value) => print('Feeding Added'))
         .catchError((error) => print("Failed to add Feeding data"));
   }
-  Future<void> updateLastFeed(String totalFeed, String path) async {
+  Future<void> updateLastFeed(DateTime time, String path) async {
     FirebaseFirestore.instance
         .doc(path)
-        .update({'Feeding': totalFeed})
+        .update({'Feeding': time.toUtc().millisecondsSinceEpoch})
         .then((value) => print('Last Feeding Updated'))
         .catchError((error) => print("Failed to add sleeping data"));
   }
@@ -149,7 +154,7 @@ class FirestoreDatabase {
   Future<void> updatediaperchange(DateTime date, String notes, String status, String path) async {
     FirebaseFirestore.instance
         .doc(path)
-        .update({'date': date, 'status' : status, 'Notes' : notes,})
+        .update({'date': date.toUtc().millisecondsSinceEpoch, 'status' : status, 'Notes' : notes,})
         .then((value) => print('Last Diaper Updated'))
         .catchError((error) => print("Failed to add Diaper data"));
   }
