@@ -148,7 +148,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //diaper change card
-              color: MyThemes.kobiPink,
+              color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("Height and Weight"),
                   subtitle: Row(
@@ -168,7 +168,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //notes card
-            color: Theme.of(context).primaryColor,
+            color: MyThemes.kobiPink,
             child: ListTile(
                 title: Text("Notes"),
                 onTap: () {
@@ -180,7 +180,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(     //diaper change card
-            color: MyThemes.kobiPink,
+            color:Theme.of(context).primaryColor,
             child: ListTile(
                 title: Text("All Stats"),
                 onTap: () {
@@ -192,7 +192,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(
-            color: Theme.of(context).primaryColor,
+            color: MyThemes.kobiPink,
             child: ListTile(
               title: Text("Add Caretakers"),
               onTap: (){
