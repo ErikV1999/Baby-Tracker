@@ -50,6 +50,12 @@ class _MainMenuState extends State<MainMenu> {
   */
   Widget _buildBabyItem(BuildContext context, DocumentSnapshot document){
     Color cardColor;
+    double now = DateTime.now().toUtc().millisecondsSinceEpoch.toDouble();
+    double feedingEpoch = 0;
+    double sleepingEpoch = 0;
+    double diaperEpoch = 0;
+
+
     if(document['gender'] == 'male') {
       if(Brightness.dark == Theme.of(context).brightness)
         cardColor = MyThemes.blueSapphire;
@@ -58,6 +64,32 @@ class _MainMenuState extends State<MainMenu> {
     }else {
       cardColor = MyThemes.kobiPink;
     }
+
+
+
+    try{
+      if(document['Feeding'] as int != 0){
+        feedingEpoch = (now - document['Feeding'] as double) ;
+        feedingEpoch = (feedingEpoch / 3600000);
+      }
+    }on Error catch(e){
+      print(e);
+    }
+    try{
+      if(document['Sleeping'] as int != 0){
+        sleepingEpoch = (now - document['Sleeping'] as double);
+        sleepingEpoch = (sleepingEpoch / 3600000);
+      }
+    }on Error catch(e){
+      print(e);
+    }
+    try{
+      diaperEpoch = (now - document['date'] as double);
+      diaperEpoch = (diaperEpoch / 3600000);
+    }on Error catch(e){
+      print(e);
+    }
+
     return
       Card(//card encapsulates 1 Listtile
         color: cardColor,
@@ -75,9 +107,19 @@ class _MainMenuState extends State<MainMenu> {
             },
           ),
           title: Text(document['Name']),    //pulls the babys name
-          subtitle: Text("Last Feeding: " + document['Feeding'].toString() +
-            " Last Sleep: " + document['Sleeping'].toString() +
-            " Last Diaper: " + document['Diaper'].toString()),
+          /*subtitle: Text("Last Feeding: " + feedingEpoch.toStringAsFixed(2) +
+            " hrs\nLast Sleep: " + sleepingEpoch.toStringAsFixed(2) +
+            " hrs\nLast Diaper: " + diaperEpoch.toStringAsFixed(2)+ " hrs") ,*/
+          subtitle: Wrap(
+            children: [
+              Icon(Icons.fastfood_sharp,size: 15),
+              Text(feedingEpoch.toStringAsFixed(2) + " hrs   "),
+              Icon(Icons.access_time_outlined, size:15),
+              Text(sleepingEpoch.toStringAsFixed(2) + " hrs   "),
+              Icon(Icons.baby_changing_station, size:15),
+              Text(diaperEpoch.toStringAsFixed(2)+ " hrs"),
+            ]
+          ),
           onTap: (){
             babyClick(document.reference.path);
           },
