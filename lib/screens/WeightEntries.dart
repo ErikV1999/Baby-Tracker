@@ -12,6 +12,9 @@ class WeightEntries extends StatefulWidget{
 }
 
 class _WeightEntriesState extends State<WeightEntries> {
+  /*
+  builds a stream with the weights subcollection
+   */
   Widget build(context){
     return StreamBuilder<dynamic>(
         stream: FirebaseFirestore.instance.doc(widget.baby).collection('weights').snapshots(),
@@ -20,11 +23,17 @@ class _WeightEntriesState extends State<WeightEntries> {
         }
     );
   }
+  /*
+  screen that gets displayed, already has teh weights collection
+   */
   Widget screen(context, snapshot){
     if(!snapshot.hasData)
       return Text("No Weight data");
     if(snapshot.data.docs == null)
       return Text("No Weight data");
+    /*
+    creates each individual item in the list
+     */
     return ListView.builder(
         itemCount: snapshot.data.docs.length,
         itemBuilder: (context, index){
@@ -32,11 +41,18 @@ class _WeightEntriesState extends State<WeightEntries> {
         }
     );
   }
+  /*
+  build weight entry creates a card for a listview that is created based on an
+  entry in the database
+   */
   Widget buildWeightEntry(context, DocumentSnapshot documentSnapshot){
-    Timestamp date = Timestamp.now();
-    String notes = "";
-    int weight = 0;
+    Timestamp date = Timestamp.now();     //the date that will be displayed on the card
+    String notes = "";      //notes section from the entry
+    int weight = 0;         //wegith of this entry
 
+    /*
+    attempt to pull data from teh entry.
+     */
     try{
       date = documentSnapshot['time'];
       notes = documentSnapshot['notes'];
@@ -45,7 +61,15 @@ class _WeightEntriesState extends State<WeightEntries> {
     } on StateError catch(e){
       return Text("Malformed");
     }
+
+    /*
+    convert the date from epoch time to a date time to use as a string.
+
+     */
     DateTime dateTime = DateTime.fromMicrosecondsSinceEpoch(date.microsecondsSinceEpoch);
+    /*
+    create the card with all the data pulled from the entry
+     */
     return Card(
         child: ListTile(
             title: Text(dateTime.year.toString() + " - " + dateTime.month.toString() + " - " + dateTime.day.toString()),
