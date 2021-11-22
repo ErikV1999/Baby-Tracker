@@ -1,7 +1,7 @@
 import 'package:baby_tracker/models/Themes/changeTheme.dart';
 import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
-import 'package:baby_tracker/screens/notes.dart';
+import 'package:baby_tracker/screens/Notes/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';

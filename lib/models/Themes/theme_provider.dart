@@ -32,6 +32,7 @@ class MyThemes {
     textTheme: TextTheme(
         bodyText1: TextStyle(color: Colors.white)
     ),
+    dividerColor: Colors.white,
 
    // cardTheme: CardTheme( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
   );
@@ -47,6 +48,7 @@ class MyThemes {
     textTheme: TextTheme(
         bodyText1: TextStyle(color: Colors.black)
     ),
+    dividerColor: Colors.black,
     //cardTheme: CardTheme( shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))
   );
 
