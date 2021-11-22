@@ -11,7 +11,11 @@ class HeightEntries extends StatefulWidget{
   State<HeightEntries> createState() => _HeightEntriesState();
 }
 
+
 class _HeightEntriesState extends State<HeightEntries> {
+  /*
+  creates a stream based on the heights subcollection
+   */
   Widget build(context){
     return StreamBuilder<dynamic>(
       stream: FirebaseFirestore.instance.doc(widget.baby).collection('heights').snapshots(),
@@ -20,11 +24,18 @@ class _HeightEntriesState extends State<HeightEntries> {
       }
     );
   }
+  /*
+  display the screen after fetching the most recent data in the stream
+   */
   Widget screen(context, snapshot){
+    /*
+    check that stream data exists
+     */
     if(!snapshot.hasData)
       return Text("No Height data");
     if(snapshot.data.docs == null)
       return Text("No Height data");
+    //generate all the cards as a listview
     return ListView.builder(
       itemCount: snapshot.data.docs.length,
       itemBuilder: (context, index){
@@ -32,11 +43,17 @@ class _HeightEntriesState extends State<HeightEntries> {
       }
     );
   }
+  /*
+  creates each individual card from the database data
+   */
   Widget buildHeightEntry(context, DocumentSnapshot documentSnapshot){
-    Timestamp date = Timestamp.now();
-    String notes = "";
-    int inches = 0;
-    int feet = 0;
+    Timestamp date = Timestamp.now(); //contains the date from teh db entry
+    String notes = "";                //contains the notes form the db entry
+    int inches = 0;                   //contains the inches from teh db entry
+    int feet = 0;                      //contains the feet from the db entry
+    /*
+    attempt to pull data from teh database snapshot
+     */
     try{
       date = documentSnapshot['time'];
       notes = documentSnapshot['notes'];
@@ -46,6 +63,7 @@ class _HeightEntriesState extends State<HeightEntries> {
     } on StateError catch(e){
       return Text("Malformed");
     }
+    //convert from epoch time to a datetime so it can be used aas a string
     DateTime dateTime = DateTime.fromMicrosecondsSinceEpoch(date.microsecondsSinceEpoch);
       return Card(
       child: ListTile(
