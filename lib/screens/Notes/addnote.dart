@@ -18,20 +18,22 @@ class AddNote extends StatefulWidget {
 class _AddNoteState extends State<AddNote> {
   late String title = 'Title';
   late String description;
-  String filePath = '';
-  late File? _file;
-  late UploadTask? uploadTask;
+  String filePath = '';   //stores path to image
+  late File? _file;       //converts filePath to type File
+  late UploadTask? uploadTask;  //created when storing files to storage
+  //stores result of file picker. Used to display selected image
   late Future<FilePickerResult?> result = Future.value(null);
 
+  //selects an image
   Future<FilePickerResult?> selectImage() async {
     try {
       FilePickerResult? _result = await FilePicker.platform
           .pickFiles(allowMultiple: false, type: FileType.image);
 
-      filePath = _result!.files.single.path.toString();
-      _file = File(filePath);
+      filePath = _result!.files.single.path.toString(); //stores file path of image
+      _file = File(filePath);   //converts filePath to type File
 
-      return _result;
+      return _result;   //returns FilePickerResult
 
     } on PlatformException catch (e) {
       print("Select Image Unsupported operation" + e.toString());
@@ -52,6 +54,7 @@ class _AddNoteState extends State<AddNote> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
+          //builds Save button
           Container(
             padding: EdgeInsets.fromLTRB(0, 10, 12, 10),
             child: ElevatedButton(
@@ -61,7 +64,7 @@ class _AddNoteState extends State<AddNote> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                addNote();
+                addNote();  //on pressing save call addNote
               },
             ),
           ),
@@ -74,7 +77,8 @@ class _AddNoteState extends State<AddNote> {
           padding: EdgeInsets.all(3),
           child: Column(
             children: [
-              TitleTile(),
+              TitleTile(),  //builds title tile
+              //builds text box for contents of notes
               Form(
                   child: Container(
                     padding: const EdgeInsets.only(left: 3, right: 3, top: 8, bottom: 10),
@@ -114,6 +118,10 @@ class _AddNoteState extends State<AddNote> {
               Row(
                 children: [
                   IconButton(
+                    /*
+                            onPressed call select image which returns a Future FilePickerResult
+                            then set state
+                         */
                     onPressed: () async {
                       result = selectImage().whenComplete(() {
                         setState(() {});
@@ -124,16 +132,20 @@ class _AddNoteState extends State<AddNote> {
                   ),
                 ],
               ),
-              
+
+              //Future Builder displays image when user selects file
               FutureBuilder<FilePickerResult?>(
                   future: result,
                   builder: (context, snap) {
+                    //if FilePickerResult has data...
                     if(snap.hasData) {
+                      //check if filePath is not empty
                       if(filePath.isNotEmpty ) {
+                        //if so then display image
                         return Stack(
                           children: [
                             Image.file(File(filePath)),
-
+                            //icon deletes image that was selected
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -147,11 +159,13 @@ class _AddNoteState extends State<AddNote> {
                           alignment: AlignmentDirectional.topEnd,
                         );
                       } else {
-                        return Text('No images');
+                        //if no image has been selected then display 'No image'
+                        return Text('No image selected');
                       }
                     }
+                    //if FileImagePicker has no data then display 'No image'
                     else {
-                      return Text('No images');
+                      return Text('No image selected');
                     }
                   }
               ),
@@ -188,13 +202,14 @@ class _AddNoteState extends State<AddNote> {
     );
   }
 
+  //uploads image to FirebaseStorage
   Future<String> upload() async{
     if(filePath.isEmpty)        //if no file chosen, dont do anything
       return '';
     //if file is chosen
-    final fileName = filePath.split('/').last;
-    final babyID = widget.baby.split('/').last;
-    final destination = "NotePics/${babyID}/${fileName}";   //sets the file name as the babies path to make it unique and easily overwritten by itself
+    final fileName = filePath.split('/').last;    //gets file name from file path
+    final babyID = widget.baby.split('/').last;   //gets baby doc ID
+    final destination = "NotePics/${babyID}/${fileName}";   //sets destination to NotePics/babyID/fileName
     uploadTask = handleStorage(destination, _file);    //sends the file to storage and takes the upload task
     if(uploadTask == null)      //if the upload task is null, somethings gone wrong, end the function
       return '';
@@ -217,6 +232,7 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 
+  //adds new notes doc to baby's note collection
   void addNote() async {
     String url = await upload();
     CollectionReference notesRef = FirebaseFirestore.instance.doc(widget.baby).collection('notes');
@@ -227,9 +243,9 @@ class _AddNoteState extends State<AddNote> {
       'image': url,
     };
 
-    notesRef.add(data);
+    notesRef.add(data);   //puts new doc into baby's note collection
 
-    Navigator.pop(context);
+    Navigator.pop(context);   //pop to previous screen
 }
 
 }
