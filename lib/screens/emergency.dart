@@ -159,7 +159,7 @@ context: build context boilerplate
       imagePath = snapshot['image'];
     }       //use w3 schools image as a default
     on StateError catch(e){
-      imagePath = "https://www.w3schools.com/images/w3schools_green.jpg";
+      imagePath = "https://firebasestorage.googleapis.com/v0/b/babytracker-c3834.appspot.com/o/Default_pfp.jpg?alt=media&token=aea6a30a-5ddd-4b78-a2d5-e678e73fb5f7";
     }
 
     return Center(      //encapsulates the profile pic with other things
