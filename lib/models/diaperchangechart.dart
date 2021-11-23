@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 
+//class for getting data from database into a list for chart
 class diaperChange{
   final DateTime dateOf;
   final String statusOf;
@@ -14,7 +15,7 @@ class diaperChange{
     statusOf=map['statusOf'];
 }
 
-
+//use to fill in chart
 List<double> dayArrDC = List.filled(10,0.0);
 
 List<BarChartGroupData> barChartGroupData = [
