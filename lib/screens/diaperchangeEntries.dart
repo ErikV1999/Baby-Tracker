@@ -1,15 +1,9 @@
-import 'package:baby_tracker/screens/diaperstats.dart';
 import 'package:flutter/material.dart';
-import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
-import 'dart:async';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:baby_tracker/models/diaperchangechart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 
 class diaperentries extends StatefulWidget {
-  final String baby;
+  final String baby; //contains path for baby in database
   const diaperentries({Key? key, required this.baby}) : super(key: key);
 
   @override
@@ -20,29 +14,11 @@ class _diaperentries extends State<diaperentries> {
 
   @override
 
-  /*Future<void> generateData() async{
-    Query _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper').orderBy("date", descending: true);
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await _diaperRef2.get();
-    DateTime temp;
-
-    print("Generate data");
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    querySnapshot.docs.forEach((doc) {
-        print(doc["date"]);
-      });
-  }*/
-
   Widget build(BuildContext context) {
     //get data from database
     Query diaperRef = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
-    CollectionReference _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change');
-    String babyPath = widget.baby;
-
     return Scaffold(
       appBar: AppBar(
-        //title: Text(babyPath),
         title: Text(
           'Diaper Change Entries',
           style: TextStyle(
@@ -58,7 +34,7 @@ class _diaperentries extends State<diaperentries> {
         future: diaperRef.get(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            //generateData();
+            //if true then print out entries in cards
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -68,9 +44,43 @@ class _diaperentries extends State<diaperentries> {
                 String formatTime = "${thisTime.year.toString()}-${thisTime.month.toString().padLeft(2,'0')}-${thisTime.day.toString().padLeft(2,'0')} "
                     "${thisTime.hour.toString().padLeft(2,'0')}:${thisTime.minute.toString().padLeft(2,'0')}";
                 return GestureDetector(
+                  // if a card is clicked then prompt user if they want to delete entry
+                  onTap: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AlertDialog(
+                            title: const Text('Delete Diaper Change Entry?'),
+                            content: Text("Date: " "${formatTime}, \n" +
+                                "Status of diaper:" + "${data['status']},\n" +
+                                "Notes: " + "${data['Notes']},",),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, 'Cancel');
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                //if clicked ok then delete data from database
+                                onPressed: () {
+                                  snapshot.data!.docs[index].reference.delete();
+                                  setState(() {
+
+                                  });
+                                  Navigator.pop(context, 'OK');
+                                },
+                                child: const Text('Delete', style: TextStyle(color: Colors.red),),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
                   child: Card(
+                    //Following prints how diaper change data in a card
+                    //Informtaion includes Date, Status of diaper, and Notes
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -90,6 +100,7 @@ class _diaperentries extends State<diaperentries> {
               },
             );
           } else {
+            //if data could not be gathered just print out loading
             return Center(child: Text('Loading...'));
           }
         },

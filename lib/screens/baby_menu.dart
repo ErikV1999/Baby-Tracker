@@ -127,20 +127,20 @@ class _BabyMenuState extends State<BabyMenu> {
                   }
               )
           ),
-          Card(     //diaper change card
+          Card(     //diaper change card, if clicked takes user to page to input data on diaper change of baby
               color: MyThemes.kobiPink,
               child: ListTile(
                   title: Text("Diaper Change"),
                   subtitle: Row(
                       children: [
-                        Text("Last Changed"),
-                        Text("Pooped"),
-                        Text("Peed")
+                        Text("Enter diaper change data for "),
+                        Text(baby["Name"]),
                       ]
                   ),
                   onTap: () {
                     Navigator.push(
                       context,
+                      //take user to diaper change page
                       MaterialPageRoute(builder: (context) => diaperchange(baby: babyPath)),
                     );
                   }

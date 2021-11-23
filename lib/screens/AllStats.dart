@@ -45,6 +45,7 @@ class _AllStatsState extends State<AllStats> {
           ),
           body: TabBarView(
             children: [
+              //take user to a page that has either stats for feeding, sleeping, diaper changes, or measurements of baby
               FeedingStats(baby: babyPath),
               SleepingStats(baby: babyPath),
               DiaperStats(baby: babyPath),
