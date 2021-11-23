@@ -1,7 +1,7 @@
 import 'package:baby_tracker/models/Themes/changeTheme.dart';
 import 'package:baby_tracker/models/Themes/theme_provider.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
-import 'package:baby_tracker/screens/notes.dart';
+import 'package:baby_tracker/screens/Notes/notes.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
@@ -148,7 +148,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //diaper change card
-              color: MyThemes.kobiPink,
+              color: Theme.of(context).primaryColor,
               child: ListTile(
                   title: Text("Height and Weight"),
                   subtitle: Row(
@@ -168,7 +168,7 @@ class _BabyMenuState extends State<BabyMenu> {
               )
           ),
           Card(     //notes card
-            color: Theme.of(context).primaryColor,
+            color: MyThemes.kobiPink,
             child: ListTile(
                 title: Text("Notes"),
                 onTap: () {
@@ -180,7 +180,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(     //diaper change card
-            color: MyThemes.kobiPink,
+            color:Theme.of(context).primaryColor,
             child: ListTile(
                 title: Text("All Stats"),
                 onTap: () {
@@ -192,7 +192,7 @@ class _BabyMenuState extends State<BabyMenu> {
               ),
           ),
           Card(
-            color: Theme.of(context).primaryColor,
+            color: MyThemes.kobiPink,
             child: ListTile(
               title: Text("Add Caretakers"),
               onTap: (){

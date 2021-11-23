@@ -16,7 +16,10 @@ class MeasureStats extends StatefulWidget{
   @override
   State<MeasureStats> createState() => _MeasureStatsState();
 }
-
+/*
+just contains the tabs for all the options involved with height and weight in the
+stats screen
+ */
 class _MeasureStatsState extends State<MeasureStats> {
   Widget build(context){
     return DefaultTabController(
