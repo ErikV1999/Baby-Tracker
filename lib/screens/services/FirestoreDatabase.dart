@@ -114,14 +114,14 @@ class FirestoreDatabase {
 
 
 
-  Future<void> addFeeding(String feedingType, String _dateString, int indexDate, int totalTimeSec, String foodType, String amount, String notes, String path) async {
+  Future<void> addFeeding(String feedingType, DateTime _startDate, int indexDate, int totalTimeSec, String foodType, String amount, String notes, String path) async {
     final uid = await AuthService().getUID();
 
     CollectionReference feedingPath = FirebaseFirestore.instance.doc(path).collection('feeding');
 
     await feedingPath.add({
       'feeding type': feedingType,
-      'date': _dateString,
+      'date': _startDate,
       'index date': indexDate,
       'total Time in seconds': totalTimeSec,
       'food type': foodType,
