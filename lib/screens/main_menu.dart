@@ -6,6 +6,7 @@ import 'package:baby_tracker/screens/services/auth.dart';
 import 'package:baby_tracker/screens/baby_menu.dart';
 import 'package:baby_tracker/screens/plus_menu.dart';
 import 'package:baby_tracker/models/Themes/changeTheme.dart';
+import 'dart:async';
 
 
 class MainMenu extends StatefulWidget{
@@ -41,6 +42,16 @@ class _MainMenuState extends State<MainMenu> {
 
   }
 
+  @override
+  void initState(){
+    super.initState();
+    Timer timer = Timer.periodic(Duration(seconds:30), (Timer t){
+      setState(() {
+      });
+    });
+
+  }
+
   /*Builds a card to be displayed for a baby
     BuildContext context: is some boilerplate thing for the environment
       its from
@@ -54,7 +65,6 @@ class _MainMenuState extends State<MainMenu> {
     double feedingEpoch = 0;
     double sleepingEpoch = 0;
     double diaperEpoch = 0;
-
 
     if(document['gender'] == 'male') {
       if(Brightness.dark == Theme.of(context).brightness)
