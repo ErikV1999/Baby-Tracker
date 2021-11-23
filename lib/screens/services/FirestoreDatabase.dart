@@ -141,7 +141,7 @@ class FirestoreDatabase {
 
   Future<void> addDiaper(DateTime date, String notes, String status, String path) async {
     CollectionReference diaperChangePath = FirebaseFirestore.instance.doc(path).collection('diaper change');
-
+    int totalEpoch = date.toUtc().millisecondsSinceEpoch;
     await diaperChangePath.add({
       'date' : date,
       'status' : status,

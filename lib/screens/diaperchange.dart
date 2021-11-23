@@ -22,9 +22,11 @@ class _diaperchangeState extends State<diaperchange> {
 
   String dateD = '';
   String timeD = '';
-  String status = '';
-  String notes = '';
+  String status = 'Wet';
+  String notes = 'No notes';
   String path = 'path';
+  String timeFormat = '';
+
 
   DateTime selectedDate = DateTime.now();
 
@@ -36,6 +38,11 @@ class _diaperchangeState extends State<diaperchange> {
     String babyPath = widget.baby;
     String path = babyPath.substring(42);
 
+    Future<void> _changeTimeFormat() async{
+      timeFormat = "${selectedDate.year.toString()}-${selectedDate.month.toString().padLeft(2,'0')}-${selectedDate.day.toString().padLeft(2,'0')} "
+          "${selectedDate.hour.toString().padLeft(2,'0')}:${selectedDate.minute.toString().padLeft(2,'0')}";
+
+    }
 
     return Scaffold(
       // resizeToAvoidBottonInset use to fix overflow by X pixels
@@ -133,21 +140,50 @@ class _diaperchangeState extends State<diaperchange> {
                           },
                         ),
                         SizedBox(height: 100.0,),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: DefaultScreen.appBarBackground,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _changeTimeFormat();
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text('Review Diaper Change Information'),
+                                        content: Text('Date: $timeFormat\n'
+                                                      'Status: $status\n'
+                                                      'Notes: $notes\n'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              _changeTimeFormat();
+                                              Navigator.pop(context, 'Cancel');
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              _changeTimeFormat();
+                                              Navigator.pop(context, 'OK');
+                                              FirestoreDatabase().addDiaper(selectedDate, notes, status, babyPath);
+                                              FirestoreDatabase().updatediaperchange(selectedDate, notes, status, babyPath);
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                );
+                              },
+                              child: const Text('Submit Sleeping Information',
+                                style: TextStyle(fontSize: 25),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blueAccent,
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                              ),
                             ),
-                          child: Text(
-                            'Add Diaper Change',
-                            style: TextStyle(),
                           ),
-                          onPressed: () async{
-                          /*print(notes);
-                          print(status);
-                          print(selectedDate);*/
-                          FirestoreDatabase().addDiaper(selectedDate, notes, status, babyPath);
-                          FirestoreDatabase().updatediaperchange(selectedDate, notes, status, babyPath);
-                          },
                         ),
                       ]
                     ),

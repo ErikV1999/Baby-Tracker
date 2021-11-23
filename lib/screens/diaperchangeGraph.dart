@@ -46,6 +46,9 @@ class _diapergraph extends State<diapergraph> {
 
   List<diaperChange> myList = [];
   List<BarChartGroupData> dataList = [];
+  String axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+  String axisMessage1 = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+  String axisMessage2 = "Last 4 weeks starting from " + DateFormat('Md').format(DateTime.now());
 
   Future<void> generateDataSeven() async{
     Query _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
@@ -54,6 +57,7 @@ class _diapergraph extends State<diapergraph> {
     //Clear previous data
     myList.clear();
     dataList.clear();
+    axisMessage = axisMessage1;
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -114,6 +118,7 @@ class _diapergraph extends State<diapergraph> {
     //Clear previous data
     myList.clear();
     dataList.clear();
+    axisMessage = axisMessage2;
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -212,7 +217,7 @@ class _diapergraph extends State<diapergraph> {
     Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("indexDate", descending: true);
     CollectionReference _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change');
     String babyPath = widget.baby;
-    String axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+
     return ListView(
       children: [Padding(
         padding: const EdgeInsets.all(8.0),

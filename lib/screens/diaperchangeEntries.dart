@@ -20,19 +20,19 @@ class _diaperentries extends State<diaperentries> {
 
   @override
 
-  Future<void> generateData() async{
+  /*Future<void> generateData() async{
     Query _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper').orderBy("date", descending: true);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _diaperRef2.get();
     DateTime temp;
 
-
+    print("Generate data");
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
     querySnapshot.docs.forEach((doc) {
         print(doc["date"]);
       });
-  }
+  }*/
 
   Widget build(BuildContext context) {
     //get data from database
@@ -58,11 +58,15 @@ class _diaperentries extends State<diaperentries> {
         future: diaperRef.get(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            generateData();
+            //generateData();
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 Map data = snapshot.data!.docs[index].data() as Map;
+                Timestamp t = data['date'];
+                DateTime thisTime = t.toDate();
+                String formatTime = "${thisTime.year.toString()}-${thisTime.month.toString().padLeft(2,'0')}-${thisTime.day.toString().padLeft(2,'0')} "
+                    "${thisTime.hour.toString().padLeft(2,'0')}:${thisTime.minute.toString().padLeft(2,'0')}";
                 return GestureDetector(
                   child: Card(
                     child: Padding(
@@ -70,15 +74,7 @@ class _diaperentries extends State<diaperentries> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /*Text(
-                            "${data['Notes']}",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),*/
-                          Text("Date: " "${data['date']}, \n" +
+                          Text("Date: " "${formatTime}, \n" +
                               "Status of diaper:" + "${data['status']},\n" +
                               "Notes: " + "${data['Notes']},",
                               style: TextStyle(
