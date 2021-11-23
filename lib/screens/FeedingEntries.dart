@@ -13,7 +13,6 @@ class FeedingEntries extends StatefulWidget {
 }
 
 class _FeedingEntriesState extends State<FeedingEntries> {
-
   String date = '';
   DateFormat formatter = DateFormat('MM-dd-yyyy');
 
@@ -62,6 +61,7 @@ class _FeedingEntriesState extends State<FeedingEntries> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                           if ("${data['feeding type']}" == 'Left Breast')
                             _BreastEntry(data),
@@ -71,6 +71,14 @@ class _FeedingEntriesState extends State<FeedingEntries> {
                             _BottleEntry(data),
                           if ("${data['feeding type']}" == 'Food')
                             _FoodEntry(data),
+                          if ("${data['notes']}" != 'none')
+                            Text(
+                              "notes: ${data['notes']}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -92,11 +100,10 @@ class _FeedingEntriesState extends State<FeedingEntries> {
         "Date: " +
             "${date.month}-${date.day}-${date.year}\n" +
             "Time Fed: " +
-            "${data['total Time in seconds']} seconds\n" +
-            "notes: " +
-            "${data['notes']}",
+            "${data['total Time in seconds']} seconds",
         style: TextStyle(
           fontSize: 18,
+          fontWeight: FontWeight.bold,
           color: Colors.black,
         ));
   }
@@ -107,11 +114,10 @@ class _FeedingEntriesState extends State<FeedingEntries> {
         "Date: " +
             "${date.month}-${date.day}-${date.year}\n" +
             "Amount: " +
-            "${data['amount']}\n" +
-            "notes: " +
-            "${data['notes']}",
+            "${data['amount']}",
         style: TextStyle(
           fontSize: 18,
+          fontWeight: FontWeight.bold,
           color: Colors.black,
         ));
   }
@@ -124,11 +130,10 @@ class _FeedingEntriesState extends State<FeedingEntries> {
             "food type: " +
             "${data['food type']}\n" +
             "Amount: " +
-            "${data['amount']}\n"+
-                "notes: " +
-            "${data['notes']}",
+            "${data['amount']}",
         style: TextStyle(
           fontSize: 18,
+          fontWeight: FontWeight.bold,
           color: Colors.black,
         ));
   }

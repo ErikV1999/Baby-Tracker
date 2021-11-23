@@ -63,7 +63,6 @@ class _FeedingState extends State<Feeding> {
 
   DateTime? _chosenDateTime;
 
-
   //set StopWatchTimer mode to count up
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(
     mode: StopWatchMode.countUp,
@@ -616,33 +615,34 @@ class _FeedingState extends State<Feeding> {
       ),
     );
   }
+
   void _showDatePicker(ctx) {
     // showCupertinoModalPopup is a built-in function of the cupertino library
     showCupertinoModalPopup(
         context: ctx,
         builder: (_) => Container(
-          height: 500,
-          color: Color.fromARGB(255, 255, 255, 255),
-          child: Column(
-            children: [
-              Container(
-                height: 400,
-                child: CupertinoDatePicker(
-                    initialDateTime: _startDate,
-                    onDateTimeChanged: (val) {
-                      setState(() {
-                        _startDate = val;
-                      });
-                    }),
-              ),
+              height: 500,
+              color: Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                children: [
+                  Container(
+                    height: 400,
+                    child: CupertinoDatePicker(
+                        initialDateTime: _startDate,
+                        onDateTimeChanged: (val) {
+                          setState(() {
+                            _startDate = val;
+                          });
+                        }),
+                  ),
 
-              // Close the modal
-              CupertinoButton(
-                child: Text('OK'),
-                onPressed: () => Navigator.of(ctx).pop(),
-              )
-            ],
-          ),
-        ));
+                  // Close the modal
+                  CupertinoButton(
+                    child: Text('OK'),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  )
+                ],
+              ),
+            ));
   }
 }

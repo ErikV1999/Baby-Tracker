@@ -311,7 +311,8 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   }
 
   Widget _build7Day() {
-    axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+    axisMessage =
+        "Number of days ago from " + DateFormat('Md').format(DateTime.now());
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -354,7 +355,8 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   }
 
   Widget _buildMonth() {
-    axisMessage = "Number of weeks ago from " + DateFormat('Md').format(DateTime.now());
+    axisMessage =
+        "Number of weeks ago from " + DateFormat('Md').format(DateTime.now());
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
