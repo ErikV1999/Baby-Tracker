@@ -48,6 +48,7 @@ class _SleepingState extends State<Sleeping> {
   String hourMinuteFormat = '';
 
   DateTime _selectedDate = DateTime.now();
+  DateTime _timeStamp = DateTime.now();
   DateFormat formatter = DateFormat('MM-dd-yyyy');
   String? _dateString;
   String? dateSubmitted;
@@ -65,7 +66,10 @@ class _SleepingState extends State<Sleeping> {
       }
       setState(() {
         // using state so that the UI will be rerendered when date is picked
+        print(_timeStamp.toString() + "1");
         _selectedDate = pickedDate;
+        _timeStamp = pickedDate;
+        print(_timeStamp.toString() + "2");
         _dateString = formatter.format(_selectedDate);
         dateSubmitted = formatter.format(DateTime.now());
         print(_dateString);
@@ -331,7 +335,7 @@ class _SleepingState extends State<Sleeping> {
                                     FirestoreDatabase().addSleepTime(_dateString, _selectedTime1, _selectedTime2, totalHour, totalMin, indexDate, notes, babyPath, dateSubmitted);
                                     hourMinuteFormat = totalHour.toString() + ":" + totalMin.toString();
                                     //FirestoreDatabase().updateLastSleep(dateSubmitted, hourMinuteFormat, path);
-                                      FirestoreDatabase().updateLastSleep(_selectedDate,time2, hourMinuteFormat, babyPath);
+                                      FirestoreDatabase().updateLastSleep(_timeStamp,time2, hourMinuteFormat, babyPath);
                                     },
                                     child: const Text('OK'),
                                   ),

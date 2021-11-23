@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:baby_tracker/models/sleepingChartData.dart';
+import 'package:baby_tracker/screens/services/FirestoreDatabase.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:baby_tracker/models/defaultscreen.dart';
 
 class debugPage extends StatefulWidget {
   final String baby;
@@ -15,108 +15,147 @@ class debugPage extends StatefulWidget {
 
 class _debugPageState extends State<debugPage> {
   dynamic baby = "Placeholder";
-  var list1 = List<double>.filled(7,1.0);
+  var list1 = List<double>.filled(7, 1.0);
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> generate() async{
-    setState(() {
-      //print(snapshot);
-      list1[0] = dayArr[0];
-      list1[1] = dayArr[1];
-      list1[2] = dayArr[2];
-      list1[3] = dayArr[3];
-      list1[4] = dayArr[4];
-      list1[5] = dayArr[5];
-      list1[6] = dayArr[6];
-    });
-  }
+
+  String dateD = '';
+  String timeD = '';
+  String status = '';
+  String notes = '';
+  String path = 'path';
+
+  DateTime selectedDate = DateTime.now();
 
   @override
+
+
   Widget build(BuildContext context) {
+
     String babyPath = widget.baby;
-    Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('sleeping').orderBy("indexDate", descending: true);
+    String path = babyPath.substring(42);
+
 
     return Scaffold(
+      // resizeToAvoidBottonInset use to fix overflow by X pixels
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('debug'),
+        iconTheme: IconThemeData(color: Colors.black,),
+        title: Text('Diaper Change',
+          style: TextStyle(color: DefaultScreen.appBarFont),),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          color: Colors.blue,
-          height: 200,
-          child: BarChart(
-            BarChartData (
-              maxY: 20,
-              barGroups: [
-                BarChartGroupData(x: 1, barRods: [
-                  BarChartRodData(y: list1[0], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 2, barRods: [
-                  BarChartRodData(y: list1[1], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 3, barRods: [
-                  BarChartRodData(y: list1[2], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 4, barRods: [
-                  BarChartRodData(y: list1[3], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 5, barRods: [
-                  BarChartRodData(y: list1[4], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 6, barRods: [
-                  BarChartRodData(y: list1[5], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-                BarChartGroupData(x: 7, barRods: [
-                  BarChartRodData(y: list1[6], colors: [Color(0xff43dde6), Color(0xff43dde6)]),
-                ]),
-              ],
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          generate();
-        },
-        child: const Icon(Icons.check),
-      ),
+      body: ListView(
+          padding: const EdgeInsets.all(0.0),
+          shrinkWrap:  true,
+          children: <Widget>[
+            Container(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    children: <Widget>[
+                      Text('Enter date and time of diaper change',
+                        style: TextStyle(fontSize:20,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        height: 200,
+                        child: CupertinoDatePicker(
+                          backgroundColor: Theme.of(context).accentColor,
+                          mode: CupertinoDatePickerMode.dateAndTime,
+                          initialDateTime: selectedDate,
+                          onDateTimeChanged: (val) {
+                            print(selectedDate);
+                            selectedDate = val;
+                            print(selectedDate);
+                          },
+                          use24hFormat: false,
+                          minuteInterval: 1,
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      Wrap(
+                          children: <Widget>[
+                            Text('Please choose best description',
+                              style: TextStyle(fontSize:20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(width: 20),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blue[500],
+                              ),
+                              child: Text(
+                                'Wet',
+                                style: TextStyle(),
+                              ),
+                              onPressed: () async {
+                                status = 'Wet';
+                                //print(status);
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.brown[500],
+                                ),
+                                child: Text(
+                                  'Dry',
+                                  style: TextStyle(),
+                                ),
+                                onPressed: () async {
+                                  status = 'Dry';
+                                  //print(status);
+                                }
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.lightGreen[800],
+                                ),
+                                child: Text(
+                                  'Mix',
+                                  style: TextStyle(),
+                                ),
+                                onPressed: () async {
+                                  status = 'Mix';
+                                }
+                            ),
 
+                          ]
+                      ),
+                      TextFormField(
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                            labelText: 'Notes'
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Notes' : null,
+                        onChanged: (val) {
+                          setState(() => notes = val);
+                        },
+                      ),
+                      SizedBox(height: 100.0,),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: DefaultScreen.appBarBackground,
+                        ),
+                        child: Text(
+                          'Add Diaper Change',
+                          style: TextStyle(),
+                        ),
+                        onPressed: () async{
+                          /*print(notes);
+                          print(status);
+                          print(selectedDate);*/
+                          //FirestoreDatabase().addDiaper(selectedDate, notes, status, babyPath);
+                          //FirestoreDatabase().updatediaperchange(selectedDate, notes, status, babyPath);
+                        },
+                      ),
+                    ]
+                ),
+              ),
+            ),
+          ]
+      ),
     );
   }
 }
-
-/*return Scaffold(
-      appBar: AppBar(
-        title: Text('debug'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-        padding: const EdgeInsets.all(10),
-        color: Colors.blue,
-        height: 200,
-        child: BarChart(
-          BarChartData (
-            maxY: 20,
-            barGroups: [BarChartGroupData(x: 1, barRods: [BarChartRodData(y: list1[0])]),
-              BarChartGroupData(x: 2, barRods: [BarChartRodData(y: list1[1])]),
-              BarChartGroupData(x: 3, barRods: [BarChartRodData(y: list1[2])]),
-              BarChartGroupData(x: 4, barRods: [BarChartRodData(y: list1[3])]),
-              BarChartGroupData(x: 5, barRods: [BarChartRodData(y: list1[4])]),
-              BarChartGroupData(x: 6, barRods: [BarChartRodData(y: list1[5])]),
-              BarChartGroupData(x: 7, barRods: [BarChartRodData(y: list1[6])]),],
-          ),
-        ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          generate();
-        },
-        child: const Icon(Icons.check),
-      ),
-
-    );
-
- */

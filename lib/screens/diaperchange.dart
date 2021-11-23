@@ -65,7 +65,9 @@ class _diaperchangeState extends State<diaperchange> {
                             mode: CupertinoDatePickerMode.dateAndTime,
                             initialDateTime: selectedDate,
                             onDateTimeChanged: (val) {
+                              print(selectedDate);
                               selectedDate = val;
+                              print(selectedDate);
                             },
                             use24hFormat: false,
                             minuteInterval: 1,

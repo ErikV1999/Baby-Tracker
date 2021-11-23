@@ -203,6 +203,24 @@ class _BabyMenuState extends State<BabyMenu> {
               }
             )
           ),
+          Card(     //sleeping card
+              color: Theme.of(context).primaryColor,
+              child: ListTile(
+                  title: Text("DEBUG"),
+                  subtitle: Row(
+                      children: [
+                        Text("Last Sleep"),
+                        Text("For")
+                      ]
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context)  =>  debugPage(baby: babyPath)),
+                    );
+                  }
+              )
+          ),
         ]
       ),
     );
