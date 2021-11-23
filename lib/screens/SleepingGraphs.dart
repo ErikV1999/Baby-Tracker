@@ -157,6 +157,11 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
               BarChartData (
                 backgroundColor: MyThemes.blizzardBlue,
                 maxY: 25,
+                axisTitleData: FlAxisTitleData(
+                  show: true,
+                  bottomTitle: AxisTitle(showTitle:true, titleText: "Past 7 Days", margin: 20.0),
+                  leftTitle: AxisTitle(showTitle:true, titleText: "Hours Of Sleep", margin: 0.0),
+                ),
                 titlesData: FlTitlesData(
                   bottomTitles: SideTitles(
                       showTitles: true,
@@ -225,6 +230,11 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
             BarChartData (
               backgroundColor: MyThemes.blizzardBlue,
               maxY: 168,
+              axisTitleData: FlAxisTitleData(
+                show: true,
+                bottomTitle: AxisTitle(showTitle:true, titleText: "Past 5 Months", margin: 20.0),
+                leftTitle: AxisTitle(showTitle:true, titleText: "Hours Of Sleep", margin: 0.0),
+              ),
               titlesData: FlTitlesData(
                 bottomTitles: SideTitles(
                     showTitles: true,
