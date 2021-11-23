@@ -631,7 +631,7 @@ class _FeedingState extends State<Feeding> {
                     initialDateTime: _startDate,
                     onDateTimeChanged: (val) {
                       setState(() {
-                        _startDatei = val;
+                        _startDate = val;
                       });
                     }),
               ),

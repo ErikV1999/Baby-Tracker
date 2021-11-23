@@ -17,6 +17,12 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   var listy = List<double>.filled(7, 0.0);
   late List<BarChartGroupData> showingBarGroups;
   int daysLength = 7;
+
+  bool show7Day = true;
+  bool showMonth = false;
+  String axisMessage =
+      "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+
   @override
   void initState() {
     super.initState();
@@ -87,8 +93,8 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
         if (((loopTime2.difference(myList[i].dateOf).inDays) == 0) &&
             (((loopTime2.month) == (myList[i].dateOf).month) &&
                 ((loopTime2.day) == (myList[i].dateOf).day))) {
-          //if true then check status of diaper and add to list
-          if (myList[i].statusOf == "Left Breast" || myList[i].statusOf == "Right Breast") {
+          if (myList[i].statusOf == "Left Breast" ||
+              myList[i].statusOf == "Right Breast") {
             // && (i< 7)){
             breastTally += 1;
           }
@@ -116,12 +122,12 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   }
 
   Future<void> generateDataThirty() async {
-    Query _diaperRef2 = FirebaseFirestore.instance
+    Query _feedingRef2 = FirebaseFirestore.instance
         .doc(widget.baby)
-        .collection('diaper change')
+        .collection('feeding')
         .orderBy("date", descending: true);
     // Get docs from collection reference
-    QuerySnapshot querySnapshot = await _diaperRef2.get();
+    QuerySnapshot querySnapshot = await _feedingRef2.get();
     //Clear previous data
     myList.clear();
     dataList.clear();
@@ -131,31 +137,31 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     querySnapshot.docs.forEach((doc) {
       final Timestamp timestop = doc['date'];
       final DateTime date = timestop.toDate();
-      FeedingData newdiaperc = new FeedingData(
+      FeedingData newFeedingData = new FeedingData(
         date,
-        doc['status'],
+        doc['feeding type'],
       );
-      myList.add(newdiaperc);
+      myList.add(newFeedingData);
     });
 
-    double dryTally = 0;
-    double wetTally = 0;
-    double mixTally = 0;
+    double breastTally = 0;
+    double bottleTally = 0;
+    double foodTally = 0;
     int day = 0; //keep track how how many days
     DateTime now = new DateTime.now();
     DateTime date = new DateTime(now.year, now.month, now.day);
     DateTime loopTime = date;
     DateTime loopTime2 = date;
     DateTime endOfWeek = now.subtract(Duration(days: 7));
-    DateTime endOfWeektemp = now.subtract(Duration(days: 7));
+    DateTime endOfWeekTemp = now.subtract(Duration(days: 7));
     DateTime lastDay = now.subtract(Duration(days: 31)); //get final day
     DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month,
         lastDay.day); //make it easier to use difference
 
     while (!(lastDay2.difference(loopTime).inDays >= 0)) {
       //check first week
-      DateTime thisweek = loopTime.subtract(Duration(days: 8));
-      while (!(thisweek.difference(loopTime).inDays >= 0)) {
+      DateTime thisWeek = loopTime.subtract(Duration(days: 8));
+      while (!(thisWeek.difference(loopTime).inDays >= 0)) {
         //loopTime will have next loop, loopTime2 will contain current time to check in database
         loopTime = loopTime2.subtract(Duration(days: 1));
         //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
@@ -163,34 +169,35 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
           if (((loopTime2.difference(myList[i].dateOf).inDays) == 0) &&
               (((loopTime2.month) == (myList[i].dateOf).month) &&
                   ((loopTime2.day) == (myList[i].dateOf).day))) {
-            //if true then check status of diaper and add to list
-            if (myList[i].statusOf == "Dry") {
+            if (myList[i].statusOf == "Left Breast" ||
+                myList[i].statusOf == "Right Breast") {
               // && (i< 7)){
-              dryTally += 1;
+              breastTally += 1;
             }
-            if (myList[i].statusOf == "Wet") {
+            if (myList[i].statusOf == "Bottle") {
               // && (i< 7)){
-              wetTally += 1;
+              bottleTally += 1;
             }
-            if (myList[i].statusOf == "Mix") {
+            if (myList[i].statusOf == "Food") {
               // && (i< 7)) {
-              mixTally += 1;
+              foodTally += 1;
             }
           }
         }
         loopTime2 =
             loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
       } //week while loop
-      dryTally = dryTally / 7;
-      wetTally = wetTally / 7;
-      mixTally = mixTally / 7;
-      endOfWeek = endOfWeektemp.subtract(Duration(days: 7));
+      breastTally = breastTally;
+      bottleTally = bottleTally;
+      foodTally = foodTally;
+      endOfWeek = endOfWeekTemp.subtract(Duration(days: 7));
       //add data to graph and get ready for next loop
-      final barGrouptemp = makeGroupData(day, dryTally, wetTally, mixTally);
-      dryTally = wetTally = mixTally = 0; //reset for next loop
+      final barGrouptemp =
+          makeGroupData(day, breastTally, bottleTally, foodTally);
+      breastTally = bottleTally = foodTally = 0; //reset for next loop
       dataList.add(barGrouptemp);
       day++; //set for next day
-      endOfWeektemp = endOfWeek; //get next week ready
+      endOfWeekTemp = endOfWeek; //get next week ready
     } //whole while loop
     showingBarGroups = dataList;
     generate();
@@ -201,17 +208,17 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     return BarChartGroupData(barsSpace: 1, x: x, barRods: [
       BarChartRodData(
         y: y1,
-        colors: [Color(0xFF3E2723)], // other one 0xffff5182
+        colors: [Color(0xFFFF00BD)], // other one 0xffff5182
         width: widths,
       ),
       BarChartRodData(
         y: y2,
-        colors: [Color(0xFF0D47A1)],
+        colors: [Color(0xFF0063FF)],
         width: widths,
       ),
       BarChartRodData(
         y: y3,
-        colors: [Color(0xFF1B5E20)],
+        colors: [Color(0xFF00FF12)],
         width: widths,
       )
     ]);
@@ -225,47 +232,19 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   }
 
   Widget build(BuildContext context) {
-    Query sleepRef = FirebaseFirestore.instance
+    Query feedRef = FirebaseFirestore.instance
         .doc(widget.baby)
         .collection('feeding')
-        .orderBy("indexDate", descending: true);
-    CollectionReference _sleepRef2 =
+        .orderBy("date", descending: true);
+    CollectionReference _feedRef2 =
         FirebaseFirestore.instance.doc(widget.baby).collection('feeding');
     String babyPath = widget.baby;
-    String axisMessage =
-        "Number of days ago from " + DateFormat('Md').format(DateTime.now());
     return ListView(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            color: Colors.white,
-            height: 400,
-            //width: 800,
-            child: BarChart(
-              BarChartData(
-                maxY: 5,
-                barGroups: showingBarGroups,
-                titlesData: FlTitlesData(
-                  show: true,
-                  rightTitles: SideTitles(showTitles: false),
-                  topTitles: SideTitles(showTitles: false),
-                ),
-                gridData: FlGridData(show: true),
-                axisTitleData: FlAxisTitleData(
-                  show: true,
-                  bottomTitle: AxisTitle(
-                      showTitle: true, titleText: axisMessage, margin: 20.0),
-                  leftTitle: AxisTitle(
-                      showTitle: true,
-                      titleText: "Number of occurrences",
-                      margin: 0.0),
-                ),
-              ),
-            ),
-          ),
-        ),
+        if (show7Day == true) _build7DayTitle(),
+        if (show7Day == true) _build7Day(),
+        if (showMonth == true) _buildMonthTitle(),
+        if (showMonth == true) _buildMonth(),
         Padding(
           padding: const EdgeInsets.all(1.0),
           child: Container(
@@ -273,14 +252,13 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
               textAlign: TextAlign.center,
               text: TextSpan(children: <TextSpan>[
                 TextSpan(
-                    text: "Blue is wet diapers |",
-                    style: TextStyle(color: Colors.blue)),
+                    text: " Breast |",
+                    style: TextStyle(color: Colors.pinkAccent)),
                 TextSpan(
-                    text: "| Green is Mix diapers |",
-                    style: TextStyle(color: Colors.green)),
+                    text: "| Bottle |",
+                    style: TextStyle(color: Colors.blueAccent)),
                 TextSpan(
-                    text: "| Brown is dry diapers |",
-                    style: TextStyle(color: Colors.brown)),
+                    text: "| Food ", style: TextStyle(color: Colors.green)),
               ]),
             ),
           ),
@@ -289,7 +267,11 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: ElevatedButton.icon(
-              onPressed: () => generateDataSeven(),
+              onPressed: () => {
+                generateDataSeven(),
+                show7Day = true,
+                showMonth = false,
+              },
               label: Text('Generate 7 Day Graph'),
               icon: Icon(
                 Icons.check,
@@ -301,7 +283,11 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: ElevatedButton.icon(
-              onPressed: () => generateDataThirty(),
+              onPressed: () => {
+                generateDataThirty(),
+                show7Day = false,
+                showMonth = true,
+              },
               label: Text('Generate 4 week summary'),
               icon: Icon(
                 Icons.check,
@@ -310,6 +296,92 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _build7DayTitle() {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
+        child: Container(
+            height: 30,
+            child: Text(
+              'Generated graph from the last 7 days for Feeding',
+              textAlign: TextAlign.center,
+            )));
+  }
+
+  Widget _build7Day() {
+    axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        color: Colors.white,
+        height: 400,
+        //width: 800,
+        child: BarChart(
+          BarChartData(
+            maxY: 15,
+            barGroups: showingBarGroups,
+            titlesData: FlTitlesData(
+              show: true,
+              rightTitles: SideTitles(showTitles: false),
+              topTitles: SideTitles(showTitles: false),
+            ),
+            gridData: FlGridData(show: true),
+            axisTitleData: FlAxisTitleData(
+              show: true,
+              bottomTitle: AxisTitle(
+                  showTitle: true, titleText: axisMessage, margin: 20.0),
+              leftTitle: AxisTitle(
+                  showTitle: true, titleText: "Feeding Units", margin: 0.0),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthTitle() {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
+        child: Container(
+            height: 30,
+            child: Text(
+              'Generated graph from the last months of Feeding',
+              textAlign: TextAlign.center,
+            )));
+  }
+
+  Widget _buildMonth() {
+    axisMessage = "Number of weeks ago from " + DateFormat('Md').format(DateTime.now());
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        color: Colors.white,
+        height: 400,
+        //width: 800,
+        child: BarChart(
+          BarChartData(
+            maxY: 50,
+            barGroups: showingBarGroups,
+            titlesData: FlTitlesData(
+              show: true,
+              rightTitles: SideTitles(showTitles: false),
+              topTitles: SideTitles(showTitles: false),
+            ),
+            gridData: FlGridData(show: true),
+            axisTitleData: FlAxisTitleData(
+              show: true,
+              bottomTitle: AxisTitle(
+                  showTitle: true, titleText: axisMessage, margin: 20.0),
+              leftTitle: AxisTitle(
+                  showTitle: true, titleText: "Feeding Units", margin: 0.0),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
