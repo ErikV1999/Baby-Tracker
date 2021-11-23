@@ -5,9 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/models/feedingChartData.dart';
 import 'package:intl/intl.dart';
 
-
 class FeedingGraphs extends StatefulWidget {
-
   final String baby;
 
   const FeedingGraphs({Key? key, required this.baby}) : super(key: key);
@@ -16,12 +14,11 @@ class FeedingGraphs extends StatefulWidget {
 }
 
 class _FeedingGraphsState extends State<FeedingGraphs> {
-  var listy = List<double>.filled(7,0.0);
+  var listy = List<double>.filled(7, 0.0);
   late List<BarChartGroupData> showingBarGroups;
   int daysLength = 7;
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     final barGroup1 = makeGroupData(0, 0, 0, 0);
     final barGroup2 = makeGroupData(1, 0, 0, 0);
@@ -47,8 +44,11 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
   List<FeedingData> myList = [];
   List<BarChartGroupData> dataList = [];
 
-  Future<void> generateDataSeven() async{
-    Query _feedRef = FirebaseFirestore.instance.doc(widget.baby).collection('feeding').orderBy("date", descending: true);
+  Future<void> generateDataSeven() async {
+    Query _feedRef = FirebaseFirestore.instance
+        .doc(widget.baby)
+        .collection('feeding')
+        .orderBy("date", descending: true);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _feedRef.get();
     //Clear previous data
@@ -60,7 +60,10 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     querySnapshot.docs.forEach((doc) {
       final Timestamp timestop = doc['date'];
       final DateTime date = timestop.toDate();
-      FeedingData newFeeding = new FeedingData(date, doc['feeding type'],);
+      FeedingData newFeeding = new FeedingData(
+        date,
+        doc['feeding type'],
+      );
       myList.add(newFeeding);
     });
 
@@ -76,39 +79,47 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     DateTime lastDay = now.subtract(Duration(days: 8));
     DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);
 
-    while(!(lastDay2.difference(loopTime).inDays >= 0))
-    {
+    while (!(lastDay2.difference(loopTime).inDays >= 0)) {
       //loopTime will have next loop, loopTime2 will contain current time to check in database
       loopTime = loopTime2.subtract(Duration(days: 1));
       //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
-      for(int i = 0; i < myList.length;i++) {
-        if (((loopTime2
-            .difference(myList[i].dateOf).inDays) == 0) &&
+      for (int i = 0; i < myList.length; i++) {
+        if (((loopTime2.difference(myList[i].dateOf).inDays) == 0) &&
             (((loopTime2.month) == (myList[i].dateOf).month) &&
-                ((loopTime2.day) == (myList[i].dateOf).day))) { //if true then check status of diaper and add to list
-          if (myList[i].statusOf == "Left Breast") { // && (i< 7)){
+                ((loopTime2.day) == (myList[i].dateOf).day))) {
+          //if true then check status of diaper and add to list
+          if (myList[i].statusOf == "Left Breast" || myList[i].statusOf == "Right Breast") {
+            // && (i< 7)){
             breastTally += 1;
           }
-          if (myList[i].statusOf == "Bottle") { // && (i< 7)){
+          if (myList[i].statusOf == "Bottle") {
+            // && (i< 7)){
             bottleTally += 1;
           }
-          if (myList[i].statusOf == "Food") { // && (i< 7)) {
+          if (myList[i].statusOf == "Food") {
+            // && (i< 7)) {
             foodTally += 1;
           }
         }
       }
       //add data to graph and get ready for next loop
-      final barGrouptemp = makeGroupData(day, breastTally, bottleTally, foodTally);
+      final barGrouptemp =
+          makeGroupData(day, breastTally, bottleTally, foodTally);
       breastTally = bottleTally = foodTally = 0; //reset for next loop
       dataList.add(barGrouptemp);
       day++; //set for next day
-      loopTime2 = loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
+      loopTime2 =
+          loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
     }
     showingBarGroups = dataList;
     generate();
   }
-  Future<void> generateDataThirty() async{
-    Query _diaperRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('diaper change').orderBy("date", descending: true);
+
+  Future<void> generateDataThirty() async {
+    Query _diaperRef2 = FirebaseFirestore.instance
+        .doc(widget.baby)
+        .collection('diaper change')
+        .orderBy("date", descending: true);
     // Get docs from collection reference
     QuerySnapshot querySnapshot = await _diaperRef2.get();
     //Clear previous data
@@ -120,7 +131,10 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     querySnapshot.docs.forEach((doc) {
       final Timestamp timestop = doc['date'];
       final DateTime date = timestop.toDate();
-      FeedingData newdiaperc = new FeedingData(date, doc['status'],);
+      FeedingData newdiaperc = new FeedingData(
+        date,
+        doc['status'],
+      );
       myList.add(newdiaperc);
     });
 
@@ -135,37 +149,38 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
     DateTime endOfWeek = now.subtract(Duration(days: 7));
     DateTime endOfWeektemp = now.subtract(Duration(days: 7));
     DateTime lastDay = now.subtract(Duration(days: 31)); //get final day
-    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month, lastDay.day);//make it easier to use difference
+    DateTime lastDay2 = new DateTime(lastDay.year, lastDay.month,
+        lastDay.day); //make it easier to use difference
 
-    while(!(lastDay2.difference(loopTime).inDays >= 0))
-    {
+    while (!(lastDay2.difference(loopTime).inDays >= 0)) {
       //check first week
       DateTime thisweek = loopTime.subtract(Duration(days: 8));
-      while(!(thisweek.difference(loopTime).inDays >= 0))
-      {
+      while (!(thisweek.difference(loopTime).inDays >= 0)) {
         //loopTime will have next loop, loopTime2 will contain current time to check in database
         loopTime = loopTime2.subtract(Duration(days: 1));
         //print("First Loop " + loopTime.toString() + " and second " + loopTime2.toString());
         for (int i = 0; i < myList.length; i++) {
-          if (((loopTime2
-              .difference(myList[i].dateOf)
-              .inDays) == 0) &&
+          if (((loopTime2.difference(myList[i].dateOf).inDays) == 0) &&
               (((loopTime2.month) == (myList[i].dateOf).month) &&
-                  ((loopTime2.day) == (myList[i].dateOf)
-                      .day))) { //if true then check status of diaper and add to list
-            if (myList[i].statusOf == "Dry") { // && (i< 7)){
+                  ((loopTime2.day) == (myList[i].dateOf).day))) {
+            //if true then check status of diaper and add to list
+            if (myList[i].statusOf == "Dry") {
+              // && (i< 7)){
               dryTally += 1;
             }
-            if (myList[i].statusOf == "Wet") { // && (i< 7)){
+            if (myList[i].statusOf == "Wet") {
+              // && (i< 7)){
               wetTally += 1;
             }
-            if (myList[i].statusOf == "Mix") { // && (i< 7)) {
+            if (myList[i].statusOf == "Mix") {
+              // && (i< 7)) {
               mixTally += 1;
             }
           }
         }
-        loopTime2 = loopTime;//set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
-      }//week while loop
+        loopTime2 =
+            loopTime; //set loopTime2 to yesterday for next loop iteration, if past 7 days then end while loop
+      } //week while loop
       dryTally = dryTally / 7;
       wetTally = wetTally / 7;
       mixTally = mixTally / 7;
@@ -175,17 +190,18 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
       dryTally = wetTally = mixTally = 0; //reset for next loop
       dataList.add(barGrouptemp);
       day++; //set for next day
-      endOfWeektemp = endOfWeek;//get next week ready
-    }//whole while loop
+      endOfWeektemp = endOfWeek; //get next week ready
+    } //whole while loop
     showingBarGroups = dataList;
     generate();
   }
+
   BarChartGroupData makeGroupData(int x, double y1, double y2, double y3) {
     double widths = 7;
     return BarChartGroupData(barsSpace: 1, x: x, barRods: [
       BarChartRodData(
         y: y1,
-        colors: [Color(0xFF3E2723)] ,// other one 0xffff5182
+        colors: [Color(0xFF3E2723)], // other one 0xffff5182
         width: widths,
       ),
       BarChartRodData(
@@ -199,66 +215,72 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
         width: widths,
       )
     ]);
-  }//makeGroupData
+  } //makeGroupData
 
-  Future<void> generate() async{//set up chart data
+  Future<void> generate() async {
+    //set up chart data
     setState(() {
       showingBarGroups = dataList;
     });
   }
 
-
   Widget build(BuildContext context) {
-    Query sleepRef = FirebaseFirestore.instance.doc(widget.baby).collection('feeding').orderBy("indexDate", descending: true);
-    CollectionReference _sleepRef2 = FirebaseFirestore.instance.doc(widget.baby).collection('feeding');
+    Query sleepRef = FirebaseFirestore.instance
+        .doc(widget.baby)
+        .collection('feeding')
+        .orderBy("indexDate", descending: true);
+    CollectionReference _sleepRef2 =
+        FirebaseFirestore.instance.doc(widget.baby).collection('feeding');
     String babyPath = widget.baby;
-    String axisMessage = "Number of days ago from " + DateFormat('Md').format(DateTime.now());
+    String axisMessage =
+        "Number of days ago from " + DateFormat('Md').format(DateTime.now());
     return ListView(
-      children: [Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          color: Colors.white,
-          height: 400,
-          //width: 800,
-          child: BarChart(
-            BarChartData (
-              maxY: 5,
-              barGroups: showingBarGroups,
-              titlesData: FlTitlesData(
-                show: true,
-                rightTitles: SideTitles(showTitles: false),
-                topTitles: SideTitles(showTitles: false),
-
-              ),
-              gridData: FlGridData(show: true),
-              axisTitleData: FlAxisTitleData(
-                show: true,
-                bottomTitle: AxisTitle(showTitle:true, titleText: axisMessage, margin: 20.0),
-                leftTitle: AxisTitle(showTitle:true, titleText: "Number of occurrences", margin: 0.0),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            color: Colors.white,
+            height: 400,
+            //width: 800,
+            child: BarChart(
+              BarChartData(
+                maxY: 5,
+                barGroups: showingBarGroups,
+                titlesData: FlTitlesData(
+                  show: true,
+                  rightTitles: SideTitles(showTitles: false),
+                  topTitles: SideTitles(showTitles: false),
+                ),
+                gridData: FlGridData(show: true),
+                axisTitleData: FlAxisTitleData(
+                  show: true,
+                  bottomTitle: AxisTitle(
+                      showTitle: true, titleText: axisMessage, margin: 20.0),
+                  leftTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: "Number of occurrences",
+                      margin: 0.0),
+                ),
               ),
             ),
           ),
         ),
-      ),
         Padding(
           padding: const EdgeInsets.all(1.0),
           child: Container(
             child: RichText(
-              textAlign:  TextAlign.center,
+              textAlign: TextAlign.center,
               text: TextSpan(children: <TextSpan>[
                 TextSpan(
                     text: "Blue is wet diapers |",
-                    style: TextStyle(color: Colors.blue)
-                ),
+                    style: TextStyle(color: Colors.blue)),
                 TextSpan(
                     text: "| Green is Mix diapers |",
-                    style: TextStyle(color: Colors.green)
-                ),
+                    style: TextStyle(color: Colors.green)),
                 TextSpan(
                     text: "| Brown is dry diapers |",
-                    style: TextStyle(color: Colors.brown)
-                ),
+                    style: TextStyle(color: Colors.brown)),
               ]),
             ),
           ),
