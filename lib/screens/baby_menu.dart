@@ -1,5 +1,6 @@
 import 'package:baby_tracker/models/Themes/changeTheme.dart';
 import 'package:baby_tracker/models/Themes/theme_provider.dart';
+import 'package:baby_tracker/screens/MedicalScreens/medical_menu.dart';
 import 'package:baby_tracker/screens/diaperchange.dart';
 import 'package:baby_tracker/screens/Notes/notes.dart';
 import 'package:flutter/material.dart';
@@ -202,6 +203,19 @@ class _BabyMenuState extends State<BabyMenu> {
                 );
               }
             )
+          ),
+
+          Card(
+              color: Theme.of(context).primaryColor,
+              child: ListTile(
+                  title: Text("Medical"),
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Medical_Menu(babyPath: babyPath)),
+                    );
+                  }
+              )
           ),
         ]
       ),
