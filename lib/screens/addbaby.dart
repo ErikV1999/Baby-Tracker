@@ -26,19 +26,35 @@ class _AddBabyState extends State<AddBaby> {
   DateTime selectedDate = DateTime.now();
 
   //creates date picker and assigns chosen date to selectedDate variable
-  _showDatePicker(BuildContext context) async {
-    final DateTime? selected = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2010),
-      lastDate: DateTime(2050),
-    );
-    if(selected != null && selected != selectedDate) {
-      setState(() {
-        selectedDate = selected;
-      });
-    }
+  void _showDatePicker(ctx) {
+    // showCupertinoModalPopup is a built-in function of the cupertino library
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+          height: 500,
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Column(
+            children: [
+              Container(
+                height: 400,
+                child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (val) {
+                      setState(() {
+                        selectedDate = val;
+                      });
+                    }),
+              ),
 
+              // Close the modal
+              CupertinoButton(
+                child: Text('OK'),
+                onPressed: () => Navigator.of(ctx).pop(),
+              )
+            ],
+          ),
+        ));
   }
 
 
@@ -51,40 +67,44 @@ class _AddBabyState extends State<AddBaby> {
           title: Text('Sign in to baby tracker'),
       ),
 
-      body: Container(
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage('assets/tempBabyLogo.png'),
-              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            )
-        ),
-        padding: EdgeInsets.fromLTRB(45, 30, 45, 20),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              _buildName(),
-              SizedBox(height: 60.0),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage('assets/tempBabyLogo.png'),
+                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              )
+          ),
+          padding: EdgeInsets.fromLTRB(30, 30, 30, 20),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                _buildName(),
+                SizedBox(height: 60.0),
 
-              Text(
-                'Gender:',
-                style: TextStyle(
-                  fontSize: 24,
+                Text(
+                  'Gender:',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
                 ),
-              ),
-              _buildGender(),
-              SizedBox(height: 50.0),
+                _buildGender(),
+                SizedBox(height: 50.0),
 
-              _buildHeightField(),
-              SizedBox(height: 60),
+                _buildHeightField(),
+                SizedBox(height: 60),
 
-              _buildDate(),
+                _buildDate(),
 
-              SizedBox(height: 100),
-              _buildSignInButton(),
+                SizedBox(height: 100),
+                _buildSignInButton(),
 
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -276,6 +296,7 @@ class _AddBabyState extends State<AddBaby> {
 
   Widget _buildSignInButton() {
     return Container(
+      padding: EdgeInsets.only(left: 45, right: 45),
       child: ElevatedButton(
         onPressed: () {
           if(_formKey.currentState!.validate()) {
