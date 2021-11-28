@@ -97,9 +97,8 @@ class _BabyMenuState extends State<BabyMenu> {
               title: Text("Feeding"),
               subtitle: Row(
                 children: [
-                  Text("Last Fed"),
-                  Text("Fed"),
-                  Text("Type")
+                  Text("Enter feeding data for "),
+                  Text(baby["Name"]),
                 ]
               ),
               onTap: (){
@@ -116,8 +115,8 @@ class _BabyMenuState extends State<BabyMenu> {
                   title: Text("Sleeping"),
                   subtitle: Row(
                       children: [
-                        Text("Last Sleep"),
-                        Text("For")
+                        Text("Enter sleeping event data for "),
+                        Text(baby["Name"]),
                       ]
                   ),
                   onTap: () {
@@ -154,9 +153,8 @@ class _BabyMenuState extends State<BabyMenu> {
                   title: Text("Height and Weight"),
                   subtitle: Row(
                       children: [
-                        //Text("Last Changed"),
-                        //Text("Pooped"),
-                        //Text("Peed")
+                        Text("Update height and weight for "),
+                        Text(baby["Name"]),
                       ]
                   ),
                   onTap: () {
