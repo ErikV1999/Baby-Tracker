@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AddLocation extends StatefulWidget {
+class AddDoctor extends StatefulWidget {
   final String babyPath;
-  const AddLocation({Key? key, required this.babyPath}) : super(key: key);
+  const AddDoctor({Key? key, required this.babyPath}) : super(key: key);
 
   @override
-  _AddLocationState createState() => _AddLocationState();
+  _AddDoctorState createState() => _AddDoctorState();
 }
 
-class _AddLocationState extends State<AddLocation> {
+class _AddDoctorState extends State<AddDoctor> {
   String doctor = '';
   String hospital = '';
   String street = '';
@@ -22,20 +22,15 @@ class _AddLocationState extends State<AddLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: Text('Records'),
+        title: Text('New Doctor'),
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8, left: 5, right: 5),
+      body: Container(
+        padding: const EdgeInsets.only(top: 8, bottom: 8, left: 5, right: 5),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              _buildLocationCard(),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 5, bottom: 20),
-                child: _buildTextBox(),
-              ),
+              _buildDoctorCard(),
 
               ElevatedButton(
                 child: Text('Create'),
@@ -52,8 +47,9 @@ class _AddLocationState extends State<AddLocation> {
     );
   }
 
-  Widget _buildLocationCard() {
+  Widget _buildDoctorCard() {
     return Card(
+      color: Theme.of(context).primaryColor,
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
         child: Column(
@@ -167,38 +163,6 @@ class _AddLocationState extends State<AddLocation> {
     );
   }
 
-  Widget _buildTextBox() {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintText: 'Reason For Visit',
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 1,
-            color: Theme.of(context).dividerColor,
-            style: BorderStyle.solid,
-          ),
-        ),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 1,
-            color: Theme.of(context).dividerColor,
-            style: BorderStyle.solid,
-          ),
-        ),
-
-      ),
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-      maxLines: 10,
-
-      onChanged: (val) {
-        reasonForVisit = val;
-      },
-    );
-  }
 
   Future saveDoctor() async {
     CollectionReference locationsRef = FirebaseFirestore.instance.doc(widget.babyPath).collection('Doctors');
