@@ -28,16 +28,19 @@ class _AddAppointmentState extends State<AddAppointment> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddDoctor(babyPath: widget.babyPath)),
-                    );
-                    setState(() {});
-                  },
-                  icon: Icon(Icons.add),
-                  iconSize: 45,
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: IconButton(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddDoctor(babyPath: widget.babyPath)),
+                      );
+                      setState(() {});
+                    },
+                    icon: Icon(Icons.add),
+                    iconSize: 45,
+                  ),
                 ),
               ],
             ),
@@ -56,7 +59,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                       DocumentReference doctorRef = doctorsCollection.doc(docID);
                       String doctorPath = doctorRef.path;
 
-                      return _buildDoctorCard(data, doctorPath);
+                      return _buildDoctorCard(data, doctorPath, doctorRef);
                     },
                   );
                 } else {
@@ -72,106 +75,141 @@ class _AddAppointmentState extends State<AddAppointment> {
     );
   }
 
-  Widget _buildDoctorCard(Map data, String doctorPath) {
+  Widget _buildDoctorCard(Map data, String doctorPath, DocumentReference doctorRef) {
     return Card(
       color: Theme.of(context).primaryColor,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Doctor:\t${data['doctor']}",
-              style: TextStyle(
-                fontSize: 25,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-
-
-            Container(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(
-                'Clinic/Hospital:',
+      child: Container(
+        padding: const EdgeInsets.only(left: 5, right: 0, bottom: 10),
+        child: ListTile(
+          trailing: buildDeleteButton(doctorRef),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Doctor:\t${data['doctor']}",
                 style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
+                  fontSize: 25,
+                  decoration: TextDecoration.underline,
                 ),
               ),
-            ),
-            Text(
-              '\t\t\t${data['hospital']}',
-              style: TextStyle(
-                  fontSize: 18,
-              ),
-            ),
 
-            Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Location:',
-                    style: TextStyle(
+
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  'Clinic/Hospital:',
+                  style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+              Text(
+                '\t\t\t${data['hospital']}',
+                style: TextStyle(
+                    fontSize: 18,
+                ),
+              ),
+
+              Container(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Location:',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              Text(
+                '\t\t${data['street']}',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              Text(
+                '\t\t${data['city']}, ${data['state']}',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  'Phone Number:',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                '\t\t${data['phone']}',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+
+              Divider(),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ScheduleAppointment(doctor: data, doctorPath: doctorPath, babyPath: widget.babyPath,)),
+                      );
+                    },
+                    icon: Icon(Icons.add_alarm),
+                    iconSize: 35,
                   ),
                 ],
               ),
-            ),
-            Text(
-              '\t\t${data['street']}',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              '\t\t${data['city']}, ${data['state']}',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
 
-            Container(
-              padding: EdgeInsets.only(top: 10),
-              child: Text(
-                'Phone Number:',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Text(
-              '\t\t${data['phone']}',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-            Divider(),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
+  Widget buildDeleteButton(DocumentReference doctorRef) {
+    return IconButton(
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Confirm Deletion'),
+              content: Text('Confirm deletion of doctor'),
+              actions: [
+                TextButton(
+                  child: Text('Confirm'),
                   onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ScheduleAppointment(doctor: data, doctorPath: doctorPath, babyPath: widget.babyPath,)),
-                    );
+                    //deletes note document
+                    await doctorRef.delete().whenComplete(() => Navigator.pop(context));
+                    setState(() {});
                   },
-                  icon: Icon(Icons.add_alarm),
-                  iconSize: 35,
+                ),
+
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),
-
-          ],
-        ),
-      ),
+        );
+      },
+      icon: Icon(Icons.clear),
     );
   }
 
