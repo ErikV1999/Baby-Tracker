@@ -54,9 +54,6 @@ class _Medical_MenuState extends State<Medical_Menu> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Medical'),
-        actions: [
-          ChangeThemeButton(),
-        ],
       ),
 
       floatingActionButton: FloatingActionButton(

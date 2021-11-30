@@ -56,9 +56,7 @@ class _AddDoctorState extends State<AddDoctor> {
           children: [
             TextFormField(
               decoration: InputDecoration(
-                label: Text(
-                  "Doctor's Name: ",
-                ),
+                labelText: "Doctor's Name: ",
               ),
 
               onChanged: (val) {
@@ -70,10 +68,8 @@ class _AddDoctorState extends State<AddDoctor> {
 
             TextFormField(
               decoration: InputDecoration(
-                label: Text(
-                    'Clinic/Hospital:'
+                labelText: 'Clinic/Hospital:'
                 ),
-              ),
 
               onChanged: (val) {
                 setState(() {
@@ -148,7 +144,7 @@ class _AddDoctorState extends State<AddDoctor> {
 
             TextFormField(
               decoration: InputDecoration(
-                label: Text('Phone Number'),
+                labelText: 'Phone Number',
               ),
               onChanged: (val) {
                 setState(() {
