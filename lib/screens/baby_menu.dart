@@ -85,6 +85,7 @@ class _BabyMenuState extends State<BabyMenu> {
             child: Text('EMERGENCY', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
 
           ),
+          Icon(Icons.light_mode, color: Colors.black,),
           ChangeThemeButton(),
         ],
       ),

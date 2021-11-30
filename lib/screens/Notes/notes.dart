@@ -24,9 +24,6 @@ class _NotesState extends State<Notes> {
       appBar: AppBar(
         title: Text('Notes'),
         backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          ChangeThemeButton(),
-        ],
       ),
 
       floatingActionButton: FloatingActionButton(
