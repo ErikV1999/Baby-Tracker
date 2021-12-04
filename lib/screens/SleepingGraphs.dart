@@ -25,6 +25,7 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
 
   List<Color> barColor = [Colors.green, Colors.red];
 
+  // initialize the graphs when switching tabs
   void initState() {
     super.initState();
     setState(() {
@@ -135,6 +136,7 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
     );
   }
 
+  // can switch between 7day view and 5month view, will update in realtime
     Widget _build7DayTitle() {
       return Padding(
           padding: const EdgeInsets.fromLTRB(1.0, 10.0, 0.0, 1.0),
@@ -152,10 +154,10 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
         padding: const EdgeInsets.all(2.0),
         child: Container(
             padding: const EdgeInsets.all(2.0),
-            height: 200,
+            height: 400,
             child: BarChart(
               BarChartData (
-                backgroundColor: MyThemes.blizzardBlue,
+                backgroundColor: Colors.white,
                 maxY: 25,
                 titlesData: FlTitlesData(
                   bottomTitles: SideTitles(
@@ -190,6 +192,11 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
                     showTitles: false,
                   ),
                 ),
+                axisTitleData: FlAxisTitleData(
+                  show: true,
+                  bottomTitle: AxisTitle(showTitle:true, titleText: "Days (M/D)", margin: 30.0),
+                  leftTitle: AxisTitle(showTitle:true, titleText: "Hours of Sleep", margin: 0.0),
+                ),
                 barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: listy[0], colors: [barColor[0]], width: 10)]),
                   BarChartGroupData(x: 1, barRods: [BarChartRodData(y: listy[1], colors: [barColor[0]], width: 10)]),
                   BarChartGroupData(x: 2, barRods: [BarChartRodData(y: listy[2], colors: [barColor[0]], width: 10)]),
@@ -220,10 +227,10 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           padding: const EdgeInsets.all(2.0),
-          height: 300,
+          height: 400,
           child: BarChart(
             BarChartData (
-              backgroundColor: MyThemes.blizzardBlue,
+              backgroundColor: Colors.white,
               maxY: 168,
               titlesData: FlTitlesData(
                 bottomTitles: SideTitles(
@@ -253,6 +260,11 @@ class _SleepingGraphsState extends State<SleepingGraphs> {
                 rightTitles: SideTitles(
                   showTitles: false,
                 ),
+              ),
+              axisTitleData: FlAxisTitleData(
+                show: true,
+                bottomTitle: AxisTitle(showTitle:true, titleText: "Months (M/Y)", margin: 30.0),
+                leftTitle: AxisTitle(showTitle:true, titleText: "Hours of Sleep", margin: 0.0),
               ),
               barGroups: [BarChartGroupData(x: 0, barRods: [BarChartRodData(y: monthY[0], colors: [barColor[0]], width: 10)]),
                 BarChartGroupData(x: 1, barRods: [BarChartRodData(y: monthY[1], colors: [barColor[0]], width: 10)]),
