@@ -317,13 +317,14 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(10),
-        color: Colors.white,
+        //color: Colors.white,
         height: 400,
         //width: 800,
         child: BarChart(
           BarChartData(
             maxY: 15,
             barGroups: showingBarGroups,
+            backgroundColor: Colors.white,
             titlesData: FlTitlesData(
               show: true,
               rightTitles: SideTitles(showTitles: false),
@@ -361,13 +362,14 @@ class _FeedingGraphsState extends State<FeedingGraphs> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(10),
-        color: Colors.white,
+        //color: Colors.white,
         height: 400,
         //width: 800,
         child: BarChart(
           BarChartData(
             maxY: 50,
             barGroups: showingBarGroups,
+            backgroundColor: Colors.white,
             titlesData: FlTitlesData(
               show: true,
               rightTitles: SideTitles(showTitles: false),
